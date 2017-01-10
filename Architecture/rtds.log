@@ -1,0 +1,630 @@
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:49:51.988540] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:49:52.600963] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:49:53.325942] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:50:03.906630] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:50:14.512922] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:52:21.451033] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:52:22.002973] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:52:22.657282] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:53:01.619296] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:53:02.243712] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:53:02.854537] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:53:13.815761] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:53:24.461334] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:53:35.328949] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:53:57.217374] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:53:57.858748] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:53:58.566235] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 14:54:09.220473] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:03:31.076908] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:03:31.698592] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:06:24.456475] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:06:25.159604] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:06:25.767687] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:07:05.392188] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:07:06.012620] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:07:06.601477] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:07:17.180360] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:07:27.795853] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:07:38.667623] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:07:49.296619] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:07:59.936082] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:08:10.564747] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:08:21.225064] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:08:31.831346] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:08:42.451096] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:08:53.240439] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:09:04.076206] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:09:14.745631] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:09:25.391663] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:09:35.965198] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:09:46.604225] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:09:57.196119] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:10:07.809742] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:10:18.563116] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:10:29.230296] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:10:39.876530] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:10:51.235365] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:11:10.144593] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:11:20.806463] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:11:31.433064] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:11:42.076059] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:11:52.745284] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:12:03.396907] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:12:14.029712] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:12:24.640028] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:12:35.264934] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:12:45.896571] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:12:56.507355] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:13:07.184777] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:13:17.841300] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:13:28.523340] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:13:39.135621] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:13:49.987673] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:14:00.589250] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:14:11.220652] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:14:21.839951] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:14:32.451471] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:14:43.099589] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:14:53.717875] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:15:04.392829] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:15:14.995300] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:15:25.865017] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:15:36.523143] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:15:47.161128] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:15:57.801782] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:16:08.409572] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:16:22.421246] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:16:33.240578] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:16:43.963359] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:16:54.586134] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:17:05.240652] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:17:15.903101] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:17:26.609331] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:17:37.279543] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:17:47.893739] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:17:58.607119] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:18:09.250866] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:18:20.006051] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:18:30.645503] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:18:41.304951] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:18:52.608752] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:19:03.202791] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:19:13.817649] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:19:24.456169] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:19:35.052534] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:19:45.665133] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:19:56.252274] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:20:06.875112] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:20:17.488063] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:20:28.099628] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:20:38.746874] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:20:49.964763] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:21:00.568541] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:21:11.154541] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:21:21.749879] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:21:35.477105] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:21:46.122283] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:21:56.724272] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:22:07.526959] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:22:18.223851] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:22:28.800434] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:22:39.394430] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:22:50.690192] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:01.295605] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:11.907481] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:14.409886] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:14.991939] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:15.609796] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:22.643156] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:26.240257] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:33.253343] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:36.884290] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:43.919606] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:47.498085] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:54.558253] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:23:58.122257] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:24:05.160583] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:24:09.142503] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:37:11.330497] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:37:11.941546] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:37:12.554147] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:37:38.044366] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:37:38.658906] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:37:39.271862] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:37:49.918637] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:38:00.575083] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:38:11.217984] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:38:15.298167] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:38:15.925685] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:38:16.849019] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:38:21.866810] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:38:33.541635] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:38:44.201885] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:38:54.846704] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:39:05.501956] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:39:16.140565] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:39:26.895805] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:39:36.332719] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:root:[2016-12-06 15:39:36.932262] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:39:37.540858] -> Enjoy torino: feed success
+DEBUG:root:[2016-12-06 15:39:37.567228] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:39:48.133229] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:39:58.739812] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:40:10.519154] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:40:21.199925] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:40:31.807102] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:40:42.633235] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:40:53.242795] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:41:03.828142] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:41:14.416546] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:41:24.983806] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:41:35.589250] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:41:46.189140] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:41:57.049308] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:42:07.639692] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:42:26.389163] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:42:37.005492] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:42:47.565890] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:42:58.125807] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:43:08.693785] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:43:19.285586] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:43:29.903083] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:43:40.489059] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:43:51.101340] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:44:01.676105] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:44:12.248849] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:47:00.020807] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:47:00.585292] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:47:01.143134] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:47:10.896126] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:47:11.442180] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:47:12.001243] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:47:23.771544] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:47:25.353991] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:47:25.930295] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:48:24.935336] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:48:25.542600] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:48:27.082148] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:48:37.667970] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:48:48.359537] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:48:58.955672] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:49:09.583706] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:49:20.201355] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:49:31.950044] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:49:32.518854] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:49:33.343119] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:49:43.940555] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:49:54.496316] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:50:05.092763] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 15:50:15.693437] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 16:02:46.356815] -> Enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 16:02:47.149432] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 16:02:47.687922] -> Enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 17:19:23.971562] -> enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 17:19:24.494966] -> enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 17:19:25.061671] -> enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-06 17:19:36.016683] -> enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /it/torino/map/ HTTP/1.1" 200 None
+DEBUG:root:[2016-12-08 12:04:10.218660] -> enjoy torino: session success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-08 12:04:10.932206] -> enjoy torino: feed success
+INFO:requests.packages.urllib3.connectionpool:Resetting dropped connection: enjoy.eni.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /ajax/retrieve_vehicles HTTP/1.1" 200 None
+DEBUG:root:[2016-12-08 12:04:11.548569] -> enjoy torino: feed success
