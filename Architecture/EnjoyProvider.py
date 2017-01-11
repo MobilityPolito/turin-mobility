@@ -2,8 +2,6 @@ import datetime
 
 import pandas as pd
 
-import geopy
-
 from Provider import Provider
 
 from DataBaseProxy import DataBaseProxy
@@ -18,17 +16,16 @@ class Enjoy(Provider):
     def select_data (self, city, by, *args):
         
         if by == "timestamp" and len(args) == 2:
-            start, end = args
-            self.cursor = dbp.query_raw_by_time(self.name, city, start, end)
-#            print self.cursor.count()
+            self.start, self.end = args
+            self.cursor = dbp.query_raw_by_time(self.name, city, self.start, self.end)
+            print "Data selected!"
+            
         return self.cursor
         
     def get_fields(self):
         
         self.cursor.rewind()
-        
-        sample_columns = pd.DataFrame(self.cursor.next()["state"]).columns  
-
+        sample_columns = pd.DataFrame(self.cursor.next()["state"]).columns
         for doc in self.cursor:
             columns = pd.DataFrame(doc["state"]).columns
             if len(columns.difference(sample_columns)):
@@ -48,123 +45,97 @@ class Enjoy(Provider):
             current_fleet = pd.Index(pd.DataFrame(doc["state"])\
                                      .loc[:, "car_plate"].values)
             self.fleet = self.fleet.union(current_fleet)
+            
+        print "Fleet acquired!"
+            
         return self.fleet
-        
-    def get_parks(self, car_plate):
 
-        def get_car_status (doc):
-            df = pd.DataFrame(doc["state"])
-            car = df[df["car_plate"] == car_plate]
-            if len(car):
-                return "parked"
-            else:
-                return "booked"
+    def get_parks_v2 (self):
         
         self.cursor.rewind()
         doc = self.cursor.next()
-        
-        last_car_status = get_car_status(doc)
-        
-        if last_car_status == "parked":
-            try:
-                park_start = doc["timestamp"]
-                df = pd.DataFrame(doc["state"])
-                car_state = df[df["car_plate"] == car_plate]
-                park_lat = float(car_state["lat"].values)
-                park_lon = float(car_state["lon"].values)
-            except:
-                print df.describe()
-        elif last_car_status == "booked":
-            try:
-                book_start = doc["timestamp"]
-                df = pd.DataFrame(doc["state"])
-                book_lat_start = 45.116
-                book_lon_start = 7.742
-            except:
-                print df.describe()
 
+        cars_status = pd.DataFrame(index = self.fleet.values)
+        cars_lat = pd.DataFrame(index = self.fleet.values)
+        cars_lon = pd.DataFrame(index = self.fleet.values)
+        
+        def update_cars_status ():
+            df = pd.DataFrame(doc["state"])
+
+            parked = df[["car_plate", "lat", "lon"]]
+            cars_status.loc[parked["car_plate"].values, doc["timestamp"]] = "parked"            
+            cars_lat.loc[parked["car_plate"].values, doc["timestamp"]] = \
+                pd.Series(data=df["lat"].values,
+                          index=parked["car_plate"].values)                
+            cars_lon.loc[parked["car_plate"].values, doc["timestamp"]] = \
+                pd.Series(data=df["lon"].values,
+                          index=parked["car_plate"].values)            
+            booked = self.fleet.difference(df["car_plate"])
+            cars_status.loc[booked.values, doc["timestamp"]] = "booked"
+        
         for doc in self.cursor:
+            update_cars_status()
             
-            try:
+        cars_status = cars_status.T
+        cars_lat = cars_lat.T
+        cars_lon = cars_lon.T
+
+        global_status = {}
+
+        for car in cars_status:
+
+            car_status = cars_status[car]
+            car_status = car_status.loc[car_status.shift(1) != car_status]
+
+            car_lats = cars_lat[car]
+            car_lats = car_lats.loc[car_status.index]
+
+            car_lons = cars_lon[car]
+            car_lons = car_lons.loc[car_status.index]
+                                
+            car_df = pd.DataFrame()
+            car_df["status"] = car_status.values
+            car_df["start"] = car_status.index
+            car_df["lat"] = car_lats.values
+            car_df["lon"] = car_lons.values
+            car_df["start_lat"] = car_df["lat"].shift(1)
+            car_df["start_lon"] = car_df["lon"].shift(1)
+            car_df["end_lat"] = car_df["lat"].shift(-1)
+            car_df["end_lon"] = car_df["lon"].shift(-1)
+            
+            car_df["end"] = car_df["start"].shift(-1)
+            car_df.loc[:,"end"].iloc[-1] = self.end
+
+            global_status[car] = car_df
+
+            parks = car_df[car_df.status == "parked"]
+            
+            parks = parks.dropna(axis=1, how="all")
+            parks = parks.drop("status", axis=1)
+            
+            for park in parks.T.to_dict().values():
+                park["provider"] = self.name
+                park["city"] = self.city
+                dbp.insert_park_v2(self.city, park)
                 
-                current_car_status = get_car_status(doc)
-                
-                if last_car_status == "parked":
-                    
-                    if current_car_status == "parked":
-                        pass
-                    
-                    elif current_car_status == "booked":
-                        
-                        park_end = doc["timestamp"]
-                        dbp.insert_park(self.name, 
-                                        self.city, 
-                                        car_plate, 
-                                        park_lat, park_lon, 
-                                        park_start, park_end)
-                        
-                        book_start = park_end
-                        book_lat_start = park_lat
-                        book_lon_start = park_lon                        
-                        
-                        last_car_status = current_car_status
-                            
-                elif last_car_status == "booked":
-
-                    if current_car_status == "booked":
-                        pass
-                    
-                    elif current_car_status == "parked":
-
-                        last_car_status = current_car_status
-
-                        df = pd.DataFrame(doc["state"])
-                        park_lat = float(df[df["car_plate"] == car_plate]["lat"].values)
-                        park_lon = float(df[df["car_plate"] == car_plate]["lon"].values)
-                        park_start = doc["timestamp"]
-
-                        book_lat_end = park_lat
-                        book_lon_end = park_lon
-                        book_end = doc["timestamp"]
-
-                        bill = self.get_price(book_start, book_end)
-                        dbp.insert_book(self.name, 
-                                        self.city, 
-                                        car_plate, 
-                                        book_lat_start, book_lon_start, 
-                                        book_lat_end, book_lon_end,
-                                        book_start, book_end,
-                                        bill)     
-                                            
-            except:
-                print doc["_id"]
-
-    def get_price(self, start, end):
-        #calcolato solo sul tempo, dovrebbe essere fatto anche sui chilometri
-        price = 0.25
-        m = int((end-start).total_seconds()/60)
-        return float(m*price)
-        
-    def get_emissions(self, book_lat_start, book_lon_start, book_lat_end, book_lon_end):
-        emission = 119
-        
-        
+        return cars_status, global_status
 
 def test():
     
-    enjoy = Enjoy("torino")  
-    end = datetime.datetime(2016, 12, 10, 23, 59, 0)
-    start = end - datetime.timedelta(minutes= 10)
+    enjoy = Enjoy("torino")
+    
+    end = datetime.datetime(2016, 12, 10, 0, 0, 0)
+    start = end - datetime.timedelta(days = 1)
        
     enjoy.select_data("torino","timestamp", start, end)    
     enjoy.get_fields()
     enjoy.get_fleet()
     
-    for car in list(enjoy.fleet):
-        enjoy.get_parks(car)
-        
-    return enjoy
-    print enjoy.get_price(start,end)
-    
-enjoy = test()
+#    for car in list(enjoy.fleet):
+#        enjoy.get_parks(car)
 
+    t = enjoy.get_parks_v2()
+        
+    return enjoy, t
+    
+enjoy, t = test()
