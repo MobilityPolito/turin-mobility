@@ -17,6 +17,7 @@ class Car2Go(Provider):
         if by == "timestamp" and len(args) == 2:
             self.start, self.end = args
             self.cursor = dbp.query_raw_by_time(self.name, city, self.start, self.end)
+            
             print "Data selected!"
 
     def get_fields(self):
@@ -26,7 +27,9 @@ class Car2Go(Provider):
 
     def get_fleet(self):
 
-        self.cursor.rewind()        
+        print "Acquiring fleet ..."
+        
+        self.cursor.rewind()
         doc = self.cursor.next()
         current_fleet = pd.Index(pd.DataFrame(doc["state"]["placemarks"])\
                                  .loc[:,"name"].values)
@@ -40,7 +43,7 @@ class Car2Go(Provider):
 
         return self.fleet
 
-    def get_parks_v2 (self):
+    def get_parks_and_books_v2 (self):
         
         self.cursor.rewind()
         doc = self.cursor.next()
@@ -48,33 +51,29 @@ class Car2Go(Provider):
         cars_status = pd.DataFrame(index = self.fleet.values)
         cars_lat = pd.DataFrame(index = self.fleet.values)
         cars_lon = pd.DataFrame(index = self.fleet.values)
-        cars_interior = pd.DataFrame(index = self.fleet.values)
-        cars_exterior = pd.DataFrame(index = self.fleet.values)
-
+        cars_fuel = pd.DataFrame(index = self.fleet.values)
         
         def update_cars_status ():
+
             df = pd.DataFrame(doc["state"]["placemarks"])
 
-            parked = df[["name", "coordinates", "interior", "exterior"]]
-            cars_status.loc[parked["name"].values, doc["timestamp"]] = "parked"
-            
+            parked = df[["name", "coordinates"]]
+            booked = self.fleet.difference(df["name"])
+
+            cars_status.loc[parked["name"].values, doc["timestamp"]] = \
+                "parked"
+            cars_status.loc[booked.values, doc["timestamp"]] = \
+                "booked"
+
             cars_lat.loc[parked["name"].values, doc["timestamp"]] = \
                 pd.Series(data=[v[0] for v in parked["coordinates"].values],
                           index=parked["name"].values)
-                
             cars_lon.loc[parked["name"].values, doc["timestamp"]] = \
                 pd.Series(data=[v[1] for v in parked["coordinates"].values],
                           index=parked["name"].values)
-                
-            cars_interior.loc[parked["name"].values, doc["timestamp"]] = \
-                pd.Series(data=parked["interior"].values, index = parked["name"].values)  
-
-            cars_exterior.loc[parked["name"].values, doc["timestamp"]] = \
-                pd.Series(data=parked["exterior"].values, index = parked["name"].values)  
-    
-                
-            booked = self.fleet.difference(df["name"])
-            cars_status.loc[booked.values, doc["timestamp"]] = "booked"
+            cars_fuel.loc[parked["name"].values, doc["timestamp"]] = \
+                pd.Series(data=df["fuel"].values,
+                          index=parked["name"].values)
         
         for doc in self.cursor:
             update_cars_status()
@@ -82,13 +81,14 @@ class Car2Go(Provider):
         cars_status = cars_status.T
         cars_lat = cars_lat.T
         cars_lon = cars_lon.T
-        cars_interior = cars_interior.T
-        cars_exterior = cars_exterior.T
+        cars_fuel = cars_fuel.T
 
-        global_status = {}
+        cars = {}
 
         for car in cars_status:
 
+            print car
+            
             car_status = cars_status[car]
             car_status = car_status.loc[car_status.shift(1) != car_status]
 
@@ -98,60 +98,63 @@ class Car2Go(Provider):
             car_lons = cars_lon[car]
             car_lons = car_lons.loc[car_status.index]
 
-            car_interior = cars_interior[car]
-            car_interior = car_interior.loc[car_status.index]
-
-            car_exterior = cars_exterior[car]
-            car_exterior = car_exterior.loc[car_status.index]
+            car_fuels = cars_fuel[car]
+            car_fuels = car_fuels.loc[car_status.index]
                                 
             car_df = pd.DataFrame()
             car_df["status"] = car_status.values
             car_df["start"] = car_status.index
             car_df["lat"] = car_lats.values
             car_df["lon"] = car_lons.values
-            car_df["interior"] = car_interior.values
-            car_df["interior_start"] = car_df["interior"].shift(1)
-            car_df["interior_end"] = car_df["interior"].shift(-3)
-            car_df["exterior"] = car_exterior.values
-            car_df["exterior_start"] = car_df["exterior"].shift(1)
-            car_df["exterior_end"] = car_df["exterior"].shift(-3)
+            car_df["fuel"] = car_fuels.values
             car_df["start_lat"] = car_df["lat"].shift(1)
             car_df["start_lon"] = car_df["lon"].shift(1)
             car_df["end_lat"] = car_df["lat"].shift(-1)
             car_df["end_lon"] = car_df["lon"].shift(-1)
-            
+            car_df["start_fuel"] = car_df["fuel"].shift(1)
+            car_df["end_fuel"] = car_df["fuel"].shift(-1)
             car_df["end"] = car_df["start"].shift(-1)
             car_df.loc[:,"end"].iloc[-1] = self.end
 
-            global_status[car] = car_df
+            cars[car] = car_df
 
             parks = car_df[car_df.status == "parked"]
-            
-            parks = parks.dropna(axis=1, how="all")
-            parks = parks.drop("status", axis=1)
-            
-            for park in parks.T.to_dict().values():
-                park["provider"] = self.name
-                park["city"] = self.city
-                dbp.insert_park_v2(self.city, park)
+            if len(parks):
+                parks = parks.dropna(axis=1, how="all")
+                parks = parks.drop("status", axis=1)
                 
-        return cars_status, global_status
+                for park in parks.T.to_dict().values():
+                    park["provider"] = self.name
+                    park["city"] = self.city
+                    dbp.insert_park_v2(self.city, park)
+
+            books = car_df[car_df.status == "booked"]
+            if len(books):
+                books = books.dropna(axis=1, how="all")
+                books = books.drop("status", axis=1)
+                
+                for book in books.T.to_dict().values():
+                    book["provider"] = self.name
+                    book["city"] = self.city
+                    dbp.insert_book_v2(self.city, book)
+                
+        return cars_status, cars
             
 def test():
 
     car2go = Car2Go()
 
-    end = datetime.datetime(2016, 12, 20, 0, 0, 0)
-    start = end - datetime.timedelta(days = 3)
+    end = datetime.datetime(2016, 12, 10, 0, 0, 0)
+    start = end - datetime.timedelta(days = 1)
     
     car2go.select_data("torino","timestamp", start, end)    
-    car2go.get_fields()
-    car2go.get_fleet()
+    print car2go.get_fields()
+    print car2go.get_fleet()
     
 #    for car in list(car2go.fleet):
 #        car2go.get_parks(car)
 
-    t = car2go.get_parks_v2()
+    t = car2go.get_parks_and_books_v2()
 
     return car2go, t
 

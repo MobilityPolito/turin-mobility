@@ -54,10 +54,7 @@ class DataBaseProxy (object):
                         last = document
                                 
             elif provider is "car2go":
-                
                 for city in ["torino"]:
-                    
-                    print city
                     
                     input_collection = input_db[city]
                     output_collection = output_db[city]
@@ -126,6 +123,15 @@ class DataBaseProxy (object):
             collection.insert_one(park)
         except:
             print "Invalid data coding!"
+
+    def insert_book_v2 (self, city, book):
+        
+        collection = self.db[city + "_books_v2"]            
+        try:
+            collection.insert_one(book)
+        except:
+            print "Invalid data coding!"
+
                 
     def insert_book (self, 
                      provider, 
@@ -148,7 +154,7 @@ class DataBaseProxy (object):
         
 #        print park
         
-        collection = self.db[city + "_books"]            
+        collection = self.db[city + "_books_v2"]            
         try:
             collection.insert_one(park)
         except:
@@ -167,7 +173,7 @@ class DataBaseProxy (object):
 
     def query_park_by_time (self, provider, city, start, end):
         
-        return self.db[city + "_parks"].find \
+        return self.db[city + "_parks_v2"].find \
                     ({"start":
                          {
                              '$gte': start,
@@ -178,7 +184,7 @@ class DataBaseProxy (object):
 
     def query_book_by_time (self, provider, city, start, end):
         
-        return self.db[city + "_books"].find \
+        return self.db[city + "_books_v2"].find \
                     ({"start":
                          {
                              '$gte': start,

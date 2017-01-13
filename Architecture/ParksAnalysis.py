@@ -37,20 +37,31 @@ end = datetime.datetime(2016, 12, 10, 0, 0, 0)
 start = end - datetime.timedelta(days = 1)
 parks_df = get_parks_df(provider, "torino", start, end)
 parks_df["durations"] = (parks_df["end"] - parks_df["start"])/np.timedelta64(1, 'm')
-
-zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
-        .to_crs({"init": "epsg:4326"})
-zones["nparks"] = 0.0
-
 parks_df["geometry"] = parks_df.apply\
     (lambda row: Point(row["lon"], row["lat"]), axis=1)
 parks_df = gpd.GeoDataFrame(parks_df, geometry="geometry")
 parks_df.crs = {"init": "epsg:4326"}
 parks_points = parks_df["geometry"]
 
-for point in parks_points.values:
-    intersect = zones.contains(point)
-    zones.ix[intersect[intersect == True].index.values[0], "nparks"] += 1
+zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
+        .to_crs({"init": "epsg:4326"})
+            
+#fig, ax = plt.subplots(1,1,figsize=(10,10))
+#
+#ax = zones.plot(color="white", ax=ax)
+#ax.set_xlim([7.6, 7.8])
+#ax.set_ylim([45.0,45.15])
+#ax = zones.plot(ax=ax)
+#
+#ax = ztl.plot(ax=ax)
+#ax.set_xlim([7.66, 7.72])
+#ax.set_ylim([45.05,45.10])
+#ax = ztl.plot(ax=ax)
+#
+#plt.show()
+#
+
+
 
 #fig, ax = plt.subplots(1,1,figsize=(10,10))
 #ax = parks_df["durations"].hist(figsize=(10,10))

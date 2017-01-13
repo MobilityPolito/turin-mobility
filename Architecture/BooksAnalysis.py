@@ -45,10 +45,10 @@ def get_books_df (provider, city, start, end):
 
     return books_df
     
-provider = "car2go"
-    
+provider = "car2go"    
 end = datetime.datetime(2016, 12, 10, 0, 0, 0)
 start = end - datetime.timedelta(days = 1)
+
 books_df = get_books_df(provider, "torino", start, end)
 books_df["durations"] = (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
 books_df["distances"] = books_df.apply\
