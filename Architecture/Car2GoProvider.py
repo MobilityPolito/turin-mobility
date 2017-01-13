@@ -117,12 +117,13 @@ class Car2Go(Provider):
             car_df.loc[:,"end"].iloc[-1] = self.end
 
             cars[car] = car_df
-
+            
             parks = car_df[car_df.status == "parked"]
             if len(parks):
+                
                 parks = parks.dropna(axis=1, how="all")
                 parks = parks.drop("status", axis=1)
-                
+               
                 for park in parks.T.to_dict().values():
                     park["provider"] = self.name
                     park["city"] = self.city
@@ -132,13 +133,16 @@ class Car2Go(Provider):
             if len(books):
                 books = books.dropna(axis=1, how="all")
                 books = books.drop("status", axis=1)
+
+#                if car_df.ix[car_df.head(1).index,"status"] == "booked":
+#                    books = books.drop(books.head(1).index)
+#                if car_df.ix[car_df.tail(1).index,"status"] == "booked":
+#                    books = books.drop(books.tail(1).index)
                 
                 for book in books.T.to_dict().values():
                     book["provider"] = self.name
                     book["city"] = self.city
-                    dbp.insert_book_v2(self.city, book)
-                    
-            
+                    dbp.insert_book_v2(self.city, book)            
                 
         return cars_status, cars
 
