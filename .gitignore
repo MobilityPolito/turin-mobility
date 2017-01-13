@@ -3,3 +3,4 @@ data_car2go_output.txt
 .Rhistory
 first_map.py
 *~
+*.pyc
