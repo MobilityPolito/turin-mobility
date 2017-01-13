@@ -18,7 +18,11 @@ class Car2Go(Provider):
             self.start, self.end = args
             self.cursor = dbp.query_raw_by_time(self.name, city, self.start, self.end)
             
-            print "Data selected!"
+        if by == "full":
+            self.cursor = dbp.query_raw(self.city, self.name)
+
+        print "Data selected!"
+
 
     def get_fields(self):
         
@@ -42,6 +46,12 @@ class Car2Go(Provider):
         print "Fleet acquired!"
 
         return self.fleet
+
+    def get_fleet_from_db(self):
+        print "Acquiring fleet ..."
+        query = dbp.query_fleet(self.city, self.name)
+        self.fleet = pd.Index(query[0]['fleet'])
+        print "Fleet acquired!"
 
     def get_parks_and_books_v2 (self):
         
@@ -145,5 +155,3 @@ class Car2Go(Provider):
                     dbp.insert_book_v2(self.city, book)            
                 
         return cars_status, cars
-
-

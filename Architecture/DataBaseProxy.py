@@ -90,6 +90,22 @@ class DataBaseProxy (object):
             collection.insert_one(record)
         except:
             print "Invalid data coding!"
+
+    def insert_fleet (self, provider, city, fleet):
+
+        record = {
+            'provider' : provider,
+            'city' : city,
+            'fleet' : fleet
+        }
+
+        collection = self.db['fleet']
+
+        try:
+            collection.insert_one(record)
+        except:
+            print "Invalid insertion in fleet"
+            print record
             
     def insert_park (self, 
                      provider, 
@@ -159,6 +175,17 @@ class DataBaseProxy (object):
         except:
             print "Invalid data coding!"
 
+    def query_raw (self, city, provider):
+        return self.db[city].find({
+            'provider':provider
+            })
+
+    def query_fleet(self, city, provider):
+        return self.db['fleet'].find({
+            'provider': provider,
+            'city': city
+            })
+
     def query_raw_by_time (self, provider, city, start, end):
         
         return self.db[city].find \
@@ -191,4 +218,3 @@ class DataBaseProxy (object):
                          },
                      "provider":provider
                     }).sort([("_id", 1)])                        
-
