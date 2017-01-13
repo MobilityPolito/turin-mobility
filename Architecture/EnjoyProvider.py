@@ -121,22 +121,23 @@ class Enjoy(Provider):
             cars[car] = car_df
 
             parks = car_df[car_df.status == "parked"]
-            
-            parks = parks.dropna(axis=1, how="all")
-            parks = parks.drop("status", axis=1)
-            
-            for park in parks.T.to_dict().values():
-                park["provider"] = self.name
-                park["city"] = self.city
-                dbp.insert_park_v2(self.city, park)
+            if len(parks):
+                parks = parks.dropna(axis=1, how="all")
+                parks = parks.drop("status", axis=1)
+                
+                for park in parks.T.to_dict().values():
+                    park["provider"] = self.name
+                    park["city"] = self.city
+                    dbp.insert_park_v2(self.city, park)
 
             books = car_df[car_df.status == "booked"]
-            books = books.dropna(axis=1, how="all")
-            books = books.drop("status", axis=1)
-            
-            for book in books.T.to_dict().values():
-                book["provider"] = self.name
-                book["city"] = self.city
-                dbp.insert_book_v2(self.city, book)
+            if len(books):
+                books = books.dropna(axis=1, how="all")
+                books = books.drop("status", axis=1)
+                
+                for book in books.T.to_dict().values():
+                    book["provider"] = self.name
+                    book["city"] = self.city
+                    dbp.insert_book_v2(self.city, book)
                 
         return cars_status, cars

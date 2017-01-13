@@ -137,6 +137,8 @@ class Car2Go(Provider):
                     book["provider"] = self.name
                     book["city"] = self.city
                     dbp.insert_book_v2(self.city, book)
+                    
+            
                 
         return cars_status, cars
 

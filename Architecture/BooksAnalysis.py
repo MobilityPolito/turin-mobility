@@ -44,22 +44,38 @@ def get_books_df (provider, city, start, end):
         books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)    
 
     return books_df
+
+def get_bill (books_df, provider):
+    
+    if provider == "car2go":
+        books_df["bill"] = books_df["durations"].apply(lambda x: x * 0.24)
+    elif provider == "enjoy":
+        books_df["bill"] = books_df["durations"].apply(lambda x: x * 0.25)
+        
+    return books_df
     
 provider = "car2go"    
 end = datetime.datetime(2016, 12, 10, 0, 0, 0)
 start = end - datetime.timedelta(days = 1)
 
 books_df = get_books_df(provider, "torino", start, end)
-books_df["durations"] = (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
+
+books_df["durations"] = \
+    (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
 books_df["distances"] = books_df.apply\
-    (lambda row: haversine(row["start_lon"], row["start_lat"], row["end_lon"], row["end_lat"]), axis=1)
+    (lambda row: haversine(row["start_lon"], row["start_lat"], 
+                           row["end_lon"], row["end_lat"]), axis=1)
+books_df = get_bill(books_df, provider)
+    
+books_df["geometry"] = books_df.apply\
+    (lambda row: LineString([(row["start_lon"], row["start_lat"]),
+                             (row["end_lon"], row["end_lat"])]), axis=1)
+books_df = gpd.GeoDataFrame(books_df, geometry="geometry")
+books_df.crs = {"init": "epsg:4326"}
+
 books_df = books_df[books_df.durations < 120]
 books_df = books_df[books_df.distances > 1]
 
-books_df["geometry"] = books_df.apply\
-    (lambda row: LineString([(row["start_lon"], row["start_lat"]),(row["end_lon"], row["end_lat"])]), axis=1)
-books_df = gpd.GeoDataFrame(books_df, geometry="geometry")
-books_df.crs = {"init": "epsg:4326"}
 zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
         .to_crs({"init": "epsg:4326"})
 

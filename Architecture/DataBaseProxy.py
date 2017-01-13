@@ -16,7 +16,6 @@ class DataBaseProxy (object):
         
         self.db_raw = client['CSMS']
         self.db_compressed = client['CSMS_']
-#        self.compress()
         self.db = self.db_compressed
 
     def compress (self):
@@ -192,5 +191,4 @@ class DataBaseProxy (object):
                          },
                      "provider":provider
                     }).sort([("_id", 1)])                        
-                                                                        
-dbp = DataBaseProxy()
+
