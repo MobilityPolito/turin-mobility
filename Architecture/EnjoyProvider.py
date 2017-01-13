@@ -9,9 +9,9 @@ dbp = DataBaseProxy()
             
 class Enjoy(Provider):
     
-    def __init__ (self, city):
+    def __init__ (self):
         self.name = "enjoy"
-        self.city = city
+        self.city = "torino"
     
     def select_data (self, city, by, *args):
         
@@ -53,12 +53,13 @@ class Enjoy(Provider):
         cars_status = pd.DataFrame(index = self.fleet.values)
         cars_lat = pd.DataFrame(index = self.fleet.values)
         cars_lon = pd.DataFrame(index = self.fleet.values)
+        cars_fuel = pd.DataFrame(index = self.fleet.values)
         
         def update_cars_status ():
             
             df = pd.DataFrame(doc["state"])
 
-            parked = df[["car_plate", "lat", "lon"]]
+            parked = df[["car_plate", "lat", "lon", "fuel_level"]]
             booked = self.fleet.difference(df["car_plate"])
 
             cars_status.loc[parked["car_plate"].values, doc["timestamp"]] = \
@@ -72,8 +73,8 @@ class Enjoy(Provider):
             cars_lon.loc[parked["car_plate"].values, doc["timestamp"]] = \
                 pd.Series(data=df["lon"].values,
                           index=parked["car_plate"].values)            
-            cars_lon.loc[parked["car_plate"].values, doc["timestamp"]] = \
-                pd.Series(data=df["fuel"].values,
+            cars_fuel.loc[parked["car_plate"].values, doc["timestamp"]] = \
+                pd.Series(data=df["fuel_level"].values,
                           index=parked["car_plate"].values)            
         
         for doc in self.cursor:
@@ -82,7 +83,7 @@ class Enjoy(Provider):
         cars_status = cars_status.T
         cars_lat = cars_lat.T
         cars_lon = cars_lon.T
-        cars_fuel = pd.DataFrame(index = self.fleet.values)
+        cars_fuel = cars_fuel.T
 
         cars = {}
 
@@ -139,23 +140,3 @@ class Enjoy(Provider):
                 dbp.insert_book_v2(self.city, book)
                 
         return cars_status, cars
-
-def test():
-    
-    enjoy = Enjoy("torino")
-    
-    end = datetime.datetime(2016, 12, 10, 0, 0, 0)
-    start = end - datetime.timedelta(days = 1)
-       
-    enjoy.select_data("torino","timestamp", start, end)    
-    print enjoy.get_fields()
-    print enjoy.get_fleet()
-    
-#    for car in list(enjoy.fleet):
-#        enjoy.get_parks(car)
-
-    t = enjoy.get_parks_v2()
-        
-    return enjoy, t
-    
-enjoy, t = test()

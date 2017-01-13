@@ -66,10 +66,10 @@ class Car2Go(Provider):
                 "booked"
 
             cars_lat.loc[parked["name"].values, doc["timestamp"]] = \
-                pd.Series(data=[v[0] for v in parked["coordinates"].values],
+                pd.Series(data=[v[1] for v in parked["coordinates"].values],
                           index=parked["name"].values)
             cars_lon.loc[parked["name"].values, doc["timestamp"]] = \
-                pd.Series(data=[v[1] for v in parked["coordinates"].values],
+                pd.Series(data=[v[0] for v in parked["coordinates"].values],
                           index=parked["name"].values)
             cars_fuel.loc[parked["name"].values, doc["timestamp"]] = \
                 pd.Series(data=df["fuel"].values,
@@ -139,24 +139,5 @@ class Car2Go(Provider):
                     dbp.insert_book_v2(self.city, book)
                 
         return cars_status, cars
-            
-def test():
 
-    car2go = Car2Go()
-
-    end = datetime.datetime(2016, 12, 10, 0, 0, 0)
-    start = end - datetime.timedelta(days = 1)
-    
-    car2go.select_data("torino","timestamp", start, end)    
-    print car2go.get_fields()
-    print car2go.get_fleet()
-    
-#    for car in list(car2go.fleet):
-#        car2go.get_parks(car)
-
-    t = car2go.get_parks_and_books_v2()
-
-    return car2go, t
-
-car2go, t = test()
 
