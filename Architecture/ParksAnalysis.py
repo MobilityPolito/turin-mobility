@@ -1,9 +1,9 @@
-from math import radians, cos, sin, asin, sqrt
-
 import datetime
 
 import numpy as np
 import pandas as pd
+
+from scipy import ndimage
 
 import geopandas as gpd
 from shapely.geometry import Point
@@ -17,15 +17,31 @@ from pandas.tools.plotting import scatter_matrix
 
 from DataBaseProxy import DataBaseProxy
 dbp = DataBaseProxy()
+
+# Parks durations
+
+def get_parks_df (provider, city, start, end):
+    
+    parks_cursor = dbp.query_park_by_time(provider, city, start, end)
+    
+    parks_df = pd.DataFrame(columns = pd.Series(parks_cursor.next()).index)
+    for doc in parks_cursor:
+        s = pd.Series(doc)
+        parks_df = pd.concat([parks_df, pd.DataFrame(s).T], ignore_index=True)
+
+    return parks_df
     
 provider = "car2go"
 end = datetime.datetime(2016, 12, 10, 0, 0, 0)
 start = end - datetime.timedelta(days = 1)
 
-parks_df = dbp.get_parks_df(provider, "torino", start, end)
+import seaborn as sns
+
+parks_df = get_parks_df(provider, "torino", start, end)
 parks_df["durations"] = (parks_df["end"] - parks_df["start"])/np.timedelta64(1, 'm')
+
 parks_df["geometry"] = parks_df.apply\
-    (lambda row: Point(row["lat"], row["lon"]), axis=1)
+    (lambda row: Point(row["lon"], row["lat"]), axis=1)
 parks_df = gpd.GeoDataFrame(parks_df, geometry="geometry")
 parks_df.crs = {"init": "epsg:4326"}
 parks_points = parks_df["geometry"]
@@ -36,9 +52,39 @@ zones["nparks"] = 0.0
 
 for point in parks_points.values:
     intersect = zones.contains(point)
+#    print intersect[intersect == True]
     z = intersect[intersect == True].index.values[0]
     zones.ix[z, "nparks"] += 1
 
+#sns.heatmap(zones)
+#plt.show()
+
+def heatmap(d, bins=(100,100), smoothing=1.3, cmap='jet'):
+
+    def getx(pt):
+        return pt.coords[0][0]
+    def gety(pt):
+        return pt.coords[0][1]
+
+    x = list(d.geometry.apply(getx))
+    y = list(d.geometry.apply(gety))
+    heatmap, xedges, yedges = np.histogram2d(y, x, bins=bins)
+    extent = [yedges[0], yedges[-1], xedges[-1], xedges[0]]
+
+    logheatmap = np.log(heatmap)
+    logheatmap[np.isneginf(logheatmap)] = 0
+    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
+    
+    plt.imshow(heatmap, cmap=cmap, extent=extent)
+    plt.colorbar()
+    plt.gca().invert_yaxis()
+    return ax
+
+fig, ax = plt.subplots(1, 1, figsize=(10,10))
+ax = zones.plot(color="white", ax=ax)
+heatmap(parks_df, bins=20, smoothing=1.2)
+plt.show()
+    
 #ztl = gpd.read_file("./DataSource/geoportale/dati_torino/ztl_geo.dbf")\
 #            .to_crs({"init": "epsg:4326"})
 #ztl["nparks"] = 0.0
@@ -47,19 +93,17 @@ for point in parks_points.values:
 #    intersect = ztl.contains(point)
 #    ztl.ix[intersect[intersect == True].index.values[0], "nparks"] += 1
             
-fig, ax = plt.subplots(1, 1, figsize=(10,10))
-
-ax = zones.plot(color="white", ax=ax)
+#fig, ax = plt.subplots(1, 1, figsize=(10,10))
+#
+#ax = zones.plot(color="white", ax=ax)
 #ax.set_xlim([7.6, 7.8])
 #ax.set_ylim([45.0,45.15])
-ax = zones.plot(ax=ax)
 
 #ax = ztl.plot(ax=ax)
 #ax.set_xlim([7.66, 7.72])
 #ax.set_ylim([45.05,45.10])
-#ax = ztl.plot(ax=ax)
 
-plt.show()
+#plt.show()
 
 #fig, ax = plt.subplots(1,1,figsize=(10,10))
 #ax = parks_df["durations"].hist(figsize=(10,10))
@@ -78,15 +122,6 @@ plt.show()
 #ax.set_ylim([45.0,45.15])
 #ax = parks_df.plot(ax=ax)
 #fig.savefig(provider + "_parks_distribution.png")
-
-#import seaborn as sns
-#
-#Index= ['aaa', 'bbb', 'ccc', 'ddd', 'eee']
-#Cols = ['A', 'B', 'C', 'D']
-#df = DataFrame(abs(np.random.randn(5, 4)), index=Index, columns=Cols)
-#
-#sns.heatmap(df)
-
 
 #from pandas.tools.plotting import andrews_curves
 #fig = plt.figure(figsize=(25,25))
