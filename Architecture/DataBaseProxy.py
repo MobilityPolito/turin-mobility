@@ -90,22 +90,6 @@ class DataBaseProxy (object):
             collection.insert_one(record)
         except:
             print "Invalid data coding!"
-
-    def insert_fleet (self, provider, city, fleet):
-
-        record = {
-            'provider' : provider,
-            'city' : city,
-            'fleet' : fleet
-        }
-
-        collection = self.db['fleet']
-
-        try:
-            collection.insert_one(record)
-        except:
-            print "Invalid insertion in fleet"
-            print record
             
     def insert_park (self, 
                      provider, 
@@ -174,17 +158,21 @@ class DataBaseProxy (object):
             collection.insert_one(park)
         except:
             print "Invalid data coding!"
+   
+    def insert_direction_transit(self,  
+                                 city, 
+                                 feed):
 
-    def query_raw (self, city, provider):
-        return self.db[city].find({
-            'provider':provider
-            })
+        dir_car = feed
+        
+#        print park
+        
+        collection = self.db[city + "_direction_car"]            
+        try:
+            collection.insert_one(dir_car)
+        except:
+            print "Invalid data coding!"
 
-    def query_fleet(self, city, provider):
-        return self.db['fleet'].find({
-            'provider': provider,
-            'city': city
-            })
 
     def query_raw_by_time (self, provider, city, start, end):
         
@@ -217,4 +205,13 @@ class DataBaseProxy (object):
                              '$lt': end
                          },
                      "provider":provider
-                    }).sort([("_id", 1)])                        
+                    }).sort([("_id", 1)])
+                        
+    def get_books (self, provider, city, start, end):
+        books_cursor = self.query_book_by_time(provider, city, start, end)    
+        books_df = pd.DataFrame(columns = pd.Series(books_cursor.next()).index)
+        for doc in books_cursor:
+            s = pd.Series(doc)
+            books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)    
+    
+        return books_df
