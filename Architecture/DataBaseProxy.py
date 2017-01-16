@@ -6,10 +6,6 @@ import pandas as pd
 
 client = MongoClient('mongodb://localhost:27017/')
 
-# db raw
-# db formatted
-# db compressed
-
 class DataBaseProxy (object):
     
     def __init__ (self):
@@ -90,30 +86,6 @@ class DataBaseProxy (object):
             collection.insert_one(record)
         except:
             print "Invalid data coding!"
-            
-    def insert_park (self, 
-                     provider, 
-                     city, 
-                     car, 
-                     lat, lon, 
-                     start, end):
-
-        park = {
-                    "provider": provider,
-                    "car": car, 
-                    "lat": lat,
-                    "lon": lon,
-                    "start": start,
-                    "end": end
-                }
-        
-#        print park
-        
-        collection = self.db[city + "_parks"]            
-        try:
-            collection.insert_one(park)
-        except:
-            print "Invalid data coding!"
 
     def insert_park_v2 (self, city, park):
         
@@ -130,49 +102,17 @@ class DataBaseProxy (object):
             collection.insert_one(book)
         except:
             print "Invalid data coding!"
-
-                
-    def insert_book (self, 
-                     provider, 
-                     city, 
-                     car, 
-                     start_lat, start_lon, 
-                     end_lat, end_lon, 
-                     start, end):
-
-        park = {
-                    "provider": provider,
-                    "car": car, 
-                    "start_lat": start_lat,
-                    "start_lon": start_lon,
-                    "end_lat": end_lat,
-                    "end_lon": end_lon,
-                    "start": start,
-                    "end": end
-                }
-        
-#        print park
-        
-        collection = self.db[city + "_books_v2"]            
-        try:
-            collection.insert_one(park)
-        except:
-            print "Invalid data coding!"
    
-    def insert_direction_transit(self,  
+    def insert_directions_transit(self, 
+                                 provider,
                                  city, 
                                  feed):
-
-        dir_car = feed
-        
-#        print park
-        
-        collection = self.db[city + "_direction_car"]            
+        print feed
+        collection = self.db[city + "_directions_pt"]            
         try:
-            collection.insert_one(dir_car)
+            collection.insert_one(feed)
         except:
             print "Invalid data coding!"
-
 
     def query_raw_by_time (self, provider, city, start, end):
         
@@ -206,12 +146,21 @@ class DataBaseProxy (object):
                          },
                      "provider":provider
                     }).sort([("_id", 1)])
+
+    def get_parks (self, provider, city, start, end):
+        
+        parks_cursor = self.query_park_by_time(provider, city, start, end)
+        parks_df = pd.DataFrame(columns = pd.Series(parks_cursor.next()).index)
+        for doc in parks_cursor:
+            s = pd.Series(doc)
+            parks_df = pd.concat([parks_df, pd.DataFrame(s).T], ignore_index=True)    
+        return parks_df
                         
     def get_books (self, provider, city, start, end):
+        
         books_cursor = self.query_book_by_time(provider, city, start, end)    
         books_df = pd.DataFrame(columns = pd.Series(books_cursor.next()).index)
         for doc in books_cursor:
             s = pd.Series(doc)
             books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)    
-    
         return books_df

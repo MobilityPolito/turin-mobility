@@ -17,25 +17,12 @@ from pandas.tools.plotting import scatter_matrix
 
 from DataBaseProxy import DataBaseProxy
 dbp = DataBaseProxy()
-
-# Parks durations
-
-def get_parks_df (provider, city, start, end):
-    
-    parks_cursor = dbp.query_park_by_time(provider, city, start, end)
-    
-    parks_df = pd.DataFrame(columns = pd.Series(parks_cursor.next()).index)
-    for doc in parks_cursor:
-        s = pd.Series(doc)
-        parks_df = pd.concat([parks_df, pd.DataFrame(s).T], ignore_index=True)
-
-    return parks_df
     
 provider = "car2go"
 end = datetime.datetime(2016, 12, 10, 0, 0, 0)
 start = end - datetime.timedelta(days = 1)
 
-parks_df = get_parks_df(provider, "torino", start, end)
+parks_df = dbp.get_parks_df(provider, "torino", start, end)
 parks_df["durations"] = (parks_df["end"] - parks_df["start"])/np.timedelta64(1, 'm')
 parks_df["geometry"] = parks_df.apply\
     (lambda row: Point(row["lat"], row["lon"]), axis=1)

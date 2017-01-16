@@ -152,6 +152,7 @@ class Car2Go(Provider):
                 for book in books.T.to_dict().values():
                     book["provider"] = self.name
                     book["city"] = self.city
+                    book["car_id"] = car
                     dbp.insert_book_v2(self.city, book)            
                 
         return cars_status, cars
