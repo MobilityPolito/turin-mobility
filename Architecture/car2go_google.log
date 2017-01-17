@@ -1,0 +1,100 @@
+DEBUG:root:[2017-01-16 18:24:00.762726] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:24:00.763142] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:25:13.819083] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:25:13.819330] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:31:51.943897] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:31:51.944126] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:34:57.841936] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:34:57.842127] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:36:33.803285] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:36:33.803468] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:36:48.841854] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:36:48.842374] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:44:00.087475] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:44:00.087665] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:44:15.217667] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:44:15.217920] -> car2go torino: session error
+DEBUG:root:[2017-01-16 18:45:01.604333] -> car2go torino: session success
+DEBUG:root:[2017-01-16 18:45:01.604610] -> car2go torino: session success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484900460&destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2356
+DEBUG:root:[2017-01-16 18:48:25.739096] -> car2go torino: session success
+DEBUG:root:[2017-01-16 18:48:25.739533] -> car2go torino: session success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484900460&destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2356
+DEBUG:root:[2017-01-16 18:48:46.120085] -> car2go torino: session success
+DEBUG:root:[2017-01-16 18:48:46.120400] -> car2go torino: session success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484900460&destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2356
+DEBUG:root:[2017-01-16 18:49:08.667745] -> car2go torino: session success
+DEBUG:root:[2017-01-16 18:49:08.668000] -> car2go torino: session success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484900460&destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2356
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484902940&destination=45.101%2C7.66981&mode=transit&origin=45.06166%2C7.67332&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2324
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484938927&destination=45.0601%2C7.67054&mode=transit&origin=45.101%2C7.66981&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2326
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484940968&destination=45.06621%2C7.69782&mode=transit&origin=45.0601%2C7.67054&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2221
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484951084&destination=45.06621%2C7.69782&mode=transit&origin=45.06621%2C7.69782&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 766
+DEBUG:root:[2017-01-16 18:49:54.360367] -> car2go torino: session success
+DEBUG:root:[2017-01-16 18:49:54.360826] -> car2go torino: session success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484900460&destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2356
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484902940&destination=45.101%2C7.66981&mode=transit&origin=45.06166%2C7.67332&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2324
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484938927&destination=45.0601%2C7.67054&mode=transit&origin=45.101%2C7.66981&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2326
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484940968&destination=45.06621%2C7.69782&mode=transit&origin=45.0601%2C7.67054&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2221
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484951084&destination=45.06621%2C7.69782&mode=transit&origin=45.06621%2C7.69782&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 766
+DEBUG:root:[2017-01-16 18:50:55.000848] -> car2go torino: session success
+DEBUG:root:[2017-01-16 18:50:55.001152] -> car2go torino: session success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484900460&destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2356
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484902940&destination=45.101%2C7.66981&mode=transit&origin=45.06166%2C7.67332&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2324
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484938927&destination=45.0601%2C7.67054&mode=transit&origin=45.101%2C7.66981&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2326
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484940968&destination=45.06621%2C7.69782&mode=transit&origin=45.0601%2C7.67054&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2221
+DEBUG:root:[2017-01-16 18:53:05.094063] -> car2go torino: session success
+DEBUG:root:[2017-01-16 18:53:05.094521] -> car2go torino: session success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484900460&destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2356
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484902940&destination=45.101%2C7.66981&mode=transit&origin=45.06166%2C7.67332&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2324
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484938927&destination=45.0601%2C7.67054&mode=transit&origin=45.101%2C7.66981&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2326
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484940968&destination=45.06621%2C7.69782&mode=transit&origin=45.0601%2C7.67054&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2221
+DEBUG:root:[2017-01-17 09:04:29.989240] -> car2go torino: session success
+DEBUG:root:[2017-01-17 09:04:29.991644] -> car2go torino: session success
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484900460&destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2356
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484902940&destination=45.101%2C7.66981&mode=transit&origin=45.06166%2C7.67332&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2324
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484938927&destination=45.0601%2C7.67054&mode=transit&origin=45.101%2C7.66981&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2326
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484940968&destination=45.06621%2C7.69782&mode=transit&origin=45.0601%2C7.67054&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 2221
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484951084&destination=45.06621%2C7.69782&mode=transit&origin=45.06621%2C7.69782&key=AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ HTTP/1.1" 200 766
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484900460&destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M HTTP/1.1" 200 2356
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484938927&destination=45.101%2C7.66981&mode=transit&origin=45.06166%2C7.67332&key=AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M HTTP/1.1" 200 2324
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M HTTP/1.1" 200 2357
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?destination=45.06166%2C7.67332&origin=45.04685%2C7.68374&key=AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M HTTP/1.1" 200 1958
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M HTTP/1.1" 200 2357
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?destination=45.06166%2C7.67332&origin=45.04685%2C7.68374&key=AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M HTTP/1.1" 200 1958
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M HTTP/1.1" 200 2357
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?destination=45.06166%2C7.67332&origin=45.04685%2C7.68374&key=AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M HTTP/1.1" 200 1958

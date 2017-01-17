@@ -104,6 +104,7 @@ class GoogleDS(RTDS):
             self.to_DB()
             time.sleep(5)
 
+
         return feed        
     
     def check_feed(self):
@@ -121,7 +122,7 @@ class GoogleDS(RTDS):
         self.start_session()
         self.get_feed()
 
-
+print "Pronello"
 end = datetime.datetime(2016, 12, 10, 0, 0, 0)
 start = end - datetime.timedelta(days = 1)
 googlecar2go = GoogleDS('car2go', 'torino', 'timestamp', start, end)

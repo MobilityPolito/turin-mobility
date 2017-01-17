@@ -164,3 +164,6 @@ class DataBaseProxy (object):
             s = pd.Series(doc)
             books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)    
         return books_df
+
+        
+    

@@ -137,6 +137,7 @@ class Car2Go(Provider):
                 for park in parks.T.to_dict().values():
                     park["provider"] = self.name
                     park["city"] = self.city
+                    park["car_id"] = car
                     dbp.insert_park_v2(self.city, park)
 
             books = car_df[car_df.status == "booked"]

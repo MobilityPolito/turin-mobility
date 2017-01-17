@@ -16,11 +16,12 @@ Created on Tue Dec 20 17:26:00 2016
 from DataBaseProxy import DataBaseProxy
 import googlemaps
 import datetime
-
+import googlemaps
 import pandas as pd
+import time
 
 dbp = DataBaseProxy()
-gmaps = googlemaps.Client(key='AIzaSyBnUsB3u6Blg23D5uqIQPnM_1Pawkp5VLY')
+gmaps = googlemaps.Client(key='AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M')
 
 # Books durations
 
@@ -51,9 +52,21 @@ start = end - datetime.timedelta(days = 1)
 
 books_df = get_books("car2go","torino", start, end) 
    
-giorno.next_weekday(datetime.datetime.now(), books_df['start'][0])
+giorno1 = giorno.next_weekday(datetime.datetime.now(), books_df['start'][0])
 
-directions_result = gmaps.directions([books_df['start_lat'][0], books_df['start_lon'][0]], [books_df['end_lat'][0], books_df['end_lon'][0]], mode="transit", departure_time = giorno.nextday)
+directions_result = gmaps.directions([books_df['start_lat'][0], books_df['start_lon'][0]], [books_df['end_lat'][0], books_df['end_lon'][0]], mode="transit", departure_time = giorno1)
+time.sleep(10)
+directions_result_ = gmaps.directions([books_df['start_lat'][0], books_df['start_lon'][0]], [books_df['end_lat'][0], books_df['end_lon'][0]], departure_time = giorno1)
+
+#
+#gmaps2 = googlemaps.Client(key='AIzaSyAcPVep5aXJLbuBDV7Qn_JaWSpD4o6s30w')
+#
+#
+#giorno2 = giorno.next_weekday(datetime.datetime.now(), books_df['start'][2])
+#
+#directions_result_2 = gmaps.directions([books_df['start_lat'][1], books_df['start_lon'][1]], [books_df['end_lat'][1], books_df['end_lon'][1]], mode="transit", departure_time = giorno.nextday)
+
+
 #directions_result = gmaps.directions("via giovanni fattori 4 torino", "corso peschiera 200 torino", mode="transit")
 #
 #
