@@ -70,7 +70,7 @@ def get_books_days (city, provider, end, depth):
 
 def get_books_day (city, provider, year, month, day):
         
-    end = datetime.datetime(year, month, day + 1, 0, 0, 0)
+    end = datetime.datetime(year, month, day, 23, 59, 59)
     start = end - datetime.timedelta(days = 1)
     books_df = dbp.get_books(provider, city, start, end)
     

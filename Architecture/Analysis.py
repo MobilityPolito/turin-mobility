@@ -35,6 +35,10 @@ def day_analysis (city, provider, year, month, day, fleet_size):
         inf_datetime = datetime.datetime(year, month, day, hour)
         day_stats.loc[sup_datetime, "n_parks"] = \
             len(parks_df[inf_datetime:sup_datetime])
+
+        day_stats.loc[sup_datetime, "n_books"] = \
+            float(len(books_df[inf_datetime:sup_datetime]))
+
         day_stats.loc[sup_datetime, "n_books_norm"] = \
             float(len(books_df[inf_datetime:sup_datetime])) / fleet_size
         day_stats.loc[sup_datetime, "avg_books_duration"] = \
@@ -48,8 +52,9 @@ def day_analysis (city, provider, year, month, day, fleet_size):
 
 def getODmatrix (city, provider, year, month, day):
     
-    end = datetime.datetime(year, month, day + 1, 0, 0, 0)
-    depth = 15 
+    end = datetime.datetime(year, month, day, 23, 59, 59)
+    #depth = 15
+    depth = 1 
 
     books_df = get_books_days(city, provider, end, depth)\
         .set_index("start").sort_index()
@@ -64,7 +69,7 @@ def getODmatrix (city, provider, year, month, day):
         (lambda row: Point(row.loc["end_lon"], row.loc["end_lat"]), 
          axis=1)    
 
-    zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
+    zones = gpd.read_file("../../../SHAPE/Zonizzazione.dbf")\
             .to_crs({"init": "epsg:4326"})
 
     OD = pd.DataFrame(0.0, index = zones.index, 
@@ -99,7 +104,7 @@ def getODmatrix (city, provider, year, month, day):
 #plt.axis([x.min(), 100, y.min(), 100])
 #plt.colorbar()
 
-demography_zones = gpd.read_file("../../dati_torino/zonestat_popolazione_residente_2015_geo.dbf")\
-        .to_crs({"init": "epsg:4326"})
+# demography_zones = gpd.read_file("../../dati_torino/zonestat_popolazione_residente_2015_geo.dbf")\
+#         .to_crs({"init": "epsg:4326"})
 
-"zonestat_popolazione_residente_2015_geo.dbf"
+# "zonestat_popolazione_residente_2015_geo.dbf"

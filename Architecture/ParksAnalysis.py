@@ -20,7 +20,7 @@ dbp = DataBaseProxy()
     
 def get_parks_day (city, provider, year, month, day):
     
-    end = datetime.datetime(year, month, day + 1, 0, 0, 0)
+    end = datetime.datetime(year, month, day, 23, 59, 59)
     start = end - datetime.timedelta(days = 1)
     
     parks_df = dbp.get_parks(provider, city, start, end)
