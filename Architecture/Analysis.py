@@ -49,7 +49,7 @@ def day_analysis (city, provider, year, month, day, fleet_size):
 def getODmatrix (city, provider, year, month, day):
     
     end = datetime.datetime(year, month, day + 1, 0, 0, 0)
-    depth = 7    
+    depth = 15 
 
     books_df = get_books_days(city, provider, end, depth)\
         .set_index("start").sort_index()
@@ -67,8 +67,8 @@ def getODmatrix (city, provider, year, month, day):
     zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
             .to_crs({"init": "epsg:4326"})
 
-    OD = pd.DataFrame(0.0, index = zones.index.union(["sum"]), 
-                      columns = zones.index.union(["sum"]))
+    OD = pd.DataFrame(0.0, index = zones.index, 
+                      columns = zones.index)
 
     for i in range(len(books_df)):
         o = origins.ix[i, "geometry"]
@@ -86,3 +86,20 @@ def getODmatrix (city, provider, year, month, day):
     return zones, origins, destinations, OD
     
 #zones, origins, destinations, od = getODmatrix("torino", "car2go", 2017, 1, 8)
+#
+#od_norm = (od - od.mean())/od.std()
+#x = od_norm.index.values
+#y = od_norm.index.values
+#fig = plt.figure(figsize=(8,8))
+##plt.pcolormesh(x, y, od_norm.values, cmap='RdBu', vmin=-1, vmax=2)
+##plt.pcolor(od_norm)
+#plt.imshow(od, interpolation='nearest', cmap='YlOrRd')
+#plt.title('pcolor')
+## set the limits of the plot to the limits of the data
+#plt.axis([x.min(), 100, y.min(), 100])
+#plt.colorbar()
+
+demography_zones = gpd.read_file("../../dati_torino/zonestat_popolazione_residente_2015_geo.dbf")\
+        .to_crs({"init": "epsg:4326"})
+
+"zonestat_popolazione_residente_2015_geo.dbf"
