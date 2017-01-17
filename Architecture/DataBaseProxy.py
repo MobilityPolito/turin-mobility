@@ -165,5 +165,8 @@ class DataBaseProxy (object):
             books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)    
         return books_df
 
-        
+    def update_bookings (self, city, feed, object_id):
+        return self.db[city + "_books_v2"].update_one({"_id":  object_id},
+                                                      {"$set": feed }, 
+                                                      upsert = True)
     

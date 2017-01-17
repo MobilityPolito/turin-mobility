@@ -9,14 +9,14 @@ Created on Mon Jan 16 09:15:02 2017
 import time
 import datetime
 import logging
+import urllib2
 
-import numpy as np
 import pandas as pd
 
 import googlemaps
 
 from DataSource import RTDS
-
+from chiavi_df import series_keys
 from DataBaseProxy import DataBaseProxy
 dbp = DataBaseProxy()
 
@@ -30,13 +30,30 @@ class GoogleDS(RTDS):
         self.provider = provider
         self.city = city
         self.log_filename = self.provider + "_google.log"
-        logging.basicConfig(filename=self.log_filename, level=logging.DEBUG)        
+        logging.basicConfig(filename=self.log_filename, level=logging.DEBUG)   
+#        self.keys = series_keys
         self.keys = pd.Series([
-                                    'AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ', 
-                                    'AIzaSyBnUsB3u6Blg23D5uqIQPnM_1Pawkp5VLY', 
-                                    'AIzaSyBaaQQyMnT7MUI421WdO67g66igzXL2O4A',
-                                    'AIzaSyAUrnCmaEs7e7izfCiKYm-k7Ap0EwZzYes'
-                                ])
+                        'AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ', 
+                        'AIzaSyBnUsB3u6Blg23D5uqIQPnM_1Pawkp5VLY', 
+                        'AIzaSyBaaQQyMnT7MUI421WdO67g66igzXL2O4A',
+                        'AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M',
+                        'AIzaSyCjy-sVWBCyN9FOjBeNg2_OeULs-uXSmMI',
+                        'AIzaSyAUrnCmaEs7e7izfCiKYm-k7Ap0EwZzYes',
+                        'AIzaSyCeT4Z_Cfabvpnh2FBbf3TCrhBNtwlfVwU',
+                        'AIzaSyAcPVep5aXJLbuBDV7Qn_JaWSpD4o6s30w',
+                        'AIzaSyBHz8SA5BKIJDOu9mtLJb5JilGvcLnGIiM',
+                        'AIzaSyBqMJcxNQUmciUN8qsI-4JVO9Hh_EJqNfE',
+                        'AIzaSyB9XupnKFaH-zuVg_lBlz7NO8q6QpWFKZk',
+                        'AIzaSyAVpeQaUjVPZznjp1b1sbtUl2iBzHSuGek',
+                        'AIzaSyCoFpO5q5MatCal_1lLaxVCr6LcXePo91M',
+                        'AIzaSyCGfLn4VqFrbV1PFc6duXi7ojPktJb-ta4',
+                        'AIzaSyA6zgFdORCnKRnpp74Ew925aCwbSmzsM9U',
+                        'AIzaSyBSjjou5aXnl-9L3SIaJR05Vc3Zb8j0WpY',
+                        'AIzaSyAKaQDrgawidGlRNkjqTIMngFZs7pOV8Zc',
+                        'AIzaSyCnksllWfpV0D3iDBomyKRFUkqEvEoNtKg',
+                        'AIzaSyB0ggpBGN6wRpsA1cdfAgO2iVtSt6Nj41I'
+                    ])
+
         self.current_key = 0
         self.start_session()
         
@@ -67,17 +84,55 @@ class GoogleDS(RTDS):
             return nextday.replace(hour = rental_time.hour, 
                                    minute = rental_time.minute, 
                                    second = rental_time.second)
-
+            
+        def change_key(self):
+            self.current_key = (self.current_key + 1)  % len(self.keys)
+            self.gmaps = googlemaps.Client(key=self.keys.iloc[self.current_key])
+            
         books_df = dbp.get_books(self.provider, self.city, self.start, self.end)
         
         for i in range(len(books_df)):
+            print i 
 
             row = books_df.iloc[i]
             google_day = next_weekday(datetime.datetime.now(), row['start'])
-            directions_result = self.gmaps.directions([row['start_lat'], row['start_lon']], 
-                                                      [row['end_lat'], row['end_lon']], 
-                                                      mode="transit", 
-                                                      departure_time = google_day)
+            
+            try:
+                directions_result = self.gmaps.directions([row['start_lat'], row['start_lon']], 
+                                                          [row['end_lat'], row['end_lon']], 
+                                                          mode="transit", 
+                                                          departure_time = google_day)
+                time.sleep(5)
+                
+            except urllib2.HTTPError, err:
+                if err.resp.status in [403]: # key limits exceeded
+                    change_key()
+                    directions_result = self.gmaps.directions([row['start_lat'], row['start_lon']], 
+                                                              [row['end_lat'], row['end_lon']], 
+                                                              mode="transit", 
+                                                              departure_time = google_day)
+                    time.sleep(5)
+
+                else: 
+                    print "Error in retrieving transit information"
+                    
+            try:
+                directions_result_driving = self.gmaps.directions([row['start_lat'], row['start_lon']], 
+                                                              [row['end_lat'], row['end_lon']], 
+                                                              departure_time = google_day)
+                time.sleep(5)
+
+            except urllib2.HTTPError, err:
+                if err.resp.status in [403]: # key limits exceeded
+                    change_key()
+                    directions_result = self.gmaps.directions([row['start_lat'], row['start_lon']], 
+                                                              [row['end_lat'], row['end_lon']], 
+                                                              departure_time = google_day)
+                    time.sleep(5)
+
+                else: 
+                    print "Error in retrieving driving information"
+                    
             departure_time = datetime.datetime.utcfromtimestamp\
                 (directions_result[0]["legs"][0]["departure_time"]["value"])\
                 + datetime.timedelta(hours = 1)
@@ -86,23 +141,21 @@ class GoogleDS(RTDS):
                 + datetime.timedelta(hours = 1)
                 
             feed = {
-                        'provider': self.provider,
-                        'car' : row['plate'],
-                        'start_lat':row['start_lat'],
-                        'start_lon' :row['start_lon'],
-                        'end_lat' :row['end_lat'], 
-                        'end_lon': row['end_lon'],
-                        'departure_time': departure_time,
-                        'arrival_time': arrival_time,
-                        'distance': directions_result[0]["legs"][0]["distance"]["value"] / 1000.0,
-                        'duration': directions_result[0]["legs"][0]["duration"]["value"] / 60.0,
-                        'fare': directions_result[0]["fare"]["value"]
+                        'departure_time_google': departure_time,
+                        'arrival_time_google_transit': arrival_time,
+                        'distance_google_transit': directions_result[0]["legs"][0]["distance"]["value"] / 1000.0,
+                        'duration_google_transit': directions_result[0]["legs"][0]["duration"]["value"] / 60.0,
+                        'fare_google_transit': directions_result[0]["fare"]["value"],
+                        'distance_driving' : directions_result_driving[0]["legs"][0]["distance"]["value"] / 1000.0,
+                        'duration_driving' : directions_result_driving[0]["legs"][0]["duration"]["value"] / 60.0
                     }
                     
             self.current_directions_result = directions_result
             self.current_feed = feed
-            self.to_DB()
-            time.sleep(5)
+            try:        
+                self.to_DB(row['_id'])
+            except:
+                print "Error in updating in DB"
 
 
         return feed        
@@ -113,18 +166,17 @@ class GoogleDS(RTDS):
         """
         pass
 
-    def to_DB(self):
+    def to_DB(self, object_id):
         
-        dbp.insert_directions_transit(self.provider, self.city, self.current_feed)
+        dbp.update_bookings(self.city, self.current_feed, object_id)
          
     def run(self):
 
         self.start_session()
         self.get_feed()
 
-print "Pronello"
 end = datetime.datetime(2016, 12, 10, 0, 0, 0)
-start = end - datetime.timedelta(days = 1)
+start = end - datetime.timedelta(hours = 1)
 googlecar2go = GoogleDS('car2go', 'torino', 'timestamp', start, end)
 googlecar2go.start_session()
 feed = googlecar2go.get_feed()
