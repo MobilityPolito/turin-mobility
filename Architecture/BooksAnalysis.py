@@ -32,59 +32,61 @@ from pandas.tools.plotting import scatter_matrix
 from DataBaseProxy import DataBaseProxy
 dbp = DataBaseProxy()
     
-# Books durations
+def process_books_df (provider, books_df):
 
-def get_books_df (provider, city, start, end):
-
-    books_cursor = dbp.query_book_by_time(provider, city, start, end)
-    
-    books_df = pd.DataFrame(columns = pd.Series(books_cursor.next()).index)
-    for doc in books_cursor:
-        s = pd.Series(doc)
-        books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)    
-
-    return books_df
-
-def get_bill (books_df, provider):
-    
-    if provider == "car2go":
-        books_df["bill"] = books_df["durations"].apply(lambda x: x * 0.24)
-    elif provider == "enjoy":
-        books_df["bill"] = books_df["durations"].apply(lambda x: x * 0.25)
+    def get_bill (books_df, provider):
         
-    return books_df
+        if provider == "car2go":
+            books_df["bill"] = books_df["durations"].apply(lambda x: x * 0.24)
+        elif provider == "enjoy":
+            books_df["bill"] = books_df["durations"].apply(lambda x: x * 0.25)
+            
+        return books_df    
     
-provider = "car2go"    
-end = datetime.datetime(2016, 12, 10, 0, 0, 0)
-start = end - datetime.timedelta(days = 1)
-
-books_df = get_books_df(provider, "torino", start, end)
-
-books_df["durations"] = \
-    (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
-books_df["distances"] = books_df.apply\
-    (lambda row: haversine(row["start_lon"], row["start_lat"], 
-                           row["end_lon"], row["end_lat"]), axis=1)
-books_df = get_bill(books_df, provider)
+    books_df["durations"] = \
+        (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
+    books_df["distances"] = books_df.apply\
+        (lambda row: haversine(row["start_lon"], row["start_lat"], 
+                               row["end_lon"], row["end_lat"]), axis=1)
+    books_df = get_bill(books_df, provider)
+        
+    books_df["geometry"] = books_df.apply\
+        (lambda row: LineString([(row["start_lon"], row["start_lat"]),
+                                 (row["end_lon"], row["end_lat"])]), axis=1)
+    books_df = gpd.GeoDataFrame(books_df, geometry="geometry")
+    books_df.crs = {"init": "epsg:4326"}
     
-books_df["geometry"] = books_df.apply\
-    (lambda row: LineString([(row["start_lon"], row["start_lat"]),
-                             (row["end_lon"], row["end_lat"])]), axis=1)
-books_df = gpd.GeoDataFrame(books_df, geometry="geometry")
-books_df.crs = {"init": "epsg:4326"}
+    books_df = books_df[books_df.durations < 120]
+    books_df = books_df[books_df.distances > 1]
 
-books_df = books_df[books_df.durations < 120]
-books_df = books_df[books_df.distances > 1]
+    return books_df    
+    
+def get_books_days (city, provider, end, depth):
+    
+    start = end - datetime.timedelta(days = depth)
+    books_df = dbp.get_books(provider, city, start, end)
+    
+    return process_books_df(provider, books_df)
 
-zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
-        .to_crs({"init": "epsg:4326"})
+def get_books_day (city, provider, year, month, day):
+        
+    end = datetime.datetime(year, month, day + 1, 0, 0, 0)
+    start = end - datetime.timedelta(days = 1)
+    books_df = dbp.get_books(provider, city, start, end)
+    
+    return process_books_df(provider, books_df)
+    
+#books_df = get_books_day("torino", "car2go", 2016, 12, 6)
 
 #fig, ax = plt.subplots(1,1,figsize=(10,10))
 #ax = scatter_matrix(books_df[["start_lat","start_lon","end_lat","end_lon","durations", "distances"]].astype("float64"), 
 #               figsize=(10, 10), diagonal='kde')
 #plt.savefig(provider + "_books_scatter_matrix.png")
-#
+
+#zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
+#        .to_crs({"init": "epsg:4326"})
 #zones_geo = zones["geometry"]
+
 #fig, ax = plt.subplots(1,1,figsize=(10,10))
 #ax = zones_geo.plot(color="white", ax=ax)
 ##-car2go

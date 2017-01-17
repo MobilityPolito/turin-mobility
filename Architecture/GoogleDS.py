@@ -87,7 +87,7 @@ class GoogleDS(RTDS):
                 
             feed = {
                         'provider': self.provider,
-                        'car' : row['plate'],
+                        'car' : row['car_id'],
                         'start_lat':row['start_lat'],
                         'start_lon' :row['start_lon'],
                         'end_lat' :row['end_lat'], 
@@ -96,13 +96,13 @@ class GoogleDS(RTDS):
                         'arrival_time': arrival_time,
                         'distance': directions_result[0]["legs"][0]["distance"]["value"] / 1000.0,
                         'duration': directions_result[0]["legs"][0]["duration"]["value"] / 60.0,
-                        'fare': directions_result[0]["fare"]["value"]
+                        'fare': directions_result[0]["fare"]["value"],
+                        'steps': directions[0]["legs"][0]["steps"]
                     }
                     
             self.current_directions_result = directions_result
             self.current_feed = feed
             self.to_DB()
-            time.sleep(5)
 
         return feed        
     
@@ -121,11 +121,12 @@ class GoogleDS(RTDS):
         self.start_session()
         self.get_feed()
 
+        time.sleep(5)
 
 end = datetime.datetime(2016, 12, 10, 0, 0, 0)
 start = end - datetime.timedelta(days = 1)
 googlecar2go = GoogleDS('car2go', 'torino', 'timestamp', start, end)
 googlecar2go.start_session()
-feed = googlecar2go.get_feed()
+googlecar2go.get_feed()
 directions = googlecar2go.current_directions_result
 

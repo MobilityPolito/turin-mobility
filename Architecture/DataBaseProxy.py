@@ -19,25 +19,17 @@ class DataBaseProxy (object):
         input_db = self.db_raw
         output_db = self.db_compressed
         
-        for provider in ["enjoy","car2go"]:
-    
-            print provider
-                
+        for provider in ["enjoy","car2go"]:    
+            print provider                
             if provider is "enjoy":
                 for city in ["torino"]:
-
                     input_collection = input_db[city]
                     output_collection = output_db[city]
-
                     cursor = input_collection.find({"provider": provider})
-
                     last = cursor.next()
-                    output_collection.insert_one(last)                    
-                    
-                    for document in cursor: 
-                        
+                    output_collection.insert_one(last)                                        
+                    for document in cursor:                         
                         current = document
-
                         try:
                             last_df = pd.DataFrame(last["state"])
                             current_df = pd.DataFrame(current["state"])
@@ -45,24 +37,16 @@ class DataBaseProxy (object):
                                 output_collection.insert_one(document)
                         except:
                             print type(current["state"])
-
-                        last = document
-                                
+                        last = document                                
             elif provider is "car2go":
-                for city in ["torino"]:
-                    
+                for city in ["torino"]:                    
                     input_collection = input_db[city]
                     output_collection = output_db[city]
-
                     cursor = input_collection.find({"provider": provider})
-
                     last = cursor.next()
-                    output_collection.insert_one(last)                    
-                    
-                    for document in cursor: 
-                        
+                    output_collection.insert_one(last)                                        
+                    for document in cursor:                         
                         current = document
-
                         try:
                             last_df = pd.DataFrame(last["state"]["placemarks"])
                             current_df = pd.DataFrame(current["state"]["placemarks"])
@@ -70,7 +54,6 @@ class DataBaseProxy (object):
                                 output_collection.insert_one(document)
                         except:
                             print type(current["state"]["placemarks"])
-
                         last = document        
         
     def insert (self, provider, city, state):
@@ -164,9 +147,3 @@ class DataBaseProxy (object):
             s = pd.Series(doc)
             books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)    
         return books_df
-
-    def update_bookings (self, city, feed, object_id):
-        return self.db[city + "_books_v2"].update_one({"_id":  object_id},
-                                                      {"$set": feed }, 
-                                                      upsert = True)
-    
