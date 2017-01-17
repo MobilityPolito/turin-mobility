@@ -13,4 +13,5 @@ clara = 'AIzaSyAVpeQaUjVPZznjp1b1sbtUl2iBzHSuGek'
 Michele1 = 'AIzaSyCoFpO5q5MatCal_1lLaxVCr6LcXePo91M'
 Michele2 = 'AIzaSyCGfLn4VqFrbV1PFc6duXi7ojPktJb-ta4'
 Michele3 = 'AIzaSyA6zgFdORCnKRnpp74Ew925aCwbSmzsM9U'
+daviderip = 'AIzaSyBSjjou5aXnl-9L3SIaJR05Vc3Zb8j0WpY'
 

@@ -98,3 +98,9 @@ INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1):
 DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?destination=45.06166%2C7.67332&mode=transit&origin=45.04685%2C7.68374&key=AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M HTTP/1.1" 200 2357
 INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
 DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?destination=45.06166%2C7.67332&origin=45.04685%2C7.68374&key=AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M HTTP/1.1" 200 1958
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484931834&destination=45.06172%2C7.69132&mode=transit&origin=45.06172%2C7.69132&key=AIzaSyBnUsB3u6Blg23D5uqIQPnM_1Pawkp5VLY HTTP/1.1" 200 760
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484940968&destination=45.06621%2C7.69782&mode=transit&origin=45.0601%2C7.67054&key=AIzaSyBnUsB3u6Blg23D5uqIQPnM_1Pawkp5VLY HTTP/1.1" 200 2221
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTPS connection (1): maps.googleapis.com
+DEBUG:requests.packages.urllib3.connectionpool:"GET /maps/api/directions/json?departure_time=1484940968&destination=45.06621%2C7.69782&mode=transit&origin=45.0601%2C7.67054&key=AIzaSyBnUsB3u6Blg23D5uqIQPnM_1Pawkp5VLY HTTP/1.1" 200 2221
