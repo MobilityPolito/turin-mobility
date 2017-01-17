@@ -10,3 +10,7 @@ Andrian2 = 'AIzaSyBHz8SA5BKIJDOu9mtLJb5JilGvcLnGIiM'
 Flavia5 = 'AIzaSyBqMJcxNQUmciUN8qsI-4JVO9Hh_EJqNfE'
 valeprof = 'AIzaSyB9XupnKFaH-zuVg_lBlz7NO8q6QpWFKZk'
 clara = 'AIzaSyAVpeQaUjVPZznjp1b1sbtUl2iBzHSuGek'
+Michele1 = 'AIzaSyCoFpO5q5MatCal_1lLaxVCr6LcXePo91M'
+Michele2 = 'AIzaSyCGfLn4VqFrbV1PFc6duXi7ojPktJb-ta4'
+Michele3 = 'AIzaSyA6zgFdORCnKRnpp74Ew925aCwbSmzsM9U'
+
