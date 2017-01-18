@@ -95,6 +95,23 @@ class DataBaseProxy (object):
         except:
             print "Invalid data coding!"
 
+    def insert_day_analysis(self, day, city, provider, stats, od):
+
+        record = {\
+         "day" : day,
+         "city": city,
+         "provider": provider,
+         "stats": stats, 
+         "od": od
+        }
+
+        collection = self.db["statistics"]
+
+        try:
+         collection.insert_one(record)
+        except:
+         print "Error in insert_one STATISTICS!" 
+     
     def insert_book_v2 (self, city, book):
         
         collection = self.db[city + "_books_v2"]            

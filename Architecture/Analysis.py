@@ -69,20 +69,24 @@ def getODmatrix (city, provider, year, month, day):
         (lambda row: Point(row.loc["end_lon"], row.loc["end_lat"]), 
          axis=1)    
 
-    zones = gpd.read_file("../../../SHAPE/Zonizzazione.dbf")\
+    zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
             .to_crs({"init": "epsg:4326"})
 
     OD = pd.DataFrame(0.0, index = zones.index, 
                       columns = zones.index)
 
     for i in range(len(books_df)):
-        o = origins.ix[i, "geometry"]
-        d = destinations.ix[i, "geometry"]
-        intersect_o = zones.contains(o)
-        intersect_d = zones.contains(d)
-        zo = intersect_o[intersect_o == True].index.values[0]
-        zd = intersect_d[intersect_d == True].index.values[0]
-        OD.loc[zo, zd] += 1
+        try:
+
+            o = origins.ix[i, "geometry"]
+            d = destinations.ix[i, "geometry"]
+            intersect_o = zones.contains(o)
+            intersect_d = zones.contains(d)
+            zo = intersect_o[intersect_o == True].index.values[0]
+            zd = intersect_d[intersect_d == True].index.values[0]
+            OD.loc[zo, zd] += 1
+        except:
+            print i
 
 #    OD["sum"] = OD.sum(axis=1)
 #    OD.loc["sum"] = OD.sum()

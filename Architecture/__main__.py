@@ -46,14 +46,14 @@ dbp = DataBaseProxy()
 ##################################################
 
 
-provider = 'car2go'
+provider = 'enjoy'
 city = 'torino'
 fleet_size = 403
 
 year = 2016
 month = 12
 
-for day in range(5, 32, 1):
+for day in range(9, 10, 1):
 
 	print ('day:'+str(day))
 
