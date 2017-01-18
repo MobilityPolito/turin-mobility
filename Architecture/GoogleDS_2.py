@@ -50,7 +50,8 @@ class GoogleDS(RTDS):
                         'AIzaSyBSjjou5aXnl-9L3SIaJR05Vc3Zb8j0WpY',
                         'AIzaSyAKaQDrgawidGlRNkjqTIMngFZs7pOV8Zc',
                         'AIzaSyCnksllWfpV0D3iDBomyKRFUkqEvEoNtKg',
-                        'AIzaSyB0ggpBGN6wRpsA1cdfAgO2iVtSt6Nj41I'
+                        'AIzaSyB0ggpBGN6wRpsA1cdfAgO2iVtSt6Nj41I',
+                        'AIzaSyDVU9CsZY89DZv7JC7N5u8HTWrppGJNOko' #chiave tano
                     ])
 
         self.current_key = 5
