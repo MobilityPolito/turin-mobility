@@ -32,7 +32,7 @@ class GoogleDS(RTDS):
         logging.basicConfig(filename=self.log_filename, level=logging.DEBUG)   
 #        self.keys = series_keys
         self.keys = pd.Series([
-#                        'AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ', 
+                        'AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ', 
                         'AIzaSyBnUsB3u6Blg23D5uqIQPnM_1Pawkp5VLY', 
                         'AIzaSyBaaQQyMnT7MUI421WdO67g66igzXL2O4A',
                         'AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M',
@@ -51,7 +51,8 @@ class GoogleDS(RTDS):
                         'AIzaSyAKaQDrgawidGlRNkjqTIMngFZs7pOV8Zc',
                         'AIzaSyCnksllWfpV0D3iDBomyKRFUkqEvEoNtKg',
                         'AIzaSyB0ggpBGN6wRpsA1cdfAgO2iVtSt6Nj41I',
-                        'AIzaSyDVU9CsZY89DZv7JC7N5u8HTWrppGJNOko' #chiave tano
+                        'AIzaSyDVU9CsZY89DZv7JC7N5u8HTWrppGJNOko', #chiave tano
+                        'AIzaSyCDdrDzYVj0zwvV3Xhx9IJ6gv-L9PVXYaM' # sbr
                     ])
 
         self.current_key = 5
@@ -263,8 +264,8 @@ class GoogleDS(RTDS):
         self.start_session()
         self.get_feed()
 
-end = datetime.datetime(2016, 12, 10, 0, 0, 0)
-start = end - datetime.timedelta(days = 1)
+end = datetime.datetime(2016, 12, 14, 0, 0, 0)
+start = end - datetime.timedelta(days = 5)
 googlecar2go = GoogleDS('car2go', 'torino', 'timestamp', start, end)
 googlecar2go.start_session()
 feed = googlecar2go.get_feed()
