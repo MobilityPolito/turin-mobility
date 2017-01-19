@@ -6,7 +6,7 @@ from pandas.tools.plotting import scatter_matrix
 
 from Analysis import day_analysis
 
-books_df_car2go, parks_d_car2go, day_stats_car2go = \
+books_df_car2go, parks_df_car2go, day_stats_car2go = \
     day_analysis("torino", "car2go", 2016, 12, 17, 403.0)
 books_df_enjoy, parks_df_enjoy, day_stats_enjoy = \
     day_analysis("torino", "enjoy", 2016, 12, 17, 140.0)

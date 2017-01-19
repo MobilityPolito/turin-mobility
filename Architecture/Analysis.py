@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 from scipy import ndimage
 
-import geopandas as gpd
-from shapely.geometry import Point
-from shapely.geometry import LineString
+#import geopandas as gpd
+#from shapely.geometry import Point
+#from shapely.geometry import LineString
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -18,46 +18,82 @@ from DataBaseProxy import DataBaseProxy
 dbp = DataBaseProxy()
     
 from BooksAnalysis import get_books_day, get_books_days
-from ParksAnalysis import get_parks_day
+#from ParksAnalysis import get_parks_day
 
-def day_analysis (city, provider, year, month, day, fleet_size):
+def day_analysis (books_df, city, provider, year, month, day, fleet_size):
 
-    books_df = get_books_day(city, provider, year, month, day)\
-        .set_index("start").sort_index()
-    parks_df = get_parks_day(city, provider, year, month, day)\
-        .set_index("start").sort_index()
-    day_stats = pd.DataFrame()
+    stats = pd.DataFrame(columns = [
+                                    "n_books",
+                                    "n_books_norm",
+                                    "avg_books_duration",
+                                    "med_books_duration",
+                                    "avg_books_duration_driving",
+                                    "med_books_duration_driving",
+                                    "avg_books_distance",
+                                    "med_books_distance",
+                                    "avg_books_distance_driving",
+                                    "med_books_distance_driving",
+                                    "avg_books_bill",
+                                    "cum_books_bill",
+                                    "avg_books_min_bill",
+                                    "cum_books_min_bill",
+                                    "avg_books_max_bill",
+                                    "cum_books_max_bill"
+                                    ])
     
     for hour in range(0, 24, 1):
         sup_datetime = datetime.datetime(year, month, day, hour, 59, 59)
         inf_datetime = datetime.datetime(year, month, day, hour)
-        
-        day_stats.loc[sup_datetime, "n_parks"] = \
-            len(parks_df[inf_datetime:sup_datetime])
 
-        day_stats.loc[sup_datetime, "n_books"] = \
+        stats.loc[sup_datetime, "n_books"] = \
             float(len(books_df[inf_datetime:sup_datetime]))
-        day_stats.loc[sup_datetime, "n_books_norm"] = \
+        stats.loc[sup_datetime, "n_books_norm"] = \
             float(len(books_df[inf_datetime:sup_datetime])) / fleet_size
 
-        day_stats.loc[sup_datetime, "avg_books_duration"] = \
+        stats.loc[sup_datetime, "avg_books_duration"] = \
             books_df[inf_datetime:sup_datetime]["durations"].mean()
-        day_stats.loc[sup_datetime, "med_books_duration"] = \
+        stats.loc[sup_datetime, "med_books_duration"] = \
             books_df[inf_datetime:sup_datetime]["durations"].median()
-        day_stats.loc[sup_datetime, "mode_books_duration"] = \
-            books_df[inf_datetime:sup_datetime]["durations"].mode()
+#        stats.loc[sup_datetime, "mode_books_duration"] = \
+#            books_df[inf_datetime:sup_datetime]["durations"].mode()
 
-        day_stats.loc[sup_datetime, "avg_books_distance"] = \
-            books_df[inf_datetime:sup_datetime]["distances"].mean()
-        day_stats.loc[sup_datetime, "med_books_distance"] = \
-            books_df[inf_datetime:sup_datetime]["distances"].median()
-        day_stats.loc[sup_datetime, "mode_books_distance"] = \
-            books_df[inf_datetime:sup_datetime]["distances"].mode()
+        stats.loc[sup_datetime, "avg_books_duration_driving"] = \
+            books_df[inf_datetime:sup_datetime]["duration_driving"].mean()
+        stats.loc[sup_datetime, "med_books_duration_driving"] = \
+            books_df[inf_datetime:sup_datetime]["duration_driving"].median()
+#        stats.loc[sup_datetime, "mode_books_duration_driving"] = \
+#            books_df[inf_datetime:sup_datetime]["durations"].mode()            
             
-        day_stats.loc[sup_datetime, "avg_books_bill"] = \
+        stats.loc[sup_datetime, "avg_books_distance"] = \
+            books_df[inf_datetime:sup_datetime]["distances"].mean()
+        stats.loc[sup_datetime, "med_books_distance"] = \
+            books_df[inf_datetime:sup_datetime]["distances"].median()
+#        stats.loc[sup_datetime, "mode_books_distance"] = \
+#            books_df[inf_datetime:sup_datetime]["distances"].mode()
+
+        stats.loc[sup_datetime, "avg_books_distance_driving"] = \
+            books_df[inf_datetime:sup_datetime]["distance_driving"].mean()
+        stats.loc[sup_datetime, "med_books_distance_driving"] = \
+            books_df[inf_datetime:sup_datetime]["distance_driving"].median()
+#        stats.loc[sup_datetime, "mode_books_distance_driving"] = \
+#            books_df[inf_datetime:sup_datetime]["distances"].mode()
+            
+        stats.loc[sup_datetime, "avg_books_bill"] = \
+            books_df[inf_datetime:sup_datetime]["bill"].mean()
+        stats.loc[sup_datetime, "cum_books_bill"] = \
             books_df[inf_datetime:sup_datetime]["bill"].sum()
-        
-    return books_df, parks_df, day_stats
+
+        stats.loc[sup_datetime, "avg_books_min_bill"] = \
+            books_df[inf_datetime:sup_datetime]["min_bill"].mean()
+        stats.loc[sup_datetime, "cum_books_min_bill"] = \
+            books_df[inf_datetime:sup_datetime]["min_bill"].sum()
+
+        stats.loc[sup_datetime, "avg_books_max_bill"] = \
+            books_df[inf_datetime:sup_datetime]["max_bill"].mean()
+        stats.loc[sup_datetime, "cum_books_max_bill"] = \
+            books_df[inf_datetime:sup_datetime]["max_bill"].sum()
+            
+    return stats
 
 def getODmatrix (city, provider, year, month, day):
     
@@ -102,7 +138,64 @@ def getODmatrix (city, provider, year, month, day):
 #    OD.loc["sum","sum"]
 
     return zones, origins, destinations, OD
-    
+
+stats = day_analysis(df, "torino", "car2go", 2016, 12, 7, 403.0)
+
+fig, ax = plt.subplots(1, 2, figsize=(16, 8))
+db_handle, = ax[0].plot(stats["cum_books_bill"].index, 
+                         stats["cum_books_bill"], label="DB")
+google_handle1, = ax[0].plot(stats["cum_books_min_bill"].index, 
+                        stats["cum_books_min_bill"], label="GoogleMin")
+google_handle2, = ax[0].plot(stats["cum_books_max_bill"].index, 
+                        stats["cum_books_max_bill"], label="GoogleMax")
+plt.legend(handles=[db_handle, google_handle1, google_handle2])
+ax[0].set_title("Cumulative Bills")
+
+db_handle, = ax[1].plot(stats["avg_books_bill"].index, 
+                         stats["avg_books_bill"], label="DB")
+google_handle1, = ax[1].plot(stats["avg_books_min_bill"].index, 
+                        stats["avg_books_min_bill"], label="GoogleMin")
+google_handle2, = ax[1].plot(stats["avg_books_max_bill"].index, 
+                        stats["avg_books_max_bill"], label="GoogleMax")
+plt.legend(handles=[db_handle, google_handle1, google_handle2])
+ax[1].set_title("Average Bills")
+
+
+plt.savefig("Bills")
+
+fig, ax = plt.subplots(1, 2, figsize=(16, 8))
+db_handle, = ax[0].plot(stats["med_books_duration"].index, 
+                         stats["med_books_duration"], label="DB")
+google_handle, = ax[0].plot(stats["med_books_duration_driving"].index, 
+                        stats["med_books_duration_driving"], label="Google")
+plt.legend(handles=[db_handle, google_handle])
+ax[0].set_title("Median Booking Durations")
+
+db_handle, = ax[1].plot(stats["avg_books_duration"].index, 
+                         stats["avg_books_duration"], label="DB")
+google_handle, = ax[1].plot(stats["avg_books_duration_driving"].index, 
+                        stats["avg_books_duration_driving"], label="Google")
+plt.legend(handles=[db_handle, google_handle])
+ax[1].set_title("Average Booking Durations")
+plt.savefig("Booking Durations")
+
+
+fig, ax = plt.subplots(1, 2, figsize=(16, 8))
+db_handle, = ax[0].plot(stats["med_books_distance"].index, 
+                         stats["med_books_distance"], label="DB")
+google_handle, = ax[0].plot(stats["med_books_distance_driving"].index, 
+                        stats["med_books_distance_driving"], label="Google")
+plt.legend(handles=[db_handle, google_handle])
+ax[0].set_title("Median Booking Distances")
+
+db_handle, = ax[1].plot(stats["avg_books_distance"].index, 
+                         stats["avg_books_distance"], label="DB")
+google_handle, = ax[1].plot(stats["avg_books_distance_driving"].index, 
+                        stats["avg_books_distance_driving"], label="Google")
+plt.legend(handles=[db_handle, google_handle])
+ax[1].set_title("Average Booking Distances")
+plt.savefig("Booking Distances")
+
 #zones, origins, destinations, od = getODmatrix("torino", "car2go", 2017, 1, 8)
 #
 #od_norm = (od - od.mean())/od.std()
