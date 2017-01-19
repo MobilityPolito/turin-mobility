@@ -26,25 +26,34 @@ def day_analysis (city, provider, year, month, day, fleet_size):
         .set_index("start").sort_index()
     parks_df = get_parks_day(city, provider, year, month, day)\
         .set_index("start").sort_index()
-    day_stats = pd.DataFrame(columns = ["n_parks", 
-                                        "n_books", 
-                                        "avg_books_duration", 
-                                        "avg_books_distance"])
+    day_stats = pd.DataFrame()
+    
     for hour in range(0, 24, 1):
         sup_datetime = datetime.datetime(year, month, day, hour, 59, 59)
         inf_datetime = datetime.datetime(year, month, day, hour)
+        
         day_stats.loc[sup_datetime, "n_parks"] = \
             len(parks_df[inf_datetime:sup_datetime])
 
         day_stats.loc[sup_datetime, "n_books"] = \
             float(len(books_df[inf_datetime:sup_datetime]))
-
         day_stats.loc[sup_datetime, "n_books_norm"] = \
             float(len(books_df[inf_datetime:sup_datetime])) / fleet_size
+
         day_stats.loc[sup_datetime, "avg_books_duration"] = \
             books_df[inf_datetime:sup_datetime]["durations"].mean()
+        day_stats.loc[sup_datetime, "med_books_duration"] = \
+            books_df[inf_datetime:sup_datetime]["durations"].median()
+        day_stats.loc[sup_datetime, "mode_books_duration"] = \
+            books_df[inf_datetime:sup_datetime]["durations"].mode()
+
         day_stats.loc[sup_datetime, "avg_books_distance"] = \
             books_df[inf_datetime:sup_datetime]["distances"].mean()
+        day_stats.loc[sup_datetime, "med_books_distance"] = \
+            books_df[inf_datetime:sup_datetime]["distances"].median()
+        day_stats.loc[sup_datetime, "mode_books_distance"] = \
+            books_df[inf_datetime:sup_datetime]["distances"].mode()
+            
         day_stats.loc[sup_datetime, "avg_books_bill"] = \
             books_df[inf_datetime:sup_datetime]["bill"].sum()
         
