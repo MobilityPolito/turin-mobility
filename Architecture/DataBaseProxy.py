@@ -1,12 +1,28 @@
+from math import radians, cos, sin, asin, sqrt
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance between two points 
+    on the earth (specified in decimal degrees)
+    """
+    # convert decimal degrees to radians 
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+    km = 6367 * c
+    return km
+    
 import datetime
-
-from pymongo import MongoClient
 
 import pandas as pd
 
-from workalendar.europe import Italy
-from bdateutil import isbday
+import numpy as np
 
+from workalendar.europe import Italy
+
+from pymongo import MongoClient
 client = MongoClient('mongodb://localhost:27017/')
 
 class DataBaseProxy (object):
@@ -129,19 +145,20 @@ class DataBaseProxy (object):
 
     def update_bookings (self, city, feed, object_id):
         
-        return self.db[city + "_books_v2"].update_one({"_id":  object_id},
-                                                      {"$set": feed },
-                                                      upsert = True)
+        return self.db["books"].update_one({"_id":  object_id},
+                                              {"$set": feed},
+                                              upsert = True)
             
     def query_raw_by_time (self, provider, city, start, end):
         
-        return self.db[city].find \
+        return self.db["snapshots"].find \
                     ({"timestamp":
                          {
                              '$gte': start,
                              '$lt': end
                          },
-                     "provider":provider
+                     "provider":provider,
+                     "city":city
                     }).sort([("_id", 1)])
 
     def query_parks (self, provider, city, start, end):
@@ -152,7 +169,7 @@ class DataBaseProxy (object):
                              '$gte': start,
                              '$lt': end
                          },
-                     "provider":provider
+                     "provider":provider,
                      "city":city
                      }).sort([("_id", 1)])
 
@@ -164,11 +181,21 @@ class DataBaseProxy (object):
                              '$gte': start,
                              '$lt': end
                          },
-                     "provider":provider
+                     "provider":provider,
                      "city":city
                     }).sort([("_id", 1)])
 
-    def get_parks_df (self, provider, city, start, end):
+    def process_books_df (provider, books_df):
+            
+        books_df["durations"] = \
+            (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
+        books_df["distances"] = books_df.apply\
+            (lambda row: haversine(row["start_lon"], row["start_lat"], 
+                                   row["end_lon"], row["end_lat"]), axis=1)
+    
+        return books_df                         
+                        
+    def query_parks_df (self, provider, city, start, end):
         
         parks_cursor = self.query_parks(provider, city, start, end)
         parks_df = pd.DataFrame(columns = pd.Series(parks_cursor.next()).index)
@@ -176,33 +203,33 @@ class DataBaseProxy (object):
             s = pd.Series(doc)
             parks_df = pd.concat([parks_df, pd.DataFrame(s).T], ignore_index=True)    
 
+        parks_df["durations"] = \
+            (parks_df["end"] - parks_df["start"])/np.timedelta64(1, 'm')            
+            
         return parks_df
                         
-    def get_books_df (self, provider, city, start, end):
+    def query_books_df (self, provider, city, start, end):
         
         books_cursor = self.query_books(provider, city, start, end)    
         books_df = pd.DataFrame(columns = pd.Series(books_cursor.next()).index)
         for doc in books_cursor:
             s = pd.Series(doc)
             books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)    
-        
+
+        books_df["durations"] = \
+            (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
+        books_df["distances"] = books_df.apply\
+            (lambda row: haversine(row["start_lon"], row["start_lat"], 
+                                   row["end_lon"], row["end_lat"]), axis=1)
+            
         return books_df
 
-    '''
-    Aggregation of bookings, in a given time interval, aggregated per
-    #1 -> weekday
-    #2 -> pre-holiday
-    #3 -> holiday
-    #4 -> weekend
-    '''
-
-    def get_books_df_filtered (self, provider, city, start, end, day_type):
-
-        books_df = self.get_books(provider, city, start, end)
-        books_df['b_day'] = books_df['start'].apply(isbday)
-       
+    def filter_df (self, df, day_type, start, end):
+        
         cal = Italy()
+        
         holidays = []
+        pre_holidays = []
        
         #holidays collection creation
         if start.year == end.year:
@@ -210,39 +237,36 @@ class DataBaseProxy (object):
                 holidays.append(h[0])
         else:
             for year in range (start.year, end.year+1):
-                 for h in cal.holidays(year):
-                     holidays.append(h[0])
-       
-        if day_type == "business":
-            business_books_df = books_df[books_df['b_day'] == True]
-            return business_books_df
-
-        elif day_type == "weekend":
-            weekend_books_df = books_df[books_df['b_day'] == False]
-            return weekend_books_df            
-            
-        #only the day BEFORE the holiday. WEEKends are not considered            
-        elif day_type == "pre-holiday":
-            pre_holidays = []
-            for d in holidays:
+                for h in cal.holidays(year):
+                    holidays.append(h[0])
+                     
+        for d in holidays:
+            if (d - datetime.timedelta(days = 1)) not in holidays:
                 pre_holidays.append(d - datetime.timedelta(days = 1))
-            pre_holidays.pop()
-            #ph_day = pre hoiday day
-            books_df['ph_day'] = books_df['start'].apply(lambda x: x.date())
-            books_df['ph_day'] = books_df[books_df['ph_day'].isin(pre_holidays)]
-            pre_holidays_books_df = books_df.dropna(subset=['ph_day'],how='all')
-            del pre_holidays_books_df['b_day']
-            del pre_holidays_books_df['ph_day']
-            return pre_holidays_books_df
-           
-        #holidays WEEKEND EXCLUDED
-        elif day_type == "holiday":
-            books_df['h_day'] = books_df['start'].apply(lambda x: x.date())
-            books_df['h_day'] = books_df[books_df['h_day'].isin(holidays)]
-            holidays_books_df = books_df.dropna(subset=['h_day'],how='all')
-            del holidays_books_df['b_day']
-            del holidays_books_df['h_day']
-            return holidays_books_df
-                       
-        else:
-            raise Exception("day_type error")
+                             
+        df['week_day'] = df['start'].apply(lambda x: x.weekday())
+
+        df['h_day'] = df['start'].apply(lambda x: x.date()).isin(holidays)
+
+        df['ph_day'] = df['start'].apply(lambda x: x.date()).isin(pre_holidays)
+        
+        if day_type == "business":
+            return df[(df.week_day > 0) & (df.week_day < 6) & (df.h_day == False)]
+        if day_type == "weekend":
+            return df[(df.week_day > 5) & (df.week_day < 8) & (df.h_day == False)]
+        if day_type == "holiday":
+            return df[df.h_day == True]
+        if day_type == "preholiday":
+            return df[df.ph_day == True]
+
+        return df
+        
+    def query_books_df_filtered (self, provider, city, start, end, day_type):
+
+        books_df = self.query_books_df(provider, city, start, end)
+        return self.filter_df(books_df, day_type, start, end)
+
+    def query_parks_df_filtered (self, provider, city, start, end, day_type):
+
+        parks_df = self.query_parks_df(provider, city, start, end)
+        return self.filter_df(parks_df, day_type, start, end)

@@ -1,7 +1,7 @@
 import datetime
 import pandas as pd
 
-from Provider import ServiceProvider
+from ServiceProvider import ServiceProvider
 
 from DataBaseProxy import DataBaseProxy
 dbp = DataBaseProxy()
@@ -16,7 +16,7 @@ class Enjoy(ServiceProvider):
         
         if by == "timestamp" and len(args) == 2:
             self.start, self.end = args
-            self.cursor = dbp.query_raw_by_time(self.name, city, self.start, self.end)
+            self.cursor = dbp.query_raw_by_time(self.name, self.city, self.start, self.end)
 
         if by == "full":
             self.cursor = dbp.query_raw(self.city, self.name)
