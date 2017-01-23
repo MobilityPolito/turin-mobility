@@ -18,10 +18,10 @@ import datetime
 
 import numpy as np
 import pandas as pd
-#
-#import geopandas as gpd
-#from shapely.geometry import Point
-#from shapely.geometry import LineString
+
+import geopandas as gpd
+from shapely.geometry import Point
+from shapely.geometry import LineString
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -50,50 +50,16 @@ def process_books_df (provider, books_df):
                                row["end_lon"], row["end_lat"]), axis=1)
     books_df = get_bill(books_df, provider)
         
-#    books_df["geometry"] = books_df.apply\
-#        (lambda row: LineString([(row["start_lon"], row["start_lat"]),
-#                                 (row["end_lon"], row["end_lat"])]), axis=1)
-#    books_df = gpd.GeoDataFrame(books_df, geometry="geometry")
-#    books_df.crs = {"init": "epsg:4326"}
+    books_df["geometry"] = books_df.apply\
+        (lambda row: LineString([(row["start_lon"], row["start_lat"]),
+                                 (row["end_lon"], row["end_lat"])]), axis=1)
+    books_df = gpd.GeoDataFrame(books_df, geometry="geometry")
+    books_df.crs = {"init": "epsg:4326"}
     
     books_df = books_df[books_df.durations < 120]
     books_df = books_df[books_df.distances > 1]
 
-    return books_df 
-    
-def minmax_bill (provider, df):
-    process_books_df(provider,df)
-    riding_time(provider, df)
-    if provider == "car2go":
-        free_reservation = 20
-        ticket = 0.24
-        extra_ticket = 0.24    
-    elif provider == "enjoy":
-        free_reservation = 15
-        ticket = 0.25
-        extra_ticket = 0.10    
-
-    indexes = df.loc[df.reservation_time > free_reservation].index
-    extra_minutes = df.loc[indexes, 'reservation_time'] - free_reservation
-    df.loc[indexes,"min_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket) + \
-                                            extra_minutes.apply(lambda x: x * extra_ticket)                                            
-    df.loc[indexes,"max_bill"] = df.loc[indexes, 'durations'].apply(lambda x: x * ticket)
-                                          
-    indexes = df.loc[(df.reservation_time <= free_reservation) & (df.reservation_time > 0)].index
-    df.loc[indexes,"min_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket)                     
-    df.loc[indexes,"max_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket)
-    
-    indexes = df.loc[df.reservation_time < 0].index
-    df.loc[indexes,"min_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket)
-    df.loc[indexes,"max_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket)        
-    return df 
-    
-def riding_time (provider, df):    
-
-    df["reservation_time"] = df["durations"] - df["duration_driving"]
-    df.loc[df.reservation_time < 0, "riding_time"] = df["durations"]
-    df.loc[df.reservation_time > 0, "riding_time"] = df["duration_driving"]
-    return df
+    return books_df    
     
 def get_books_days (city, provider, end, depth):
     
@@ -109,14 +75,11 @@ def get_books_day (city, provider, year, month, day):
     books_df = dbp.get_books(provider, city, start, end)
     
     return process_books_df(provider, books_df)
-
-#df = process_books_df("car2go", df)
-#df = minmax_bill("car2go", df)
-
+    
 #books_df = get_books_day("torino", "car2go", 2016, 12, 6)
 
 #fig, ax = plt.subplots(1,1,figsize=(10,10))
-#ax = scatter_matrix(books_df[["start_lat","start_lon","end_lat","end_lon","durations", "distances"]].astype("float64"), 
+#ax = scatter_matrix(books_df_car2go[["start_lat","start_lon","end_lat","end_lon","durations", "distances"]].astype("float64"), 
 #               figsize=(10, 10), diagonal='kde')
 #plt.savefig(provider + "_books_scatter_matrix.png")
 

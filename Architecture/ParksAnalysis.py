@@ -33,45 +33,47 @@ def get_parks_day (city, provider, year, month, day):
 
     return parks_df
     
-#parks_df = get_parks_day("torino", "car2go", 2016, 12, 6)
-#
-#parks_points = parks_df["geometry"]    
-#zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
-#        .to_crs({"init": "epsg:4326"})
-#zones["nparks"] = 0.0
-#
-#for point in parks_points.values:
-#    intersect = zones.contains(point)
-#    print intersect[intersect == True]
-#    z = intersect[intersect == True].index.values[0]
-#    zones.ix[z, "nparks"] += 1
+parks_df = get_parks_day("torino", "car2go", 2016, 12, 10)
 
-#
-#def heatmap(d, bins=(100,100), smoothing=1.3, cmap='jet'):
-#
-#    def getx(pt):
-#        return pt.coords[0][0]
-#    def gety(pt):
-#        return pt.coords[0][1]
-#
-#    x = list(d.geometry.apply(getx))
-#    y = list(d.geometry.apply(gety))
-#    heatmap, xedges, yedges = np.histogram2d(y, x, bins=bins)
-#    extent = [yedges[0], yedges[-1], xedges[-1], xedges[0]]
-#
-#    logheatmap = np.log(heatmap)
-#    logheatmap[np.isneginf(logheatmap)] = 0
-#    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
-#    
-#    plt.imshow(heatmap, cmap=cmap, extent=extent)
-#    plt.colorbar()
-#    plt.gca().invert_yaxis()
-#    return ax
-#
+parks_points = parks_df["geometry"]    
+zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
+        .to_crs({"init": "epsg:4326"})
+zones["nparks"] = 0.0
+
+for point in parks_points.values:
+    intersect = zones.contains(point)
+#    print intersect[intersect == True]
+    z = intersect[intersect == True].index.values[0]
+    zones.ix[z, "nparks"] += 1
+
+def heatmap(d, bins=(100,100), smoothing=1.3, cmap='jet'):
+
+    def getx(pt):
+        return pt.coords[0][0]
+    def gety(pt):
+        return pt.coords[0][1]
+
+    x = list(d.geometry.apply(getx))
+    y = list(d.geometry.apply(gety))
+    heatmap, xedges, yedges = np.histogram2d(y, x, bins=bins)
+    extent = [yedges[0], yedges[-1], xedges[-1], xedges[0]]
+
+    logheatmap = np.log(heatmap)
+    logheatmap[np.isneginf(logheatmap)] = 0
+    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
+    
+    plt.imshow(logheatmap, cmap=cmap, extent=extent)
+    plt.colorbar()
+    plt.gca().invert_yaxis()
+    plt.savefig("car2go_logheatmap.png")    
+
+    return ax
+
 #fig, ax = plt.subplots(1, 1, figsize=(10,10))
 #ax = zones.plot(color="white", ax=ax)
 #heatmap(parks_df, bins=20, smoothing=1.2)
 #plt.show()
+
     
 #ztl = gpd.read_file("./DataSource/geoportale/dati_torino/ztl_geo.dbf")\
 #            .to_crs({"init": "epsg:4326"})

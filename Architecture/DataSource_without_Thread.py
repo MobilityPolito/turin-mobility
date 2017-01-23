@@ -1,11 +1,11 @@
 """
 
-Real Time Data Source (RTDS):
-This interface is designed to represent a real time JSON stream coming 
+DataSource:
+This interface is designed to represent data streams coming 
 from some API or web scraping. Its main functions are:
     - Initialize connections (e.g HTTP session)
     - Periodically retrieve and check data
-    - Insert (possibly) consistent data in the DB
+    - Insert/update consistent data in the DB
 
 """
 

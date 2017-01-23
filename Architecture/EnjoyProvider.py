@@ -1,12 +1,12 @@
 import datetime
 import pandas as pd
 
-from Provider import Provider
+from Provider import ServiceProvider
 
 from DataBaseProxy import DataBaseProxy
 dbp = DataBaseProxy()
             
-class Enjoy(Provider):
+class Enjoy(ServiceProvider):
     
     def __init__ (self):
         self.name = "enjoy"
@@ -47,13 +47,36 @@ class Enjoy(Provider):
             
         return self.fleet
 
-    def get_fleet_from_db(self):
+    def get_fleet_from_db (self):
+        
         print "Acquiring fleet ..."
         query = dbp.query_fleet(self.city, self.name)
         self.fleet = pd.Index(query[0]['fleet'])
         print "Fleet acquired!"
 
-    def get_parks_and_books_v2 (self):
+    def update_cars_status (self, doc, cars_status, cars_lat, cars_lon, cars_fuel):
+        
+        df = pd.DataFrame(doc["state"])
+
+        parked = df[["car_plate", "lat", "lon", "fuel_level"]]
+        booked = self.fleet.difference(df["car_plate"])
+
+        cars_status.loc[parked["car_plate"].values, doc["timestamp"]] = \
+            "parked"            
+        cars_status.loc[booked.values, doc["timestamp"]] = \
+            "booked"
+
+        cars_lat.loc[parked["car_plate"].values, doc["timestamp"]] = \
+            pd.Series(data=df["lat"].values,
+                      index=parked["car_plate"].values)                
+        cars_lon.loc[parked["car_plate"].values, doc["timestamp"]] = \
+            pd.Series(data=df["lon"].values,
+                      index=parked["car_plate"].values)            
+        cars_fuel.loc[parked["car_plate"].values, doc["timestamp"]] = \
+            pd.Series(data=df["fuel_level"].values,
+                      index=parked["car_plate"].values)        
+        
+    def get_parks_and_books (self):
         
         self.cursor.rewind()
         doc = self.cursor.next()
@@ -62,31 +85,9 @@ class Enjoy(Provider):
         cars_lat = pd.DataFrame(index = self.fleet.values)
         cars_lon = pd.DataFrame(index = self.fleet.values)
         cars_fuel = pd.DataFrame(index = self.fleet.values)
-        
-        def update_cars_status ():
-            
-            df = pd.DataFrame(doc["state"])
-
-            parked = df[["car_plate", "lat", "lon", "fuel_level"]]
-            booked = self.fleet.difference(df["car_plate"])
-
-            cars_status.loc[parked["car_plate"].values, doc["timestamp"]] = \
-                "parked"            
-            cars_status.loc[booked.values, doc["timestamp"]] = \
-                "booked"
-
-            cars_lat.loc[parked["car_plate"].values, doc["timestamp"]] = \
-                pd.Series(data=df["lat"].values,
-                          index=parked["car_plate"].values)                
-            cars_lon.loc[parked["car_plate"].values, doc["timestamp"]] = \
-                pd.Series(data=df["lon"].values,
-                          index=parked["car_plate"].values)            
-            cars_fuel.loc[parked["car_plate"].values, doc["timestamp"]] = \
-                pd.Series(data=df["fuel_level"].values,
-                          index=parked["car_plate"].values)            
-        
+                
         for doc in self.cursor:
-            update_cars_status()
+            self.update_cars_status()
             
         cars_status = cars_status.T
         cars_lat = cars_lat.T
@@ -141,13 +142,7 @@ class Enjoy(Provider):
             books = car_df[car_df.status == "booked"]
             if len(books):
                 books = books.dropna(axis=1, how="all")
-                books = books.drop("status", axis=1)
-
-#                if car_df.ix[car_df.head(1).index,"status"] == "booked":
-#                    books = books.drop(books.head(1).index)
-#                if car_df.ix[car_df.tail(1).index,"status"]  == "booked":
-#                    books = books.drop(books.tail(1).index)
-                
+                books = books.drop("status", axis=1)                
                 for book in books.T.to_dict().values():
                     book["provider"] = self.name
                     book["city"] = self.city

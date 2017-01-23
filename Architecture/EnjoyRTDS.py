@@ -65,25 +65,15 @@ class EnjoyRTDS(RTDS):
         
         last_feed_df = pd.DataFrame(self.last_feed)
         current_feed_df = pd.DataFrame(self.current_feed)
-        print last_feed_df.equals(current_feed_df)
-        
-        print current_feed_df.index
-        print current_feed_df.columns
-        
         for col in current_feed_df.columns:
             s = current_feed_df[col]
-            print str(s.dtype)
-#            if str(s.dtype) != "object":
-#                print s.describe()
-
+#
     def to_DB (self):
     
-        dbp.insert(self.name, self.city, self.current_feed)
+        dbp.insert_snapshot(self.name, self.city, self.current_feed)
         
     def run(self):
-        
-        print threading.current_thread()
-    
+
         self.start_session()
         
         self.last_feed = self.get_feed()

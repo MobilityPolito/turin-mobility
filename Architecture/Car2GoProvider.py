@@ -1,12 +1,12 @@
 import datetime
 import pandas as pd
 
-from Provider import Provider
+from Provider import ServiceProvider
 
 from DataBaseProxy import DataBaseProxy
 dbp = DataBaseProxy()
 
-class Car2Go(Provider):
+class Car2Go(ServiceProvider):
     
     def __init__ (self):
         self.name = "car2go"
@@ -22,7 +22,6 @@ class Car2Go(Provider):
             self.cursor = dbp.query_raw(self.city, self.name)
 
         print "Data selected!"
-
 
     def get_fields(self):
         
@@ -48,12 +47,35 @@ class Car2Go(Provider):
         return self.fleet
 
     def get_fleet_from_db(self):
+        
         print "Acquiring fleet ..."
         query = dbp.query_fleet(self.city, self.name)
         self.fleet = pd.Index(query[0]['fleet'])
         print "Fleet acquired!"
 
-    def get_parks_and_books_v2 (self):
+    def update_cars_status (self, doc, cars_status, cars_lat, cars_lon, cars_fuel):
+
+        df = pd.DataFrame(doc["state"]["placemarks"])
+
+        parked = df[["name", "coordinates"]]
+        booked = self.fleet.difference(df["name"])
+
+        cars_status.loc[parked["name"].values, doc["timestamp"]] = \
+            "parked"
+        cars_status.loc[booked.values, doc["timestamp"]] = \
+            "booked"
+
+        cars_lat.loc[parked["name"].values, doc["timestamp"]] = \
+            pd.Series(data=[v[1] for v in parked["coordinates"].values],
+                      index=parked["name"].values)
+        cars_lon.loc[parked["name"].values, doc["timestamp"]] = \
+            pd.Series(data=[v[0] for v in parked["coordinates"].values],
+                      index=parked["name"].values)
+        cars_fuel.loc[parked["name"].values, doc["timestamp"]] = \
+            pd.Series(data=df["fuel"].values,
+                      index=parked["name"].values)        
+        
+    def get_parks_and_books (self):
         
         self.cursor.rewind()
         doc = self.cursor.next()
@@ -63,30 +85,8 @@ class Car2Go(Provider):
         cars_lon = pd.DataFrame(index = self.fleet.values)
         cars_fuel = pd.DataFrame(index = self.fleet.values)
         
-        def update_cars_status ():
-
-            df = pd.DataFrame(doc["state"]["placemarks"])
-
-            parked = df[["name", "coordinates"]]
-            booked = self.fleet.difference(df["name"])
-
-            cars_status.loc[parked["name"].values, doc["timestamp"]] = \
-                "parked"
-            cars_status.loc[booked.values, doc["timestamp"]] = \
-                "booked"
-
-            cars_lat.loc[parked["name"].values, doc["timestamp"]] = \
-                pd.Series(data=[v[1] for v in parked["coordinates"].values],
-                          index=parked["name"].values)
-            cars_lon.loc[parked["name"].values, doc["timestamp"]] = \
-                pd.Series(data=[v[0] for v in parked["coordinates"].values],
-                          index=parked["name"].values)
-            cars_fuel.loc[parked["name"].values, doc["timestamp"]] = \
-                pd.Series(data=df["fuel"].values,
-                          index=parked["name"].values)
-        
         for doc in self.cursor:
-            update_cars_status()
+            self.update_cars_status()
             
         cars_status = cars_status.T
         cars_lat = cars_lat.T
@@ -142,17 +142,9 @@ class Car2Go(Provider):
             books = car_df[car_df.status == "booked"]
             if len(books):
                 books = books.dropna(axis=1, how="all")
-                books = books.drop("status", axis=1)
-
-#                if car_df.ix[car_df.head(1).index,"status"] == "booked":
-#                    books = books.drop(books.head(1).index)
-#                if car_df.ix[car_df.tail(1).index,"status"] == "booked":
-#                    books = books.drop(books.tail(1).index)
-                
+                books = books.drop("status", axis=1)                
                 for book in books.T.to_dict().values():
-                    book["provider"] = self.name
-                    book["city"] = self.city
                     book["car_id"] = car
-                    dbp.insert_book_v2(self.city, book)            
+                    dbp.insert_book_v2(self.provider, self.city, book)            
                 
         return cars_status, cars

@@ -36,6 +36,8 @@ dbp = DataBaseProxy()
 
 
 def process_books_df(provider, books_df):
+
+
         
     books_df["durations"] = \
         (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
@@ -84,8 +86,12 @@ def get_bill (provider, df):
     
    
 def riding_time (provider, df):    
-
+#    if provider == "car2go":
+#        free_reservation = 20
+#    elif provider == "enjoy":
+#        free_reservation = 15
     df["reservation_time"] = df["durations"] - df["duration_driving"]
+#    df.loc[df.reservation_time < 0, "reservation_time"] = 0
     df.loc[df.reservation_time < 0, "riding_time"] = df["durations"]
     df.loc[df.reservation_time > 0, "riding_time"] = df["duration_driving"]
     return df

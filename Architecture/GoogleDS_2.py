@@ -32,7 +32,7 @@ class GoogleDS(RTDS):
         logging.basicConfig(filename=self.log_filename, level=logging.DEBUG)   
 #        self.keys = series_keys
         self.keys = pd.Series([
-#                        'AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ', 
+                        'AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ', 
                         'AIzaSyBnUsB3u6Blg23D5uqIQPnM_1Pawkp5VLY', 
                         'AIzaSyBaaQQyMnT7MUI421WdO67g66igzXL2O4A',
                         'AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M',
