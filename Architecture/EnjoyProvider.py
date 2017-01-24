@@ -50,9 +50,10 @@ class Enjoy(ServiceProvider):
     def get_fleet_from_db (self):
         
         print "Acquiring fleet ..."
-        query = dbp.query_fleet(self.city, self.name)
-        self.fleet = pd.Index(query[0]['fleet'])
+        query = dbp.query_fleet(self.name, self.city)
+        self.fleet = pd.Index(query.next()['fleet'])
         print "Fleet acquired!"
+        return self.fleet
 
     def update_cars_status (self, doc, cars_status, cars_lat, cars_lon, cars_fuel):
         
@@ -87,7 +88,7 @@ class Enjoy(ServiceProvider):
         cars_fuel = pd.DataFrame(index = self.fleet.values)
                 
         for doc in self.cursor:
-            self.update_cars_status()
+            self.update_cars_status(doc, cars_status, cars_lat, cars_lon, cars_fuel)
             
         cars_status = cars_status.T
         cars_lat = cars_lat.T
@@ -133,20 +134,20 @@ class Enjoy(ServiceProvider):
             if len(parks):
                 parks = parks.dropna(axis=1, how="all")
                 parks = parks.drop("status", axis=1)
-                
                 for park in parks.T.to_dict().values():
+                    park["plate"] = car
                     park["provider"] = self.name
                     park["city"] = self.city
-                    dbp.insert_park_v2(self.city, park)
+                    dbp.insert_park(self.name, self.city, park)
 
             books = car_df[car_df.status == "booked"]
             if len(books):
                 books = books.dropna(axis=1, how="all")
                 books = books.drop("status", axis=1)                
                 for book in books.T.to_dict().values():
+                    book["plate"] = car
                     book["provider"] = self.name
                     book["city"] = self.city
-                    book["car_id"] = car
-                    dbp.insert_book_v2(self.city, book)
+                    dbp.insert_book(self.name, self.city, book)            
                 
         return cars_status, cars

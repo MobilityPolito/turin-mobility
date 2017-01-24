@@ -30,7 +30,7 @@ class DataBaseProxy (object):
     def __init__ (self):
         
         self.db_raw = client['CSMS']
-        self.db_compressed = client['CSMS_']
+        self.db_compressed = client['CSMS__']
         self.db = self.db_compressed
 
     def compress (self):
@@ -96,33 +96,17 @@ class DataBaseProxy (object):
 
     def insert_park (self, provider, city, park):
 
-        record = {
-                     "provider": provider,
-                     "city": city,
-                     "start": park["start"],
-                     "end": park["end"],
-                     "park": park
-                 }
-        
         collection = self.db["parks"]            
         try:
-            collection.insert_one(record)
+            collection.insert_one(park)
         except:
             print "Invalid data coding!"
 
     def insert_book (self, provider, city, book):
 
-        record = {
-                     "provider": provider,
-                     "city": city,
-                     "start": book["start"],
-                     "end": book["end"],
-                     "book": book
-                 }
-        
         collection = self.db["books"]            
         try:
-            collection.insert_one(record)
+            collection.insert_one(book)
         except:
             print "Invalid data coding!"            
             
@@ -161,6 +145,14 @@ class DataBaseProxy (object):
                      "city":city
                     }).sort([("_id", 1)])
 
+    def query_fleet (self, provider, city):
+
+        return self.db["fleet"].find \
+                    ({
+                     "provider":provider,
+                     "city":city
+                    }).sort([("_id", 1)])
+                        
     def query_parks (self, provider, city, start, end):
         
         return self.db["parks"].find \
@@ -185,14 +177,22 @@ class DataBaseProxy (object):
                      "city":city
                     }).sort([("_id", 1)])
 
-    def process_books_df (provider, books_df):
+    def process_books_df (self, provider, books_df):
             
         books_df["durations"] = \
             (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
         books_df["distances"] = books_df.apply\
             (lambda row: haversine(row["start_lon"], row["start_lat"], 
                                    row["end_lon"], row["end_lat"]), axis=1)
-    
+
+        books_df["fuel_consumption"] = \
+            books_df["start_fuel"] - books_df["end_fuel"]
+
+        if provider == "car2go":
+            books_df["bill"] = books_df["durations"].apply(lambda x: x * 0.24)
+        elif provider == "enjoy":
+            books_df["bill"] = books_df["durations"].apply(lambda x: x * 0.25)
+            
         return books_df                         
                         
     def query_parks_df (self, provider, city, start, end):
@@ -214,17 +214,11 @@ class DataBaseProxy (object):
         books_df = pd.DataFrame(columns = pd.Series(books_cursor.next()).index)
         for doc in books_cursor:
             s = pd.Series(doc)
-            books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)    
-
-        books_df["durations"] = \
-            (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
-        books_df["distances"] = books_df.apply\
-            (lambda row: haversine(row["start_lon"], row["start_lat"], 
-                                   row["end_lon"], row["end_lat"]), axis=1)
-        books_df["fuel_consumption"] = \
-            books_df["end_fuel"] - books_df["start_fuel"]
+            books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)           
             
-        return books_df
+        print books_df
+        
+        return self.process_books_df(provider, books_df)
 
     def filter_df (self, df, day_type, start, end):
         

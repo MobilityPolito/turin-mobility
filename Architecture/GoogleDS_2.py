@@ -139,7 +139,6 @@ class GoogleDS(RTDS):
  
         books_df = dbp.query_books_df(self.provider, self.city, self.start, self.end)
         print len(books_df)
-                   
        
         for i in range(len(books_df)):
             print "book: " + str(i)
@@ -160,9 +159,8 @@ class GoogleDS(RTDS):
          
             if ('distance_driving' in row.index) and (pd.notnull(row['distance_driving'])):
                 continue
-            
             else:
-                if ((row['start_lat']==row['end_lat']) and (row['end_lon']==row['end_lon'])):
+                if ((row['start_lat'] == row['end_lat']) and (row['end_lon'] == row['end_lon'])):
                     self.current_feed = feed
                     self.to_DB(row['_id'])
                     continue
@@ -176,6 +174,7 @@ class GoogleDS(RTDS):
                     continue
  
                 time.sleep(1)
+                
                 directions_result_driving, scheduled_start = manage_key(self, row, 'driving')
                 results_car = directions_result_driving[0]["legs"][0]
                 if not directions_result_driving:

@@ -41,7 +41,7 @@ def process_books_df (provider, books_df):
         elif provider == "enjoy":
             books_df["bill"] = books_df["durations"].apply(lambda x: x * 0.25)
             
-        return books_df    
+        return books_df
     
     books_df["durations"] = \
         (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
