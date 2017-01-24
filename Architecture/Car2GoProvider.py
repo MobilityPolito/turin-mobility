@@ -9,6 +9,7 @@ dbp = DataBaseProxy()
 class Car2Go(ServiceProvider):
     
     def __init__ (self):
+        
         self.name = "car2go"
         self.city = "torino"
     

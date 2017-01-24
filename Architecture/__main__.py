@@ -41,8 +41,14 @@ dbp = DataBaseProxy()
 #end = datetime.datetime(2016, 12, 10, 0, 0, 0)    
 #enjoy_parks_df = dbp.query_parks_df(provider, city, start, end)
 
+#city = "torino"
+#provider = "enjoy"
+#start = datetime.datetime(2016, 12, 7, 0, 0, 0)
+#end = datetime.datetime(2016, 12, 10, 0, 0, 0)    
+#enjoy_parks_df = dbp.query_parks_df_filtered(provider, city, start, end, "holiday")
+
 city = "torino"
 provider = "enjoy"
-start = datetime.datetime(2016, 12, 7, 0, 0, 0)
+start = datetime.datetime(2016, 12, 5, 0, 0, 0)
 end = datetime.datetime(2016, 12, 10, 0, 0, 0)    
-enjoy_parks_df = dbp.query_parks_df_filtered(provider, city, start, end, "holiday")
+enjoy_parks_df = dbp.query_books_df(provider, city, start, end)
