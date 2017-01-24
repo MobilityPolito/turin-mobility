@@ -215,8 +215,6 @@ class DataBaseProxy (object):
         for doc in books_cursor:
             s = pd.Series(doc)
             books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)           
-            
-        print books_df
         
         return self.process_books_df(provider, books_df)
 
@@ -247,9 +245,9 @@ class DataBaseProxy (object):
         df['ph_day'] = df['start'].apply(lambda x: x.date()).isin(pre_holidays)
         
         if day_type == "business":
-            return df[(df.week_day > -1) & (df.week_day < 5) & (df.h_day == False)]
+            return df[(df.week_day >= 0) & (df.week_day <= 4) & (df.h_day == False)]
         if day_type == "weekend":
-            return df[(df.week_day > 4) & (df.week_day < 7) & (df.h_day == False)]
+            return df[(df.week_day >= 5) & (df.week_day <= 6) & (df.h_day == False)]
         if day_type == "holiday":
             return df[df.h_day == True]
         if day_type == "preholiday":
