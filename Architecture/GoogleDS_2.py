@@ -136,7 +136,6 @@ class GoogleDS(RTDS):
             logging.debug(message)
             return directions_result, scheduled_start
  
- 
         books_df = dbp.query_books_df(self.provider, self.city, self.start, self.end)
         print len(books_df)
        
@@ -196,9 +195,9 @@ class GoogleDS(RTDS):
                     feed['distance_google_transit'] = results_bus["distance"]["value"] / 1000.0
                     feed['duration_google_transit'] = results_bus["duration"]["value"] / 60.0
                     if "arrival_time" in results_bus:
-                        arrival_time = datetime.datetime.utcfromtimestamp\
-                        (results_bus["arrival_time"]["value"])\
-                        + datetime.timedelta(hours = 1)
+                        arrival_time = datetime.datetime.fromtimestamp\
+                            (results_bus["arrival_time"]["value"])\
+                            + datetime.timedelta(hours = 1)
                         feed['arrival_time_google_transit'] = arrival_time
                         time_difference = arrival_time - scheduled_start
                         feed['tot_duration_google_transit'] = time_difference.total_seconds() / 60

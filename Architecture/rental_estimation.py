@@ -71,7 +71,7 @@ def get_bill (provider, df):
     extra_minutes = df.loc[indexes, 'reservation_time'] - free_reservation
     df.loc[indexes,"min_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket) + \
                                             extra_minutes.apply(lambda x: x * extra_ticket)                                            
-    df.loc[indexes,"max_bill"] = df.loc[indexes, 'durations'].apply(lambda x: x * ticket)
+    df.loc[indexes,"max_bill"] = df.loc[indexes, 'duration'].apply(lambda x: x * ticket)
                                          
     indexes = df.loc[(df.reservation_time <= free_reservation) & (df.reservation_time > 0)].index
     df.loc[indexes,"min_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket)                    
@@ -85,8 +85,8 @@ def get_bill (provider, df):
    
 def riding_time (provider, df):    
  
-    df["reservation_time"] = df["durations"] - df["duration_driving"]
-    df.loc[df.reservation_time < 0, "riding_time"] = df["durations"]
+    df["reservation_time"] = df["duration"] - df["duration_driving"]
+    df.loc[df.reservation_time < 0, "riding_time"] = df["duration"]
     df.loc[df.reservation_time > 0, "riding_time"] = df["duration_driving"]
     return df
  

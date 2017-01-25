@@ -235,10 +235,23 @@ class DataBaseProxy (object):
             s = pd.Series(doc)
             parks_df = pd.concat([parks_df, pd.DataFrame(s).T], ignore_index=True)    
 
-        parks_df["durations"] = \
+        parks_df["duration"] = \
             (parks_df["end"] - parks_df["start"])/np.timedelta64(1, 'm')            
             
-        return parks_df
+        return parks_df\
+                    [
+                     [
+                         "city",
+                         "provider",
+                         "plate",
+                         "_id",
+                         "start",
+                         "end",
+                         "lat",
+                         "lon",
+                         "duration", 
+                     ]
+                    ]
                         
     def query_books_df (self, provider, city, start, end):
         
@@ -248,7 +261,34 @@ class DataBaseProxy (object):
             s = pd.Series(doc)
             books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)           
         
-        return self.process_books_df(provider, books_df)
+        return self.process_books_df(provider, books_df).replace({None:np.NaN})\
+                    [
+                     [
+                         "city",
+                         "provider",
+                         "plate",
+                         "_id",
+                         "start",
+                         "end",
+                         "start_lat",
+                         "start_lon",
+                         "end_lat", 
+                         "end_lon", 
+                         "distance", 
+                         "duration", 
+                         "fuel_consumption",
+                         "reservation_time",
+                         "riding_time",
+                         "distance_driving",
+                         "duration_driving",
+                         "distance_google_transit",
+                         "duration_google_transit",
+                         "tot_duration_google_transit",
+                         "min_bill",
+                         "max_bill",
+                         "fare_google_transit"
+                     ]
+                    ]
 
     def filter_df (self, df, day_type, start, end):
         
