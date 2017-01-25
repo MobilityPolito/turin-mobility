@@ -8,6 +8,8 @@ from Car2GoProvider import Car2Go
 from EnjoyProvider import Enjoy
 
 from DataBaseProxy import DataBaseProxy
+dbp = DataBaseProxy()
+#dbp.compress()
 
 #start = datetime.datetime(2016, 12, 5, 0, 0, 0)
 #end = datetime.datetime(2016, 12, 12, 0, 0, 0)
@@ -15,13 +17,10 @@ enjoy = Enjoy()
 enjoy_fleet = enjoy.get_fleet_from_db()
 #enjoy.select_data("torino", "timestamp", start, end)
 #enjoy.get_parks_and_books()
-car2go = Car2Go()
+car2go = Car2Go() 
 car2go_fleet = car2go.get_fleet_from_db()
 #car2go.select_data("torino", "timestamp", start, end)
 #car2go.get_parks_and_books()
-
-dbp = DataBaseProxy()
-#dbp.compress()
 
 #city = "torino"
 #for provider in ["car2go", "enjoy"]:
@@ -62,10 +61,10 @@ dbp = DataBaseProxy()
 #enjoy_parks_df = dbp.query_parks_df_filtered(provider, city, start, end, "business")
 
 city = "torino"
-provider = "enjoy"
-start = datetime.datetime(2016, 12, 10, 0, 0, 0)
-end = datetime.datetime(2016, 12, 11, 0, 0, 0)
-enjoy_books_df = dbp.query_books_df(provider, city, start, end)
+provider = "car2go"
+start = datetime.datetime(2016, 12, 5, 0, 0, 0)
+end = datetime.datetime(2016, 12, 8, 0, 0, 0)
+car2go_books_df = dbp.query_books_df(provider, city, start, end)
 
 #def day_analysis (books_df, year, month, day, fleet_size):
 #
@@ -107,11 +106,18 @@ enjoy_books_df = dbp.query_books_df(provider, city, start, end)
 #        stats = pd.concat([stats, day_analysis(group, date.year, date.month, date.day, fleet_size)])
 #    stats["time"] = pd.Series(stats.index.values).apply(lambda x: x.time()).values
 #
-#    return books_df, stats
+#    return books_df, stats.groupby("time").aggregate(np.mean)
 #
 #city = "torino"
-#provider = "enjoy"
+#provider = "car2go"
 #start = datetime.datetime(2016, 12, 5, 0, 0, 0)
 #end = datetime.datetime(2016, 12, 12, 0, 0, 0)
-#enjoy.select_data("torino", "timestamp", start, end)
-#books_df, stats = get_hours_stats("torino", "enjoy", start, end, len(enjoy_fleet), "weekend")
+#books_df, stats = get_hours_stats(city, provider, start, end, len(enjoy_fleet), "business")
+#
+#import matplotlib
+#import matplotlib.pyplot as plt
+#matplotlib.style.use('ggplot')
+#
+#stats["n_books_norm"].plot()
+#plt.xticks(rotation=70)
+#plt.show()

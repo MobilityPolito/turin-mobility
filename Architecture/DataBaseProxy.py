@@ -30,7 +30,7 @@ class DataBaseProxy (object):
     def __init__ (self):
         
         self.db_raw = client['CSMS']
-        self.db_compressed = client['CSMS__']
+        self.db_compressed = client['CSMS_']
         self.db = self.db_compressed
 
     def compress (self):
@@ -178,21 +178,53 @@ class DataBaseProxy (object):
                     }).sort([("_id", 1)])
 
     def process_books_df (self, provider, books_df):
+
+        def riding_time (provider, df):    
+         
+            df["reservation_time"] = df["duration"] - df["duration_driving"]
+            df.loc[df.reservation_time < 0, "riding_time"] = df["duration"]
+            df.loc[df.reservation_time > 0, "riding_time"] = df["duration_driving"]
             
-        books_df["durations"] = \
+            return df        
+        
+        def get_bill (provider, df):
+            
+            if provider == "car2go":
+                free_reservation = 20
+                ticket = 0.24
+                extra_ticket = 0.24    
+            elif provider == "enjoy":
+                free_reservation = 15
+                ticket = 0.25
+                extra_ticket = 0.10    
+         
+            indexes = df.loc[df.reservation_time > free_reservation].index
+            extra_minutes = df.loc[indexes, 'reservation_time'] - free_reservation
+            df.loc[indexes,"min_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket) + \
+                                                    extra_minutes.apply(lambda x: x * extra_ticket)                                            
+            df.loc[indexes,"max_bill"] = df.loc[indexes, 'duration'].apply(lambda x: x * ticket)
+                                                 
+            indexes = df.loc[(df.reservation_time <= free_reservation) & (df.reservation_time > 0)].index
+            df.loc[indexes,"min_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket)                    
+            df.loc[indexes,"max_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket)
+           
+            indexes = df.loc[df.reservation_time < 0].index
+            df.loc[indexes,"min_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket)
+            df.loc[indexes,"max_bill"] = df.loc[indexes, 'riding_time'].apply(lambda x: x * ticket)        
+            
+            return df
+                       
+        books_df["duration"] = \
             (books_df["end"] - books_df["start"])/np.timedelta64(1, 'm')
-        books_df["distances"] = books_df.apply\
+        books_df["distance"] = books_df.apply\
             (lambda row: haversine(row["start_lon"], row["start_lat"], 
                                    row["end_lon"], row["end_lat"]), axis=1)
-
         books_df["fuel_consumption"] = \
             books_df["start_fuel"] - books_df["end_fuel"]
 
-        if provider == "car2go":
-            books_df["bill"] = books_df["durations"].apply(lambda x: x * 0.24)
-        elif provider == "enjoy":
-            books_df["bill"] = books_df["durations"].apply(lambda x: x * 0.25)
-            
+        books_df = riding_time(provider, books_df)
+        books_df = get_bill(provider, books_df)
+
         return books_df                         
                         
     def query_parks_df (self, provider, city, start, end):
