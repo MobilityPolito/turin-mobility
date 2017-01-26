@@ -139,8 +139,6 @@ plt.show()
 #fig, ax = plt.subplots()
 #fig = sm.graphics.plot_fit(res, 1, ax=ax)
 
-
-
 car2go_books_df.loc[(car2go_books_df.reservation_time < 0), "reservation_time"] = 0.0
 false_trips_df = car2go_books_df[(car2go_books_df.distance < 0.1) & (car2go_books_df.fuel_consumption == 0)]
 

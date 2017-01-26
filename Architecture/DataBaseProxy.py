@@ -132,7 +132,20 @@ class DataBaseProxy (object):
         return self.db["books"].update_one({"_id":  object_id},
                                               {"$set": feed},
                                               upsert = True)
-            
+        
+    def query_fleet_by_day (self, provider, city, start, end):
+        
+        return self.db['fleet'].find \
+                           ({
+                               'day':
+                                   {
+                                       '$gt': start,
+                                       '$lt': end
+                                   },
+                               'provider': provider,
+                               'city':city
+                           }).sort([("_id", 1)])        
+                
     def query_raw_by_time (self, provider, city, start, end):
         
         return self.db["snapshots"].find \
