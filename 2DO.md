@@ -17,7 +17,7 @@
 
 * Analisi e visualizzazione:
 
-	Parks:
+	* Parks:
 		- Filtrare per:
 			- Business days
 			- Weekend days
@@ -36,7 +36,7 @@
 				- Globale
 				- Ora per ora (oppure ogni n ore se il grafico è troppo confuso)
 
-	Books:
+	* Books:
 		- Considerando T_reservation = 0, Classificare TUTTI i books in:
 			- Books (probabilmente) falsi
 			- Books "diretti" O != D, T_booking < 120
