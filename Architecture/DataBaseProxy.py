@@ -355,6 +355,48 @@ class DataBaseProxy (object):
             return df[df.ph_day == True]
 
         return df
+
+    def filter_date (self, start, end, day_type):
+        
+        cal = Italy()
+        
+        holidays = []
+        pre_holidays = []
+        business = []
+        weekends = []
+       
+        #holidays collection creation
+        if start.year == end.year:
+            for h in cal.holidays(start.year):
+                holidays.append(h[0])
+        else:
+            for year in range (start.year, end.year+1):
+                for h in cal.holidays(year):
+                    holidays.append(h[0])
+                     
+        for d in holidays:
+            if (d - datetime.timedelta(days = 1)) not in holidays:
+                pre_holidays.append(d - datetime.timedelta(days = 1))
+
+        date_list = [end - datetime.timedelta(days=x) for x in range(0, (end-start).days+1)]
+
+        if day_type == "business":
+            for day in date_list:
+                if (day.weekday() >= 0) & (day.weekday() <= 4) & (day not in holidays):
+                    business.append(day)
+            return business
+
+        if day_type == "weekend":
+            for day in date_list:
+                if (day.weekday() >= 5) & (day.weekday() <= 6) & (day not in holidays):
+                    weekends.append(day)
+            return weekends
+
+        if day_type == "holiday":
+            return holidays
+
+        if day_type == "preholiday":
+            return pre_holidays
         
     def query_books_df_filtered (self, provider, city, start, end, day_type):
 
@@ -365,3 +407,27 @@ class DataBaseProxy (object):
 
         parks_df = self.query_parks_df(provider, city, start, end)
         return self.filter_df(parks_df, day_type, start, end)
+
+    def query_books_df_filtered_v2 (self, provider, city, start, end, day_type):
+
+        lista_date = self.filter_date(start, end, day_type)
+        books_df = pd.DataFrame()
+
+        for end_ in lista_date:
+            start_ = (end_ - datetime.timedelta(days = 1))
+            query = self.query_books_df(provider, city, start_, end_)
+            books_df = pd.concat([books_df, query], ignore_index=True)
+
+        return books_df
+
+    def query_parks_df_filtered_v2 (self, provider, city, start, end, day_type):
+
+        lista_date = self.filter_date(start, end, day_type)
+        books_df = pd.DataFrame()
+
+        for end_ in lista_date:
+            start_ = (end_ - datetime.timedelta(days = 1))
+            query = self.query_parks_df(provider, city, start_, end_)
+            books_df = pd.concat([books_df, query], ignore_index=True)
+
+        return books_df

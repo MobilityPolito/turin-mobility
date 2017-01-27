@@ -114,7 +114,7 @@ def day_analysis (books_df, year, month, day):
 
     return day_stats
 
-def get_hours_stats (books_df):
+def get_books_hours_stats (books_df):
 
     books_df = books_df[books_df.duration < 300]
     books_df = books_df[books_df.distance > 0.1]
@@ -139,14 +139,14 @@ def group_books_by_hour (books_df):
     return books_df
 
 
-start = datetime.datetime(2016, 12, 5, 0, 0, 0)
-end = datetime.datetime(2016, 12, 16, 23, 59, 59)
-#end = datetime.datetime.now()
+# start = datetime.datetime(2016, 12, 5, 0, 0, 0)
+# end = datetime.datetime(2016, 12, 16, 23, 59, 59)
+# #end = datetime.datetime.now()
 
-car2go_books = dbp.query_books_df_filtered("car2go", "torino", start, end, "business")
-#enjoy_books = dbp.query_books_df_filtered("enjoy", "torino", start, end, "business")
+# car2go_books = dbp.query_books_df_filtered("car2go", "torino", start, end, "business")
+# #enjoy_books = dbp.query_books_df_filtered("enjoy", "torino", start, end, "business")
  
-car2go_books_modified, car2go_books_stats = get_hours_stats(car2go_books)
+# car2go_books_modified, car2go_books_stats = get_books_hours_stats(car2go_books)
 #enjoy_books_modified, enjoy_books_stats = get_hours_stats(enjoy_books)
 
 #car2go_books_hour = group_books_by_hour(car2go_books)
