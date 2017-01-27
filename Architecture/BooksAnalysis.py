@@ -75,7 +75,83 @@ def get_books_day (city, provider, year, month, day):
     books_df = dbp.get_books(provider, city, start, end)
     
     return process_books_df(provider, books_df)
+
+def day_analysis (books_df, year, month, day):
+
+    day_stats = pd.DataFrame()
+    start = datetime.datetime(year, month, day, 0, 0, 0)
+    end = datetime.datetime(year, month, day, 23, 59, 0)
+    provider = books_df["provider"].unique()[0]
+    city = books_df["city"].unique()[0]
+    fleet_size = float(len(dbp.query_fleet_by_day(provider, city, start, end)[0]["fleet"]))
+
+    for hour in range(0, 24, 1):
+        sup_datetime = datetime.datetime(year, month, day, hour, 59, 59)
+        inf_datetime = datetime.datetime(year, month, day, hour, 0, 0)
+
+        day_stats.loc[sup_datetime, "n"] = \
+            float(len(books_df[inf_datetime:sup_datetime]))
+            
+        day_stats.loc[sup_datetime, "n_norm"] = \
+            float(len(books_df[inf_datetime:sup_datetime]))/fleet_size
+
+        day_stats.loc[sup_datetime, "avg_duration"] = \
+            books_df[inf_datetime:sup_datetime]["duration"].mean()
+            
+        day_stats.loc[sup_datetime, "med_duration"] = \
+            books_df[inf_datetime:sup_datetime]["duration"].median()
+
+        day_stats.loc[sup_datetime, "avg_books_distance"] = \
+            books_df[inf_datetime:sup_datetime]["distance_driving"].mean()
+        day_stats.loc[sup_datetime, "med_books_distance"] = \
+            books_df[inf_datetime:sup_datetime]["distance_driving"].median()
+        
+        day_stats.loc[sup_datetime, "min_bill"] = \
+            books_df[inf_datetime:sup_datetime]["min_bill"].sum()
+
+        day_stats.loc[sup_datetime, "max_bill"] = \
+            books_df[inf_datetime:sup_datetime]["max_bill"].sum()
+
+    return day_stats
+
+def get_hours_stats (books_df):
+
+    books_df = books_df[books_df.duration < 300]
+    books_df = books_df[books_df.distance > 0.1]
     
+    books_df["start_"] = books_df["start"]
+    books_df = books_df.set_index("start_").sort_index()
+    books_df["date"] = books_df["start"].apply(lambda x: x.date())
+    
+    stats = pd.DataFrame()
+    for date, group in books_df.groupby("date"):
+        stats = pd.concat([stats, day_analysis(group, date.year, date.month, date.day)])
+    stats["time"] = pd.Series(stats.index.values).apply(lambda x: x.time()).values
+
+    return books_df, stats.groupby("time").aggregate(np.mean)
+
+def group_books_by_hour (books_df):
+
+    books_df["start_"] = books_df["start"]
+    books_df = books_df.set_index("start_").sort_index()
+    books_df["hour"] = books_df["start"].apply(lambda x: x.hour)
+    
+    return books_df
+
+
+start = datetime.datetime(2016, 12, 5, 0, 0, 0)
+end = datetime.datetime(2016, 12, 16, 23, 59, 59)
+#end = datetime.datetime.now()
+
+car2go_books = dbp.query_books_df_filtered("car2go", "torino", start, end, "business")
+#enjoy_books = dbp.query_books_df_filtered("enjoy", "torino", start, end, "business")
+ 
+car2go_books_modified, car2go_books_stats = get_hours_stats(car2go_books)
+#enjoy_books_modified, enjoy_books_stats = get_hours_stats(enjoy_books)
+
+#car2go_books_hour = group_books_by_hour(car2go_books)
+#enjoy_books_hour = group_books_by_hour(enjoy_books)
+
 #books_df = get_books_day("torino", "car2go", 2016, 12, 6)
 
 #fig, ax = plt.subplots(1,1,figsize=(10,10))
