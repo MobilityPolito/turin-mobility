@@ -197,9 +197,12 @@ class GoogleDS(RTDS):
                     feed['distance_google_transit'] = results_bus["distance"]["value"] / 1000.0
                     feed['duration_google_transit'] = results_bus["duration"]["value"] / 60.0
                     if "arrival_time" in results_bus:
-                        arrival_time = datetime.datetime.fromtimestamp(results_bus["arrival_time"]["value"], pytz.utc)\
-                                        + datetime.timedelta(hours = 1)
-                        arrival_time = arrival_time.replace(tzinfo=None)
+                        if  type(results_bus["arrival_time"]["value"]) == int:
+                            arrival_time = datetime.datetime.fromtimestamp(results_bus["arrival_time"]["value"], pytz.utc)\
+                                            + datetime.timedelta(hours = 1)
+                            arrival_time = arrival_time.replace(tzinfo=None)
+                        else:
+                            arrival_time = results_bus["arrival_time"]["value"]
                         feed['arrival_time_google_transit'] = arrival_time
                         time_difference = arrival_time - scheduled_start
                         feed['tot_duration_google_transit'] = time_difference.total_seconds() / 60

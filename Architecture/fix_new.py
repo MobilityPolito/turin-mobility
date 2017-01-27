@@ -36,7 +36,7 @@ start = end - datetime.timedelta(days = 10)
 
 city = "torino"
 provider = "car2go"
-start = datetime.datetime(2016, 12, 7, 0, 0, 0)
+start = datetime.datetime(2016, 12, 5, 0, 0, 0)
 end = datetime.datetime(2016, 12, 20, 0, 0, 0)
 books_df = dbp.query_books_df(provider, city, start, end)
 books_df = books_df.replace({"nan":np.NaN})
@@ -49,8 +49,7 @@ for i in range(len(books_df)):
     if ((row['start_lat']== row['end_lat']) and (row['end_lon']==row['end_lon'])):
         continue
     else:
-        if row.isnull()["tot_duration_google_transit"] == True\
-        and row.isnull()['arrival_time_google_transit'] == False:
+        if ('arrival_time_google_transit' in row) and row.isnull()['arrival_time_google_transit'] == False and type(row['arrival_time_google_transit'])==int:
             print row['_id']
             scheduled_start = next_weekday(datetime.datetime.now(), row['start'])
             if type(row['arrival_time_google_transit'])==int:
@@ -59,10 +58,49 @@ for i in range(len(books_df)):
             else:
                 scheduled_end = next_weekday(datetime.datetime.now(), row['arrival_time_google_transit'])
             tot_dur = scheduled_end - scheduled_start
-            tot_dur = tot_dur.total_seconds() / 60
+            tot_dur = tot_dur.total_seconds() / 60.0
             dbp.db["books"].update_one({"_id":  row['_id']},
                                        {"$set": {"tot_duration_google_transit": tot_dur }}, 
                                         upsert = True)
-        else:
-            pass
+            print "1"
+            
+        if ('departure_time_google_transit' in row) and row.isnull()['departure_time_google_transit'] == False and type(row['departure_time_google_transit'])==int:
+            departure_time_google_transit = datetime.datetime.fromtimestamp(row['departure_time_google_transit'], pytz.utc)
+            dbp.db["books"].update_one({"_id":  row['_id']},
+                           {"$set": {"departure_time_google_transit": departure_time_google_transit }}, 
+                            upsert = True)
+            print "2"
+
+
+        if ('duration_google_transit' in row) and row.isnull()['duration_google_transit'] == False and type(row['duration_google_transit'])==int:
+            duration_google_transit = row['duration_google_transit']/60.0
+            dbp.db["books"].update_one({"_id":  row['_id']},
+               {"$set": {"duration_google_transit": duration_google_transit }}, 
+                upsert = True)
+            print "3"
+
+ 
+        if ('duration_driving' in row) and row.isnull()['duration_driving'] == False and type(row['duration_driving'])==int:
+            duration_driving = row['duration_driving']/60.0
+            dbp.db["books"].update_one({"_id":  row['_id']},
+               {"$set": {"duration_driving": duration_driving }}, 
+                upsert = True)
+            print "3"
         
+            
+        if ('distance_driving' in row) and row.isnull()['distance_driving'] == False and type(row['distance_driving'])==int:
+            distance_driving = row['distance_driving']/1000.0
+            dbp.db["books"].update_one({"_id":  row['_id']},
+               {"$set": {"distance_driving": distance_driving }}, 
+                upsert = True)
+            print "4"
+
+        
+        if ('distance_google_transit' in row) and row.isnull()['distance_google_transit'] == False and type(row['distance_google_transit'])==int:
+            distance_google_transit = row['distance_google_transit']/1000.0
+            dbp.db["books"].update_one({"_id":  row['_id']},
+               {"$set": {"distance_google_transit": distance_google_transit }}, 
+                upsert = True)
+            print "5"
+
+            
