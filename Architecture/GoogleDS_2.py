@@ -10,7 +10,7 @@ import time
 import datetime
 import logging
 import urllib2
- 
+import pytz 
 import pandas as pd
 import numpy as np
  
@@ -19,7 +19,7 @@ import googlemaps
 from DataSource_without_Thread import RTDS
 from DataBaseProxy import DataBaseProxy
 dbp = DataBaseProxy()
- 
+
 class GoogleDS(RTDS):
        
     def __init__ (self, provider, city, by, *args):
@@ -33,7 +33,7 @@ class GoogleDS(RTDS):
         logging.basicConfig(filename=self.log_filename, level=logging.DEBUG)  
 #        self.keys = series_keys
         self.keys = pd.Series([
-                        'AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ',
+#                        'AIzaSyD3PdBLQxWMDsaJ1tdHOs02QNBuIEqLSiQ',
                         'AIzaSyBnUsB3u6Blg23D5uqIQPnM_1Pawkp5VLY',
                         'AIzaSyBaaQQyMnT7MUI421WdO67g66igzXL2O4A',
                         'AIzaSyDbPG5qS-g0pROiPRcOT2G-keWi54ie2-M',
@@ -42,7 +42,7 @@ class GoogleDS(RTDS):
                         'AIzaSyCeT4Z_Cfabvpnh2FBbf3TCrhBNtwlfVwU',
                         'AIzaSyAcPVep5aXJLbuBDV7Qn_JaWSpD4o6s30w',
                         'AIzaSyBHz8SA5BKIJDOu9mtLJb5JilGvcLnGIiM',
-                        'AIzaSyBqMJcxNQUmciUN8qsI-4JVO9Hh_EJqNfE',
+#                        'AIzaSyBqMJcxNQUmciUN8qsI-4JVO9Hh_EJqNfE',
                         'AIzaSyB9XupnKFaH-zuVg_lBlz7NO8q6QpWFKZk',
                         'AIzaSyAVpeQaUjVPZznjp1b1sbtUl2iBzHSuGek',
                         'AIzaSyCoFpO5q5MatCal_1lLaxVCr6LcXePo91M',
@@ -68,6 +68,7 @@ class GoogleDS(RTDS):
                         'AIzaSyDnjsWBJLiu2KeQuB06SI3MX5oNcSxYGpk',
                         'AIzaSyA02bc_0MCLk9bJ5VQl61friKy_jez-fDg',
                         'AIzaSyDE1gmIDOwgNqZwtPG4n0cXuAWJC-o6zqs'
+                        
                     ])
  
         self.current_key = 5
@@ -136,6 +137,7 @@ class GoogleDS(RTDS):
             logging.debug(message)
             return directions_result, scheduled_start
  
+ 
         books_df = dbp.query_books_df(self.provider, self.city, self.start, self.end)
         print len(books_df)
        
@@ -195,9 +197,9 @@ class GoogleDS(RTDS):
                     feed['distance_google_transit'] = results_bus["distance"]["value"] / 1000.0
                     feed['duration_google_transit'] = results_bus["duration"]["value"] / 60.0
                     if "arrival_time" in results_bus:
-                        arrival_time = datetime.datetime.fromtimestamp\
-                            (results_bus["arrival_time"]["value"])\
-                            + datetime.timedelta(hours = 1)
+                        arrival_time = datetime.datetime.fromtimestamp(results_bus["arrival_time"]["value"], pytz.utc)\
+                                        + datetime.timedelta(hours = 1)
+                        arrival_time = arrival_time.replace(tzinfo=None)
                         feed['arrival_time_google_transit'] = arrival_time
                         time_difference = arrival_time - scheduled_start
                         feed['tot_duration_google_transit'] = time_difference.total_seconds() / 60
@@ -207,7 +209,7 @@ class GoogleDS(RTDS):
                 else:
                     print "Fare missing"
                     print row['_id']  
-   
+                print row['_id']
                 print feed
                 change_key(self)
                 self.current_directions_result = directions_result
@@ -233,9 +235,9 @@ class GoogleDS(RTDS):
         self.start_session()
         self.get_feed()
  
-#start = datetime.datetime(2016, 12, 5, 0, 0, 0)
-#end = datetime.datetime(2016, 12, 10, 0, 0, 0)    
-#googlecar2go = GoogleDS('enjoy', 'torino', 'timestamp', start, end)
-#googlecar2go.start_session()
-#feed = googlecar2go.get_feed()
+start = datetime.datetime(2016, 12, 5, 0, 0, 0)
+end = datetime.datetime(2016, 12, 20, 0, 0, 0)    
+googlecar2go = GoogleDS('enjoy', 'torino', 'timestamp', start, end)
+googlecar2go.start_session()
+feed = googlecar2go.get_feed()
 #directions = googlecar2go.current_directions_result
