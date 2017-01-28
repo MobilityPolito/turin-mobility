@@ -319,6 +319,69 @@ class DataBaseProxy (object):
                      ]
                     ]
 
+    def query_parks_df_intervals (self, provider, city, dates_list):
+        
+        parks_cursor = self.query_parks_intervals(provider, city, dates_list)
+        parks_df = pd.DataFrame(columns = pd.Series(parks_cursor.next()).index)
+        for doc in parks_cursor:
+            s = pd.Series(doc)
+            parks_df = pd.concat([parks_df, pd.DataFrame(s).T], ignore_index=True)    
+
+        parks_df["duration"] = \
+            (parks_df["end"] - parks_df["start"])/np.timedelta64(1, 'm')            
+            
+        return parks_df\
+                    [
+                     [
+                         "city",
+                         "provider",
+                         "plate",
+                         "_id",
+                         "start",
+                         "end",
+                         "lat",
+                         "lon",
+                         "duration", 
+                     ]
+                    ]
+
+    def query_books_df_intervals (self, provider, city, dates_list):
+        
+        books_cursor = self.query_books_intervals(provider, city, dates_list)    
+        books_df = pd.DataFrame(columns = pd.Series(books_cursor.next()).index)
+        for doc in books_cursor:
+            s = pd.Series(doc)
+            books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)           
+        
+        return self.process_books_df(provider, books_df).replace({None:np.NaN})\
+                    [
+                     [
+                         "city",
+                         "provider",
+                         "plate",
+                         "_id",
+                         "start",
+                         "end",
+                         "start_lat",
+                         "start_lon",
+                         "end_lat", 
+                         "end_lon", 
+                         "distance", 
+                         "duration", 
+                         "fuel_consumption",
+                         "reservation_time",
+                         "riding_time",
+                         "distance_driving",
+                         "duration_driving",
+                         "distance_google_transit",
+                         "duration_google_transit",
+                         "tot_duration_google_transit",
+                         "min_bill",
+                         "max_bill",
+                         "fare_google_transit"
+                     ]
+                    ]
+
     def filter_df (self, df, day_type, start, end):
         
         cal = Italy()
@@ -361,7 +424,9 @@ class DataBaseProxy (object):
         cal = Italy()
         
         holidays = []
+        holidays_ = []
         pre_holidays = []
+        pre_holidays_ = []
         business = []
         weekends = []
        
@@ -393,10 +458,54 @@ class DataBaseProxy (object):
             return weekends
 
         if day_type == "holiday":
-            return holidays
+            for day in date_list:
+                if (day.date() in holidays):
+                    holidays_.append(day)
+            return holidays_
 
         if day_type == "preholiday":
-            return pre_holidays
+            for day in date_list:
+                if (day.date() in holidays):
+                    pre_holidays_.append(day)
+            return pre_holidays_
+
+    def query_books_intervals(self, provider, city, dates_list):
+
+        query = []
+        for end_ in dates_list:
+            start_ = (end_ - datetime.timedelta(days = 1))
+            q = {'start': {
+                            '$gt': start_,
+                            '$lt': end_
+                            }
+                }
+            query.append(q)
+
+        return self.db['books'].find \
+                    ({ 
+                        '$or': query,
+                        'provider': provider,
+                        'city': city                      
+                    })
+
+    def query_parks_intervals(self, provider, city, dates_list):
+
+        query = []
+        for end_ in dates_list:
+            start_ = (end_ - datetime.timedelta(days = 1))
+            q = {'start': {
+                            '$gt': start_,
+                            '$lt': end_
+                            }
+                }
+            query.append(q)
+
+        return self.db['parks'].find \
+                    ({ 
+                        '$or': query,
+                        'provider': provider,
+                        'city': city                      
+                    })
         
     def query_books_df_filtered (self, provider, city, start, end, day_type):
 
@@ -411,23 +520,11 @@ class DataBaseProxy (object):
     def query_books_df_filtered_v2 (self, provider, city, start, end, day_type):
 
         lista_date = self.filter_date(start, end, day_type)
-        books_df = pd.DataFrame()
-
-        for end_ in lista_date:
-            start_ = (end_ - datetime.timedelta(days = 1))
-            query = self.query_books_df(provider, city, start_, end_)
-            books_df = pd.concat([books_df, query], ignore_index=True)
-
-        return books_df
+        return self.query_books_df_intervals(provider, city, lista_date)
 
     def query_parks_df_filtered_v2 (self, provider, city, start, end, day_type):
 
         lista_date = self.filter_date(start, end, day_type)
-        books_df = pd.DataFrame()
-
-        for end_ in lista_date:
-            start_ = (end_ - datetime.timedelta(days = 1))
-            query = self.query_parks_df(provider, city, start_, end_)
-            books_df = pd.concat([books_df, query], ignore_index=True)
+        return self.query_parks_df_intervals(provider, city, lista_date)
 
         return books_df
