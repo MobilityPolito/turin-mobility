@@ -21,7 +21,7 @@ import geopandas as gpd
 
 from DataBaseProxy import DataBaseProxy
 
-#from Analysis import *
+from Analysis import *
 from BooksAnalysis import get_books_hours_stats
 
 
@@ -33,33 +33,33 @@ dbp = DataBaseProxy()
 ##################DATA ANALYSIS###################
 ##################################################
 
-provider = 'car2go'
+provider = 'enjoy'
 city = 'torino'
 
 year = 2016
 month = 12
 
-#zones = gpd.read_file("../../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
+zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
 
 #zones = gpd.read_file("../../../SHAPE/Zones_limit.dbf").to_crs({"init": "epsg:4326"})
 
-for day in range(8, 12, 1):
+for day in range(10, 11, 1):
 
 	print ('day:'+str(day))
 
-	start = datetime.datetime(year, month, day, 0, 0, 0)
-	end = datetime.datetime(year, month, day, 23, 59, 59)
+	start = datetime.datetime(year, month, 5, 0, 0, 0)
+	end = datetime.datetime(year, month, 15, 23, 59, 59)
 
 #	fleet_size = len(dbp.query_fleet_by_day(provider, city, start, end)[0]['fleet'])
  
-	provider_books = dbp.query_books_df_filtered_v2('enjoy', 'torino', start, end, "full")
-	books_df, stats = get_books_hours_stats(provider_books)
+#	provider_books = dbp.query_books_df_filtered_v2(provider, city, start, end, "full")
+#	books_df, stats = get_books_hours_stats(provider_books)
 
-#	origins, destinations, od = getODmatrix(city, provider, zones, start, end)
+	dataframeOD, origins, destinations, od = getODmatrix(city, provider, zones, start, end)
 
 	#books_df_car2go, parks_d_car2go, day_stats_car2go = \
 	#    day_analysis(city, provider, start, end, fleet_size)
-	#zones, origins, destinations, od = getODmatrix(city, provider, year, month, day)
+#	zones, origins, destinations, od = getODmatrix(city, provider, year, month, day)
 
 	# day_db = datetime.datetime(year, month, day, 12, 00)
 	# dbp.insert_day_analysis(day_db, city, provider, list(stats.T.to_dict().values()), json.loads(od.T.to_json()).values())

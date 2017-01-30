@@ -20,8 +20,8 @@ from pandas.tools.plotting import scatter_matrix
 from DataBaseProxy import DataBaseProxy
 dbp = DataBaseProxy()
     
-from BooksAnalysis import get_books_day, get_books_days
-from ParksAnalysis import get_parks_day
+#from BooksAnalysis import get_books_day, get_books_days
+#from ParksAnalysis import get_parks_day
 
 def day_analysis (city, provider, year, month, day, fleet_size):
 
@@ -54,12 +54,18 @@ def day_analysis (city, provider, year, month, day, fleet_size):
         
     return books_df, day_stats
 
-def getODmatrix (city, provider, zones, year, month, day, depth):
+def getODmatrix (city, provider, zones, start, end):
     
-    end = datetime.datetime(year, month, day, 23, 59, 59)
+#    end = datetime.datetime(year, month, day, 23, 59, 59)
 
-    books_df = get_books_days(city, provider, end, depth)\
-        .set_index("start").sort_index()
+#    books_df = get_books_days(city, provider, end, depth)\
+#        .set_index("start").sort_index()
+        
+    books_df = dbp.query_books_df_filtered_v2(provider, city, start, end, 'full')\
+        .set_index('start').sort_index()
+
+    books_df = books_df[books_df.duration < 120]
+    books_df = books_df[books_df.distance > 0.1]
     
     origins = books_df[["start_lat","start_lon"]]
     origins["geometry"] = origins.apply\
@@ -89,7 +95,7 @@ def getODmatrix (city, provider, zones, year, month, day, depth):
 #    OD.loc["sum"] = OD.sum()
 #    OD.loc["sum","sum"]
 
-    return origins, destinations, OD
+    return books_df, origins, destinations, OD
     
 ## 2
 #gdf1 = gpd.read_file("../../dati_torino/zonestat_popolazione_residente_2015_geo.dbf").to_crs({"init": "epsg:4326"})
