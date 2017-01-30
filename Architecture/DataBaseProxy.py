@@ -469,6 +469,9 @@ class DataBaseProxy (object):
                     pre_holidays_.append(day)
             return pre_holidays_
 
+        if day_type == 'full':
+            return date_list
+
     def query_books_intervals(self, provider, city, dates_list):
 
         query = []

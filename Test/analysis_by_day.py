@@ -16,16 +16,17 @@ import pandas as pd
 import geopandas as gpd
 
 #from Car2GoProvider import Car2Go
-from EnjoyProvider import Enjoy
+#from EnjoyProvider import Enjoy
 #from Analysis import day_analysis, getODmatrix
 
 from DataBaseProxy import DataBaseProxy
 
-from Analysis import *
+#from Analysis import *
+from BooksAnalysis import get_books_hours_stats
 
 
-enjoy = Enjoy()
-enjoy_fleet = enjoy.get_fleet_from_db()
+#enjoy = Enjoy()
+#enjoy_fleet = enjoy.get_fleet_from_db()
 dbp = DataBaseProxy()
 
 ##################################################
@@ -38,28 +39,27 @@ city = 'torino'
 year = 2016
 month = 12
 
-zones = gpd.read_file("../../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
+#zones = gpd.read_file("../../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
 
 #zones = gpd.read_file("../../../SHAPE/Zones_limit.dbf").to_crs({"init": "epsg:4326"})
 
-for day in range(5, 32, 1):
+for day in range(8, 12, 1):
 
 	print ('day:'+str(day))
 
 	start = datetime.datetime(year, month, day, 0, 0, 0)
 	end = datetime.datetime(year, month, day, 23, 59, 59)
 
-	fleet_size = len(dbp.query_fleet_by_day(provider, city, start, end)[0]['fleet'])
+#	fleet_size = len(dbp.query_fleet_by_day(provider, city, start, end)[0]['fleet'])
  
-	books_df, stats = get_hours_stats(city, provider, start, end, fleet_size)
+	provider_books = dbp.query_books_df_filtered_v2('enjoy', 'torino', start, end, "full")
+	books_df, stats = get_books_hours_stats(provider_books)
 
-	origins, destinations, od = getODmatrix(city, provider, zones, start, end)
+#	origins, destinations, od = getODmatrix(city, provider, zones, start, end)
 
 	#books_df_car2go, parks_d_car2go, day_stats_car2go = \
 	#    day_analysis(city, provider, start, end, fleet_size)
 	#zones, origins, destinations, od = getODmatrix(city, provider, year, month, day)
 
-	day_db = datetime.datetime(year, month, day, 12, 00)
-	dbp.insert_day_analysis(day_db, city, provider, list(stats.T.to_dict().values()), json.loads(od.T.to_json()).values())
- 
- 
+	# day_db = datetime.datetime(year, month, day, 12, 00)
+	# dbp.insert_day_analysis(day_db, city, provider, list(stats.T.to_dict().values()), json.loads(od.T.to_json()).values())

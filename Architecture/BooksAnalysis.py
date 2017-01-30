@@ -116,7 +116,7 @@ def day_analysis (books_df, year, month, day):
 
 def get_books_hours_stats (books_df):
 
-    books_df = books_df[books_df.duration < 300]
+    books_df = books_df[books_df.duration < 120]
     books_df = books_df[books_df.distance > 0.1]
     
     books_df["start_"] = books_df["start"]
