@@ -382,7 +382,10 @@ class DataBaseProxy (object):
                      ]
                     ]
 
-    def filter_df (self, df, day_type, start, end):
+    def filter_df_outliers (self, df):
+        return df[(df.distance > 0.03) & (df.duration > 5) & (df.duration < 120)]
+                    
+    def filter_df_days (self, df, day_type, start, end):
         
         cal = Italy()
         
@@ -469,9 +472,6 @@ class DataBaseProxy (object):
                     pre_holidays_.append(day)
             return pre_holidays_
 
-        if day_type == 'full':
-            return date_list
-
     def query_books_intervals(self, provider, city, dates_list):
 
         query = []
@@ -513,21 +513,25 @@ class DataBaseProxy (object):
     def query_books_df_filtered (self, provider, city, start, end, day_type):
 
         books_df = self.query_books_df(provider, city, start, end)
-        return self.filter_df(books_df, day_type, start, end)
+        return self.filter_df_days(books_df, day_type, start, end)
 
     def query_parks_df_filtered (self, provider, city, start, end, day_type):
 
         parks_df = self.query_parks_df(provider, city, start, end)
-        return self.filter_df(parks_df, day_type, start, end)
+        return self.filter_df_days(parks_df, day_type, start, end)
 
     def query_books_df_filtered_v2 (self, provider, city, start, end, day_type):
 
-        lista_date = self.filter_date(start, end, day_type)
-        return self.query_books_df_intervals(provider, city, lista_date)
+        if day_type == "full":
+            return self.query_books_df(provider, city, start, end)
+        else:
+            lista_date = self.filter_date(start, end, day_type)
+            return self.query_books_df_intervals(provider, city, lista_date)
 
     def query_parks_df_filtered_v2 (self, provider, city, start, end, day_type):
-
-        lista_date = self.filter_date(start, end, day_type)
-        return self.query_parks_df_intervals(provider, city, lista_date)
-
-        return books_df
+        
+        if day_type == "full":
+            return self.query_parks_df(provider, city, start, end)
+        else:
+            lista_date = self.filter_date(start, end, day_type)
+            return self.query_parks_df_intervals(provider, city, lista_date)

@@ -205,7 +205,7 @@ class GoogleDS(RTDS):
                             arrival_time = results_bus["arrival_time"]["value"]
                         feed['arrival_time_google_transit'] = arrival_time
                         time_difference = arrival_time - scheduled_start
-                        feed['tot_duration_google_transit'] = time_difference.total_seconds() / 60
+                        feed['tot_duration_google_transit'] = time_difference.total_seconds() / 60.0
                     else:
                         print "ArrivalTime missing"
                         print row['_id']
