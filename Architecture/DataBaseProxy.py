@@ -383,7 +383,19 @@ class DataBaseProxy (object):
                     ]
 
     def filter_df_outliers (self, df):
-        return df[(df.distance > 0.03) & (df.duration > 5) & (df.duration < 120)]
+        '''
+        mc idea: remove all the rent with duration >0, distace == 0 fuel_cons = 0
+        on this compute the cdf, compute the 5 and 95 quantile and remove them
+        return this df
+        '''
+        df = df[(df.distance > 0)  & (df.fuel_fuel_consumption != 0)]
+        min_perc = df['duration'].quantile(q=0.05)
+        max_perc = df['duration'].quantile(q=0.95)
+        df = df[(df.duration >= min_perc) & (df.duration <= max_perc)]
+        return df
+#        return df[(df.distance > 0.03) & (df.duration > 5) & (df.duration < 120)]
+
+    
                     
     def filter_df_days (self, df, day_type, start, end):
         
