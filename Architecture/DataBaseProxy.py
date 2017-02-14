@@ -382,22 +382,27 @@ class DataBaseProxy (object):
                      ]
                     ]
 
-    def filter_df_outliers (self, df):
+    def filter_books_df_outliers (self, df):
         '''
-        mc idea: remove all the rent with duration >0, distace == 0 fuel_cons = 0
-        on this compute the cdf, compute the 5 and 95 quantile and remove them
-        return this df
+        mc idea: 
+            remove all the rent with distance = 0 fuel_cons = 0
+            on this compute the cdf, compute the 5 and 95 quantile and remove them
+            return this df
         '''
-        df = df[(df.distance > 0)  & (df.fuel_fuel_consumption != 0)]
-        min_perc = df['duration'].quantile(q=0.05)
-        max_perc = df['duration'].quantile(q=0.95)
-        df = df[(df.duration >= min_perc) & (df.duration <= max_perc)]
-        return df
-#        return df[(df.distance > 0.03) & (df.duration > 5) & (df.duration < 120)]
+        #only reservations
+        reservations = df[(df.distance == 0)  & (df.fuel_consumption == 0)]
+                          
+        #there should be a ride
+        with_ride = df[(df.distance > 0.5)]
 
-    
+        #filter
+        min_perc = with_ride['duration'].quantile(q=0.05)
+        max_perc = with_ride['duration'].quantile(q=0.95)
+        with_ride_filtered = with_ride[(with_ride.duration >= min_perc) & (with_ride.duration <= max_perc)]
+                
+        return reservations, with_ride, with_ride_filtered
                     
-    def filter_df_days (self, df, day_type, start, end):
+    def filter_df_days (self, df, start, end):
         
         cal = Italy()
         
@@ -418,19 +423,9 @@ class DataBaseProxy (object):
                 pre_holidays.append(d - datetime.timedelta(days = 1))
                              
         df['week_day'] = df['start'].apply(lambda x: x.weekday())
-
-        df['h_day'] = df['start'].apply(lambda x: x.date()).isin(holidays)
-
-        df['ph_day'] = df['start'].apply(lambda x: x.date()).isin(pre_holidays)
-        
-        if day_type == "business":
-            return df[(df.week_day >= 0) & (df.week_day <= 4) & (df.h_day == False)]
-        if day_type == "weekend":
-            return df[(df.week_day >= 5) & (df.week_day <= 6) & (df.h_day == False)]
-        if day_type == "holiday":
-            return df[df.h_day == True]
-        if day_type == "preholiday":
-            return df[df.ph_day == True]
+        df['business'] = df['week_day'].apply(lambda w: (0 <= w) and (w <= 4))
+        df['weekend'] = df['week_day'].apply(lambda w: (5 <= w) and (w <= 6))
+        df['holiday'] = df['start'].apply(lambda x: x.date()).isin(holidays)    
 
         return df
 
@@ -522,15 +517,15 @@ class DataBaseProxy (object):
                         'city': city                      
                     })
         
-    def query_books_df_filtered (self, provider, city, start, end, day_type):
+    def query_books_df_filtered (self, provider, city, start, end):
 
         books_df = self.query_books_df(provider, city, start, end)
-        return self.filter_df_days(books_df, day_type, start, end)
+        return self.filter_df_days(books_df, start, end)
 
-    def query_parks_df_filtered (self, provider, city, start, end, day_type):
-
+    def query_parks_df_filtered (self, provider, city, start, end):
+        
         parks_df = self.query_parks_df(provider, city, start, end)
-        return self.filter_df_days(parks_df, day_type, start, end)
+        return self.filter_df_days(parks_df, start, end)
 
     def query_books_df_filtered_v2 (self, provider, city, start, end, day_type):
 
@@ -547,3 +542,12 @@ class DataBaseProxy (object):
         else:
             lista_date = self.filter_date(start, end, day_type)
             return self.query_parks_df_intervals(provider, city, lista_date)
+            
+    def query_fleetsize_series (self, provider, city):
+
+        cursor = self.db['fleet'].aggregate([
+                {"$match":{"provider":provider}}, 
+                {"$group":{"_id": "$day", "daysize": {"$sum": {"$size": "$fleet"}}}}
+            ])
+        return pd.Series({doc["_id"]: doc["daysize"] for doc in cursor})
+                         

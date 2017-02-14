@@ -23,61 +23,8 @@ class Car2Go(ServiceProvider):
             self.cursor = dbp.query_raw(self.city, self.name)
 
         print "Data selected!"
-
-    def get_fields(self):
         
-        doc = self.cursor.next()
-        return list(pd.DataFrame(doc["state"]["placemarks"]).columns)
-
-    def get_fleet(self):
-
-        print "Acquiring fleet ..."
-        
-        self.cursor.rewind()
-        doc = self.cursor.next()
-        current_fleet = pd.Index(pd.DataFrame(doc["state"]["placemarks"])\
-                                 .loc[:,"name"].values)
-        self.fleet = current_fleet
-        for doc in self.cursor:
-            current_fleet = pd.Index(pd.DataFrame(doc["state"]["placemarks"])\
-                                     .loc[:,"name"].values)
-            self.fleet = self.fleet.union(current_fleet)
-            
-        print "Fleet acquired!"
-
-        return self.fleet
-        
-    def get_fleet_from_db (self):
-        
-        print "Acquiring fleet ..."
-        query = dbp.query_fleet(self.name, self.city)
-        self.fleet = pd.Index(query.next()['fleet'])
-        print "Fleet acquired!"
-        return self.fleet
-
-    def update_cars_status (self, doc, cars_status, cars_lat, cars_lon, cars_fuel):
-
-        df = pd.DataFrame(doc["state"]["placemarks"])
-
-        parked = df[["name", "coordinates"]]
-        booked = self.fleet.difference(df["name"])
-
-        cars_status.loc[parked["name"].values, doc["timestamp"]] = \
-            "parked"
-        cars_status.loc[booked.values, doc["timestamp"]] = \
-            "booked"
-
-        cars_lat.loc[parked["name"].values, doc["timestamp"]] = \
-            pd.Series(data=[v[1] for v in parked["coordinates"].values],
-                      index=parked["name"].values)
-        cars_lon.loc[parked["name"].values, doc["timestamp"]] = \
-            pd.Series(data=[v[0] for v in parked["coordinates"].values],
-                      index=parked["name"].values)
-        cars_fuel.loc[parked["name"].values, doc["timestamp"]] = \
-            pd.Series(data=df["fuel"].values,
-                      index=parked["name"].values)        
-        
-    def get_parks_and_books (self):
+    def extract_parks_and_books (self):
         
         self.cursor.rewind()
         doc = self.cursor.next()
@@ -88,7 +35,26 @@ class Car2Go(ServiceProvider):
         cars_fuel = pd.DataFrame(index = self.fleet.values)
         
         for doc in self.cursor:
-            self.update_cars_status(doc, cars_status, cars_lat, cars_lon, cars_fuel)
+            
+            df = pd.DataFrame(doc["state"]["placemarks"])
+    
+            parked = df[["name", "coordinates"]]
+            booked = self.fleet.difference(df["name"])
+    
+            cars_status.loc[parked["name"].values, doc["timestamp"]] = \
+                "parked"
+            cars_status.loc[booked.values, doc["timestamp"]] = \
+                "booked"
+    
+            cars_lat.loc[parked["name"].values, doc["timestamp"]] = \
+                pd.Series(data=[v[1] for v in parked["coordinates"].values],
+                          index=parked["name"].values)
+            cars_lon.loc[parked["name"].values, doc["timestamp"]] = \
+                pd.Series(data=[v[0] for v in parked["coordinates"].values],
+                          index=parked["name"].values)
+            cars_fuel.loc[parked["name"].values, doc["timestamp"]] = \
+                pd.Series(data=df["fuel"].values,
+                          index=parked["name"].values)        
             
         cars_status = cars_status.T
         cars_lat = cars_lat.T
@@ -151,3 +117,32 @@ class Car2Go(ServiceProvider):
                     dbp.insert_book(self.name, self.city, book)            
                 
         return cars_status, cars
+
+    def extract_global_fleet(self):
+
+        print "Acquiring fleet ..."
+        
+        self.cursor.rewind()
+        doc = self.cursor.next()
+        current_fleet = pd.Index(pd.DataFrame(doc["state"]["placemarks"])\
+                                 .loc[:,"name"].values)
+        self.fleet = current_fleet
+        for doc in self.cursor:
+            current_fleet = pd.Index(pd.DataFrame(doc["state"]["placemarks"])\
+                                     .loc[:,"name"].values)
+            self.fleet = self.fleet.union(current_fleet)
+            
+        print "Fleet acquired!"
+
+        return self.fleet
+
+    def extract_fields(self):
+        
+        doc = self.cursor.next()
+        return list(pd.DataFrame(doc["state"]["placemarks"]).columns)
+
+    def get_fleetsize_info (self):
+
+        return dbp.query_fleetsize_series (self.name, self.city)
+        
+        
