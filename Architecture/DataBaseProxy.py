@@ -1,3 +1,45 @@
+parks_cols = [
+                 "city",
+                 "provider",
+                 "plate",
+                 "_id",
+                 "start",
+                 "end",
+                 "lat",
+                 "lon",
+                 "duration", 
+             ]
+
+books_cols = [
+                 "city",
+                 "provider",
+                 "plate",
+                 "_id",
+                 "start",
+                 "end",
+                 "start_lat",
+                 "start_lon",
+                 "end_lat", 
+                 "end_lon", 
+                 "distance", 
+                 "duration", 
+                 "fuel_consumption",
+                 "reservation_time",
+                 "riding_time",
+                 "distance_driving",
+                 "duration_driving",
+                 "distance_google_transit",
+                 "duration_google_transit",
+                 "tot_duration_google_transit",
+                 "min_bill",
+                 "max_bill",
+                 "fare_google_transit",
+                 "arrival_time_google_transit",
+                 "departure_time_google",
+                 "duration_google_transit"
+             ]
+             
+             
 from math import radians, cos, sin, asin, sqrt
 def haversine(lon1, lat1, lon2, lat2):
     """
@@ -13,7 +55,7 @@ def haversine(lon1, lat1, lon2, lat2):
     c = 2 * asin(sqrt(a)) 
     km = 6367 * c
     return km
-    
+
 import datetime
 
 import pandas as pd
@@ -267,20 +309,7 @@ class DataBaseProxy (object):
         parks_df["duration"] = \
             (parks_df["end"] - parks_df["start"])/np.timedelta64(1, 'm')            
             
-        return parks_df\
-                    [
-                     [
-                         "city",
-                         "provider",
-                         "plate",
-                         "_id",
-                         "start",
-                         "end",
-                         "lat",
-                         "lon",
-                         "duration", 
-                     ]
-                    ]
+        return parks_df[parks_cols]
                         
     def query_books_df (self, provider, city, start, end):
         
@@ -290,34 +319,7 @@ class DataBaseProxy (object):
             s = pd.Series(doc)
             books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)           
         
-        return self.process_books_df(provider, books_df).replace({None:np.NaN})\
-                    [
-                     [
-                         "city",
-                         "provider",
-                         "plate",
-                         "_id",
-                         "start",
-                         "end",
-                         "start_lat",
-                         "start_lon",
-                         "end_lat", 
-                         "end_lon", 
-                         "distance", 
-                         "duration", 
-                         "fuel_consumption",
-                         "reservation_time",
-                         "riding_time",
-                         "distance_driving",
-                         "duration_driving",
-                         "distance_google_transit",
-                         "duration_google_transit",
-                         "tot_duration_google_transit",
-                         "min_bill",
-                         "max_bill",
-                         "fare_google_transit"
-                     ]
-                    ]
+        return self.process_books_df(provider, books_df)[books_cols].replace({None:np.NaN})
 
     def query_parks_df_intervals (self, provider, city, dates_list):
         
@@ -330,20 +332,7 @@ class DataBaseProxy (object):
         parks_df["duration"] = \
             (parks_df["end"] - parks_df["start"])/np.timedelta64(1, 'm')            
             
-        return parks_df\
-                    [
-                     [
-                         "city",
-                         "provider",
-                         "plate",
-                         "_id",
-                         "start",
-                         "end",
-                         "lat",
-                         "lon",
-                         "duration", 
-                     ]
-                    ]
+        return parks_df[parks_cols]
 
     def query_books_df_intervals (self, provider, city, dates_list):
         
@@ -353,34 +342,7 @@ class DataBaseProxy (object):
             s = pd.Series(doc)
             books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)           
         
-        return self.process_books_df(provider, books_df).replace({None:np.NaN})\
-                    [
-                     [
-                         "city",
-                         "provider",
-                         "plate",
-                         "_id",
-                         "start",
-                         "end",
-                         "start_lat",
-                         "start_lon",
-                         "end_lat", 
-                         "end_lon", 
-                         "distance", 
-                         "duration", 
-                         "fuel_consumption",
-                         "reservation_time",
-                         "riding_time",
-                         "distance_driving",
-                         "duration_driving",
-                         "distance_google_transit",
-                         "duration_google_transit",
-                         "tot_duration_google_transit",
-                         "min_bill",
-                         "max_bill",
-                         "fare_google_transit"
-                     ]
-                    ]
+        return self.process_books_df(provider, books_df)[books_cols].replace({None:np.NaN})
 
     def filter_books_df_outliers (self, df):
         '''
@@ -393,7 +355,7 @@ class DataBaseProxy (object):
         reservations = df[(df.distance == 0)  & (df.fuel_consumption == 0)]
                           
         #there should be a ride
-        with_ride = df[(df.distance > 0.5)]
+        with_ride = df[(df.distance > 0.05) & (df.distance < 50)]
 
         #filter
         min_perc = with_ride['duration'].quantile(q=0.05)

@@ -7,12 +7,12 @@ import json
 
 import pandas as pd
 
-from DataSource import RTDS
+from DataSource_without_Thread import DataGatherer
 from DataBaseProxy import dbp
 
 stop_enjoy = False
 
-class EnjoyRTDS(RTDS):
+class EnjoyRTDS(DataGatherer):
     
     def __init__ (self, city):
 
@@ -61,13 +61,13 @@ class EnjoyRTDS(RTDS):
 
         return feed
         
-    def check_feed (self, feed):
-        
-        last_feed_df = pd.DataFrame(self.last_feed)
-        current_feed_df = pd.DataFrame(self.current_feed)
-        for col in current_feed_df.columns:
-            s = current_feed_df[col]
-#
+#    def check_feed (self, feed):
+#        
+#        last_feed_df = pd.DataFrame(self.last_feed)
+#        current_feed_df = pd.DataFrame(self.current_feed)
+#        for col in current_feed_df.columns:
+#            s = current_feed_df[col]
+
     def to_DB (self):
     
         dbp.insert_snapshot(self.name, self.city, self.current_feed)

@@ -23,6 +23,24 @@ class Car2Go(ServiceProvider):
             self.cursor = dbp.query_raw(self.city, self.name)
 
         print "Data selected!"
+
+    def extract_global_fleet(self):
+
+        print "Acquiring fleet ..."
+        
+        self.cursor.rewind()
+        doc = self.cursor.next()
+        current_fleet = pd.Index(pd.DataFrame(doc["state"]["placemarks"])\
+                                 .loc[:,"name"].values)
+        self.fleet = current_fleet
+        for doc in self.cursor:
+            current_fleet = pd.Index(pd.DataFrame(doc["state"]["placemarks"])\
+                                     .loc[:,"name"].values)
+            self.fleet = self.fleet.union(current_fleet)
+            
+        print "Fleet acquired!"
+
+        return self.fleet
         
     def extract_parks_and_books (self):
         
@@ -117,24 +135,6 @@ class Car2Go(ServiceProvider):
                     dbp.insert_book(self.name, self.city, book)            
                 
         return cars_status, cars
-
-    def extract_global_fleet(self):
-
-        print "Acquiring fleet ..."
-        
-        self.cursor.rewind()
-        doc = self.cursor.next()
-        current_fleet = pd.Index(pd.DataFrame(doc["state"]["placemarks"])\
-                                 .loc[:,"name"].values)
-        self.fleet = current_fleet
-        for doc in self.cursor:
-            current_fleet = pd.Index(pd.DataFrame(doc["state"]["placemarks"])\
-                                     .loc[:,"name"].values)
-            self.fleet = self.fleet.union(current_fleet)
-            
-        print "Fleet acquired!"
-
-        return self.fleet
 
     def extract_fields(self):
         

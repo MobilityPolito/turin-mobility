@@ -11,7 +11,7 @@ from some API or web scraping. Its main functions are:
 
 from abc import ABCMeta
 
-class RTDS():
+class DataGatherer():
     
     __metaclass__ = ABCMeta
     

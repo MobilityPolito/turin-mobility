@@ -51,30 +51,49 @@ enjoy_books_df = dbp.query_books_df_filtered("enjoy", "torino", start, end)
 car2go_books_df = dbp.query_books_df_filtered("car2go", "torino", start, end)
 
 plt.figure()
-plt.title("Duration")
+plt.title("Duration samples")
 enjoy_books_df.duration.plot(figsize=(13,6), marker='o', label="Enjoy")
 car2go_books_df.duration.plot(figsize=(13,6), marker='o', label="Car2Go")
 
 plt.figure()
-plt.title("Duration without outliers")
+plt.title("Distance samples")
+enjoy_books_df.distance.plot(figsize=(13,6), marker='o', label="Enjoy")
+car2go_books_df.distance.plot(figsize=(13,6), marker='o', label="Car2Go")
+
 enjoy_reservations, enjoy_with_ride, enjoy_with_ride_filtered = dbp.filter_books_df_outliers(enjoy_books_df)
-enjoy_with_ride_filtered.duration.plot(figsize=(13,6), marker='o', label="Enjoy", color="red")
-enjoy_with_ride_filtered.duration.plot(figsize=(13,6), marker='o', label="Enjoy", color="red")
-
-plt.figure()
-plt.title("Duration without outliers")
 car2go_reservations, car2go_with_ride, car2go_with_ride_filtered = dbp.filter_books_df_outliers(car2go_books_df)
+
+plt.figure()
+plt.title("Duration samples without outliers")
+enjoy_with_ride_filtered.duration.plot(figsize=(13,6), marker='o', label="Enjoy", color="red")
+enjoy_with_ride_filtered.duration.plot(figsize=(13,6), marker='o', label="Enjoy", color="red")
+
+plt.figure()
+plt.title("Duration samples without outliers")
 car2go_with_ride_filtered.duration.plot(figsize=(13,6), marker='o', label="Car2Go", color="blue")
 car2go_with_ride_filtered.duration.plot(figsize=(13,6), marker='o', label="Car2Go", color="blue")
 
 plt.figure()
-enjoy_with_ride_filtered.duration.hist(bins=100, figsize=(13,6))
+plt.title("Distance samples without outliers")
+enjoy_with_ride_filtered.distance.plot(figsize=(13,6), marker='o', label="Enjoy", color="red")
+enjoy_with_ride_filtered.distance.plot(figsize=(13,6), marker='o', label="Enjoy", color="red")
+
+plt.figure()
+plt.title("Distance samples without outliers")
+car2go_with_ride_filtered.distance.plot(figsize=(13,6), marker='o', label="Car2Go", color="blue")
+car2go_with_ride_filtered.distance.plot(figsize=(13,6), marker='o', label="Car2Go", color="blue")
+
+plt.figure()
+enjoy_with_ride_filtered.duration.hist(bins=200, figsize=(13,6))
 plt.figure()
 car2go_with_ride_filtered.duration.hist(bins=100, figsize=(13,6))
 plt.figure()
 enjoy_with_ride_filtered.duration.hist(bins=100, figsize=(13,6), cumulative=True)
 plt.figure()
 car2go_with_ride_filtered.duration.hist(bins=100, figsize=(13,6), cumulative=True)
+
+plt.figure()
+enjoy_with_ride_filtered.end.hist(bins=200, figsize=(13,6))
 
 plt.figure()
 plt.title("Duration aggregated by 30 min")
@@ -125,7 +144,7 @@ car2go_with_ride_filtered.set_index("start").resample("30Min").max_bill.sum()\
 plt.legend()
 
 plt.figure()
-plt.title("Mean daily bills aggregated by hour")    
+plt.title("Mean daily bills aggregated by hour")
 enjoy_min = enjoy_with_ride_filtered.set_index("start").resample("30Min").min_bill.sum()
 enjoy_min.groupby(enjoy_min.index.map(lambda t: t.hour)).mean().plot(figsize=(13,6), marker='o', label="Enjoy min", color="red")
 enjoy_max = enjoy_with_ride_filtered.set_index("start").resample("30Min").max_bill.sum()
@@ -136,31 +155,31 @@ car2go_max = car2go_with_ride_filtered.set_index("start").resample("30Min").max_
 car2go_max.groupby(enjoy_min.index.map(lambda t: t.hour)).mean().plot(figsize=(13,6), marker='o', label="Car2Go max", color="blue")
 plt.legend()
 
-#def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
-#
-#    heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
-#    
-#    logheatmap = np.log(heatmap)
-#    logheatmap[np.isneginf(logheatmap)] = 0
-#    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
-#    
-#    plt.imshow(heatmap, cmap=cmap, extent=[yedges[0], yedges[-1], xedges[-1], xedges[0]], 
-#               aspect='auto')
-#    plt.colorbar()
-#    plt.gca().invert_yaxis()
-#    plt.show()
-#
-#    return
-#
-#enjoy_start_lats = enjoy_books_df.set_index("start").start_lat
-#enjoy_start_lons = enjoy_books_df.set_index("start").start_lon
-#
-#enjoy_books_df["hour"] = enjoy_books_df["start"].apply(lambda d: d.hour)
-#grouped = enjoy_books_df.groupby("hour")
-#for hour in range(24):
-#    plt.title(str(hour))
-#    heatmap(grouped.get_group(hour).start_lat.values, 
-#            grouped.get_group(hour).start_lon.values)
+def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
+
+    heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
+    
+    logheatmap = np.log(heatmap)
+    logheatmap[np.isneginf(logheatmap)] = 0
+    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
+    
+    plt.imshow(heatmap, cmap=cmap, extent=[yedges[0], yedges[-1], xedges[-1], xedges[0]], 
+               aspect='auto')
+    plt.colorbar()
+    plt.gca().invert_yaxis()
+    plt.show()
+
+    return
+
+car2go_with_ride_filtered["hour"] = car2go_with_ride_filtered["start"].apply(lambda d: d.hour)
+grouped = car2go_with_ride_filtered.groupby("hour")
+for hour in range(24):
+    plt.title(str(hour) + ":00")
+    plt.xlim((7.61, 7.73))
+    heatmap(grouped.get_group(hour).start_lat.values, 
+            grouped.get_group(hour).start_lon.values,
+            bins=100)
+    
 #import imageio
 #images = []
 #for filename in filenames:
