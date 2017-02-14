@@ -83,6 +83,36 @@ plt.title("Distance samples without outliers")
 car2go_with_ride_filtered.distance.plot(figsize=(13,6), marker='o', label="Car2Go", color="blue")
 car2go_with_ride_filtered.distance.plot(figsize=(13,6), marker='o', label="Car2Go", color="blue")
 
+
+fig, ax = plt.subplots(figsize=(13, 6))
+plt.title("Enjoy - Business days vs Weekend days duration CDF")
+bd_df = enjoy_with_ride_filtered[enjoy_with_ride_filtered['business']== True]
+n, bins, patches = ax.hist(bd_df.duration, 1000, histtype='step',
+                           cumulative=True, label="Business day")
+
+we_df = enjoy_with_ride_filtered[enjoy_with_ride_filtered['weekend']== True]
+n, bins, patches = ax.hist(we_df.duration, 1000, histtype='step',
+                           cumulative=True, label="Week end", linestyle="--")
+ax.legend(loc=4)
+ax.set_xlabel('Durations')
+ax.set_ylabel('CDF probability')
+plt.show()
+
+
+'''RENTS PER BD VS WE'''
+df1 = enjoy_with_ride_filtered[enjoy_with_ride_filtered['business'] == True]
+df1 = df1.set_index("start").resample("60Min")._id.count().replace({0:np.NaN}).dropna()
+df1 = df1.groupby(df1.index.map(lambda t: t.hour)).mean()
+
+df2 = enjoy_with_ride_filtered[enjoy_with_ride_filtered['weekend'] == True]
+df2 = df2.set_index("start").resample("60Min")._id.count().replace({0:np.NaN}).dropna()
+df2 = df2.groupby(df2.index.map(lambda t: t.hour)).mean()
+
+fig, ax = plt.subplots(figsize=(13, 6))
+ax.plot(df1,linewidth=2.0, label= "Business days", color= "red")
+ax.plot(df2,linewidth=2.0, linestyle='--', label= "weekends", color= "red")
+
+
 plt.figure()
 enjoy_with_ride_filtered.duration.hist(bins=200, figsize=(13,6))
 plt.figure()
