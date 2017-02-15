@@ -447,8 +447,8 @@ ax.plot(df2,linewidth=2.0, linestyle='--', label= "weekends", color= "blue")
 plt.show()
 
 '''Enj Tcar vs Tgoogle'''
-enj = enjoy_improved[( (enjoy_improved['ride'] == True) &\
-                       (enjoy_improved['quantile'] == True) 
+enj = enjoy_improved[(enjoy_improved['ride'] == True) &\
+                     (enjoy_improved['quantile'] == True) 
                        ]
 bis_y = bis_x = range(1,int(enj.duration.max()))
 
@@ -458,11 +458,35 @@ ax.set_xlabel('Duration')
 ax.set_ylabel('Gogole Duration')
 
 plt_date = range(0,24)
-ax.plot(df1,linewidth=2.0, label= "Business days", color= "red")
-ax.plot(bis_x,bisy,linewidth=2.0, linestyle='--', 
-        label= "weekends", color= "red")
+ax.scatter(enj['duration_driving'],enj['duration'],
+           s=0.5, label= "Trips", color= "red")
+ax.plot(bis_x,bis_y,linewidth=1.0, linestyle='--', 
+        label= "Equal time bisector", color= "black")
+ax.set_xlabel("Google Forecast")
+ax.set_ylabel("Measuerd Duratiion")
+plt.legend(loc=4)
 plt.show()
 
+'''c2g Tcar vs Tgoogle'''
+c2g = car2go_improved[(car2go_improved['ride'] == True) &\
+                      (car2go_improved['quantile'] == True) 
+                       ]
+bis_y = bis_x = range(1,int(enj.duration.max()))
+
+fig, ax = plt.subplots(figsize=(13, 6))
+plt.title ("Car2go - Duration vs Google forecast time")
+ax.set_xlabel('Duration')
+ax.set_ylabel('Gogole Duration')
+
+plt_date = range(0,24)
+ax.scatter(c2g['duration_driving'],c2g['duration'],
+           s=1.0, label= "Trips", color= "blue")
+ax.plot(bis_x,bis_y,linewidth=1.0, linestyle='--',
+        label= "Equal time bisector", color= "black")
+ax.set_xlabel("Google Forecast")
+ax.set_ylabel("Measuerd Duratiion")
+plt.legend(loc=4)
+plt.show()
 
 print "E - ***********************************************"
 #def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
