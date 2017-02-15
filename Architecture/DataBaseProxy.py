@@ -352,17 +352,23 @@ class DataBaseProxy (object):
             return this df
         '''
         #only reservations
-        reservations = df[(df.distance == 0)  & (df.fuel_consumption == 0)]
+        # reservations = df[(df.distance == 0)  & (df.fuel_consumption == 0)]
                           
         #there should be a ride
-        with_ride = df[(df.distance > 0.05) & (df.distance < 50)]
+        with_ride = df[(df.distance > 0.05)]
 
         #filter
         min_perc = with_ride['duration'].quantile(q=0.05)
         max_perc = with_ride['duration'].quantile(q=0.95)
-        with_ride_filtered = with_ride[(with_ride.duration >= min_perc) & (with_ride.duration <= max_perc)]
+        # with_ride_filtered = with_ride[(with_ride.duration >= min_perc) & (with_ride.duration <= max_perc)]
                 
-        return reservations, with_ride, with_ride_filtered
+        df['ride'] = df['distance'].apply(lambda w: (w > 0.05))
+        df['quantile'] = df['duration'].apply(lambda w: (w >= min_perc) and (w <= max_perc))
+        df['reservations'] = df['distance'].apply(lambda w: (w == 0)) 
+        df['short_trips'] = df['duration'].apply(lambda w: (w < 120))
+        df['long_trips'] = df['duration'].apply(lambda w: (w > 120) and (w < 1440))
+        
+        return df
                     
     def filter_df_days (self, df, start, end):
         
@@ -388,6 +394,7 @@ class DataBaseProxy (object):
         df['business'] = df['week_day'].apply(lambda w: (0 <= w) and (w <= 4))
         df['weekend'] = df['week_day'].apply(lambda w: (5 <= w) and (w <= 6))
         df['holiday'] = df['start'].apply(lambda x: x.date()).isin(holidays)    
+        df['week'] = df['start'].apply(lambda x: x.week)
 
         return df
 
