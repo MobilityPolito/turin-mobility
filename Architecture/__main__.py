@@ -300,18 +300,52 @@ car2go_max = car2go_improved[(car2go_improved['ride'] == True)\
 car2go_max.groupby(car2go_min.index.map(lambda t: t.hour)).mean().plot(figsize=(13,6), marker='o', label="car2go max", color="blue")
 plt.legend()
 
+### CDF WEEKS ###
 plt.figure()
-plt.title('settimane')
-enjoy_improved[(enjoy_improved['ride'] == True)\
+plt.title('CDF by weeks duration')
+weeks_number = enjoy_improved['week'].unique()
+
+for week in weeks_number:
+    enjoy_improved[(enjoy_improved['ride'] == True)\
                      & (enjoy_improved['short_trips'] == True)\
-                     & (enjoy_improved['week']==1) & (enjoy_improved['quantile'])].duration.hist(bins=10000, normed=1, cumulative=True, histtype='step')
-enjoy_improved[(enjoy_improved['ride'] == True)\
-                     & (enjoy_improved['short_trips'] == True)\
-                     & (enjoy_improved['week']==2)& (enjoy_improved['quantile'])].duration.hist(bins=10000, normed=1, cumulative=True, histtype='step')
-enjoy_improved[(enjoy_improved['ride'] == True)\
-                     & (enjoy_improved['short_trips'] == True)\
-                     & (enjoy_improved['week']==52)& (enjoy_improved['quantile'])].duration.hist(bins=10000, normed=1, cumulative=True, histtype='step')
+                     & (enjoy_improved['week']==week)].duration.hist(bins=10000, normed=1, cumulative=True, histtype='step')
+
+# enjoy_improved[(enjoy_improved['ride'] == True)\
+#                      & (enjoy_improved['short_trips'] == True)\
+#                      & (enjoy_improved['week']==1) & (enjoy_improved['quantile'])].duration.hist(bins=10000, normed=1, cumulative=True, histtype='step')
+# enjoy_improved[(enjoy_improved['ride'] == True)\
+#                      & (enjoy_improved['short_trips'] == True)\
+#                      & (enjoy_improved['week']==2)& (enjoy_improved['quantile'])].duration.hist(bins=10000, normed=1, cumulative=True, histtype='step')
+# enjoy_improved[(enjoy_improved['ride'] == True)\
+#                      & (enjoy_improved['short_trips'] == True)\
+#                      & (enjoy_improved['week']==52)& (enjoy_improved['quantile'])].duration.hist(bins=10000, normed=1, cumulative=True, histtype='step')
+
+for week in weeks_number:
+    car2go_improved[(car2go_improved['ride'] == True)\
+                     & (car2go_improved['short_trips'] == True)\
+                     & (car2go_improved['week']==week)].duration.hist(bins=10000, normed=1, cumulative=True, histtype='step')
 plt.legend()
+
+plt.figure()
+plt.title('CDF : weeks distance')
+weeks_number = enjoy_improved['week'].unique()
+
+for week in weeks_number:
+    enjoy_improved[(enjoy_improved['ride'] == True)\
+                     & (enjoy_improved['short_trips'] == True)\
+                     & (enjoy_improved['week']==week)].distance_driving\
+                     .hist(bins=100, normed=1, label='enjoy '+str(week), cumulative=True, histtype='step')
+
+for week in weeks_number:
+   car2go_improved[(car2go_improved['ride'] == True)\
+                    & (car2go_improved['short_trips'] == True)\
+                    & (car2go_improved['week']==week)].distance_driving\
+                    .hist(bins=100, normed=1, label='car2go '+str(week), cumulative=True, histtype='step')
+                    
+plt.ylabel('p')
+plt.xlabel('distance [km]')
+plt.axis([0, 20, 0, 1.1])
+plt.legend(loc=4)
 
 print "s - ***********************************************"
 
