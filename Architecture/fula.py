@@ -179,6 +179,7 @@ plt.scatter(df.tot_duration_google_transit, df.duration)
 plt.plot(df.duration, df.duration)
 
 
+
 plt.figure()
 df[df.tot_duration_google_transit < df.duration].set_index("start")\
                 .tot_duration_google_transit.plot(figsize=(w,h), marker='o', label="car2go", color="blue")  
@@ -206,10 +207,17 @@ df.loc[(df.tot_duration_google_transit < 90) & (df.tot_duration_google_transit >
 df.loc[df.tot_duration_google_transit > 90, "slot"] = 100
 
 df.groupby('slot')._id.count().apply(lambda x : x/float(len(df))).plot.bar(color="blue")
-       
+
+plt.figure()
+plt.axis([0,100,0,55])
+df_ = df.set_index("start").resample("5Min").mean()
+plt.scatter(df_.tot_duration_google_transit, df_.duration)
+plt.plot(df_.duration, df_.duration)      
+ 
 df_ = df[df.tot_duration_google_transit < df.duration].set_index("start")
 df_.groupby(df_.index.map(lambda t: t.hour)).tot_duration_google_transit.mean().plot(figsize=(w,h), marker='o', label="car2go", color="blue")
 plt.legend()
+
 
                                                 
 #plt.figure()
