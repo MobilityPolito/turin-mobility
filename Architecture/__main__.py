@@ -12,6 +12,7 @@ from scipy import ndimage
 
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.dates as md
 matplotlib.style.use('ggplot')
 
 #from pandas.tools.plotting import scatter_matrix
@@ -45,10 +46,10 @@ Sketch
 """
 
 start = datetime.datetime(2017, 1, 1, 0, 0, 0)
-end = datetime.datetime(2017, 1, 15, 0, 0, 0)
+end = datetime.datetime(2017, 1, 8, 0, 0, 0)
 
-enjoy_books_df = dbp.query_books_df_filtered("enjoy", "torino", start, end)
-car2go_books_df = dbp.query_books_df_filtered("car2go", "torino", start, end)
+#enjoy_books_df = dbp.query_books_df_filtered("enjoy", "torino", start, end)
+#car2go_books_df = dbp.query_books_df_filtered("car2go", "torino", start, end)
 
 plt.figure()
 plt.title("Duration")
@@ -312,59 +313,148 @@ enjoy_improved[(enjoy_improved['ride'] == True)\
                      & (enjoy_improved['week']==52)& (enjoy_improved['quantile'])].duration.hist(bins=10000, normed=1, cumulative=True, histtype='step')
 plt.legend()
 
+print "s - ***********************************************"
 
+'''CDF bd vs we enjoy'''
 fig, ax = plt.subplots(figsize=(13, 6))
 plt.title("Enjoy - Business days vs Weekend days duration CDF")
-bd_df = enjoy_with_ride_filtered[enjoy_with_ride_filtered['business']== True]
+bd_df = enjoy_improved[(enjoy_improved['business'] == True) & \
+                       (enjoy_improved['ride'] == True) &\
+                       (enjoy_improved['quantile'] == True) 
+                       ]
 n, bins, patches = ax.hist(bd_df.duration, 1000, histtype='step',
-                           cumulative=True, label="Business day")
+                           cumulative=True, label="Business day",
+                           rwidth=2.0, color='red')
 
-we_df = enjoy_with_ride_filtered[enjoy_with_ride_filtered['weekend']== True]
+we_df = enjoy_improved[(enjoy_improved['weekend'] == True) & \
+                       (enjoy_improved['ride'] == True) &\
+                       (enjoy_improved['quantile'] == True) 
+                       ]
 n, bins, patches = ax.hist(we_df.duration, 1000, histtype='step',
-                           cumulative=True, label="Week end", linestyle="--")
+                           cumulative=True, label="Week end", linestyle="--",
+                           rwidth=2.0,color='red')
+ax.legend(loc=4)
+ax.set_xlabel('Durations')
+ax.set_ylabel('CDF probability')
+plt.show()
+
+'''CDF bd vs we c2g'''
+fig, ax = plt.subplots(figsize=(13, 6))
+plt.title("Car2go - Business days vs Weekend days duration CDF")
+bd_df = car2go_improved[(car2go_improved['business'] == True) & \
+                       (car2go_improved['ride'] == True) &\
+                       (car2go_improved['quantile'] == True) 
+                       ]
+n, bins, patches = ax.hist(bd_df.duration, 1000, histtype='step',
+                           cumulative=True, label="Business day",
+                           rwidth=2.0, color='blue', normed = True)
+
+we_df = car2go_improved[(car2go_improved['weekend'] == True) & \
+                       (car2go_improved['ride'] == True) &\
+                       (car2go_improved['quantile'] == True) 
+                       ]
+n, bins, patches = ax.hist(we_df.duration, 1000, histtype='step',
+                           cumulative=True, label="Week end", linestyle="--",
+                           rwidth=2.0, color='blue', normed = True)
 ax.legend(loc=4)
 ax.set_xlabel('Durations')
 ax.set_ylabel('CDF probability')
 plt.show()
 
 
-'''RENTS PER BD VS WE'''
-df1 = enjoy_with_ride_filtered[enjoy_with_ride_filtered['business'] == True]
+''' ENJ RENTS PER BD VS WE'''
+df1 = enjoy_improved[(enjoy_improved['business'] == True) & \
+                       (enjoy_improved['ride'] == True) &\
+                       (enjoy_improved['quantile'] == True) 
+                       ]
 df1 = df1.set_index("start").resample("60Min")._id.count().replace({0:np.NaN}).dropna()
 df1 = df1.groupby(df1.index.map(lambda t: t.hour)).mean()
 
-df2 = enjoy_with_ride_filtered[enjoy_with_ride_filtered['weekend'] == True]
+df2 = enjoy_improved[(enjoy_improved['weekend'] == True) & \
+                       (enjoy_improved['ride'] == True) &\
+                       (enjoy_improved['quantile'] == True) 
+                       ]
 df2 = df2.set_index("start").resample("60Min")._id.count().replace({0:np.NaN}).dropna()
 df2 = df2.groupby(df2.index.map(lambda t: t.hour)).mean()
 
 fig, ax = plt.subplots(figsize=(13, 6))
+plt.title ("Enjoy rents in business day and week-ends")
+ax.set_xlabel('Time')
+ax.set_ylabel('Rents')
+
+plt_date = range(0,24)
 ax.plot(df1,linewidth=2.0, label= "Business days", color= "red")
 ax.plot(df2,linewidth=2.0, linestyle='--', label= "weekends", color= "red")
+plt.show()
 
-def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
+''' C2G RENTS PER BD VS WE'''
+df1 = car2go_improved[(car2go_improved['business'] == True) & \
+                      (car2go_improved['ride'] == True) &\
+                      (car2go_improved['quantile'] == True) 
+                       ]
+df1 = df1.set_index("start").resample("60Min")._id.count().replace({0:np.NaN}).dropna()
+df1 = df1.groupby(df1.index.map(lambda t: t.hour)).mean()
 
-    heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
-    
-    logheatmap = np.log(heatmap)
-    logheatmap[np.isneginf(logheatmap)] = 0
-    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
-    
-    plt.imshow(heatmap, cmap=cmap, extent=[yedges[0], yedges[-1], xedges[-1], xedges[0]], 
-               aspect='auto')
-    plt.colorbar()
-    plt.gca().invert_yaxis()
-    plt.show()
+df2 = car2go_improved[(car2go_improved['weekend'] == True) & \
+                      (car2go_improved['ride'] == True) &\
+                      (car2go_improved['quantile'] == True) 
+                       ]
+df2 = df2.set_index("start").resample("60Min")._id.count().replace({0:np.NaN}).dropna()
+df2 = df2.groupby(df2.index.map(lambda t: t.hour)).mean()
 
-    return
+fig, ax = plt.subplots(figsize=(13, 6))
+plt.title ("Car2go rents in business day and week-ends")
+ax.set_xlabel('Time')
+ax.set_ylabel('Rents')
 
-car2go_with_ride_filtered["hour"] = car2go_with_ride_filtered["start"].apply(lambda d: d.hour)
-grouped = car2go_with_ride_filtered.groupby("hour")
-for hour in range(24):
-    plt.title(str(hour) + ":00")
-    plt.xlim((7.61, 7.73))
-    heatmap(grouped.get_group(hour).start_lat.values, 
-            grouped.get_group(hour).start_lon.values,
-            bins=100)
+plt_date = range(0,24)
+ax.plot(df1,linewidth=2.0, label= "Business days", color= "blue")
+ax.plot(df2,linewidth=2.0, linestyle='--', label= "weekends", color= "blue")
+plt.show()
+
+'''Enj Tcar vs Tgoogle'''
+enj = enjoy_improved[( (enjoy_improved['ride'] == True) &\
+                       (enjoy_improved['quantile'] == True) 
+                       ]
+bis_y = bis_x = range(1,int(enj.duration.max()))
+
+fig, ax = plt.subplots(figsize=(13, 6))
+plt.title ("Enjoy - Duration vs Google forecast time")
+ax.set_xlabel('Duration')
+ax.set_ylabel('Gogole Duration')
+
+plt_date = range(0,24)
+ax.plot(df1,linewidth=2.0, label= "Business days", color= "red")
+ax.plot(bis_x,bisy,linewidth=2.0, linestyle='--', 
+        label= "weekends", color= "red")
+plt.show()
+
+
+print "E - ***********************************************"
+#def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
+#
+#    heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
+#    
+#    logheatmap = np.log(heatmap)
+#    logheatmap[np.isneginf(logheatmap)] = 0
+#    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
+#    
+#    plt.imshow(heatmap, cmap=cmap, extent=[yedges[0], yedges[-1], xedges[-1], xedges[0]], 
+#               aspect='auto')
+#    plt.colorbar()
+#    plt.gca().invert_yaxis()
+#    plt.show()
+#
+#    return
+#
+#["hour"] = car2go_with_ride_filtered["start"].apply(lambda d: d.hour)
+#grouped = car2go_with_ride_filtered.groupby("hour")
+#for hour in range(24):
+#    plt.title(str(hour) + ":00")
+#    plt.xlim((7.61, 7.73))
+#    heatmap(grouped.get_group(hour).start_lat.values, 
+#            grouped.get_group(hour).start_lon.values,
+#            bins=100)
     
 #import imageio
 #images = []
