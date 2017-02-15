@@ -139,6 +139,24 @@ plt.figure()
 df[df.tot_duration_google_transit < df.duration].set_index("start").duration.plot(figsize=(w,h), marker='o', label="enjoy")
 plt.legend()
 
+df["slot"] = pd.Series()
+df.loc[df.tot_duration_google_transit < 10, "slot"] = 10
+df.loc[(df.tot_duration_google_transit < 20) & (df.tot_duration_google_transit > 10), "slot"] = 20
+df.loc[(df.tot_duration_google_transit < 30) & (df.tot_duration_google_transit > 20), "slot"] = 30
+df.loc[(df.tot_duration_google_transit < 40) & (df.tot_duration_google_transit > 30), "slot"] = 40
+df.loc[(df.tot_duration_google_transit < 50) & (df.tot_duration_google_transit > 40), "slot"] = 50
+df.loc[(df.tot_duration_google_transit < 60) & (df.tot_duration_google_transit > 50), "slot"] = 60
+df.loc[(df.tot_duration_google_transit < 70) & (df.tot_duration_google_transit > 60), "slot"] = 70
+df.loc[(df.tot_duration_google_transit < 80) & (df.tot_duration_google_transit > 70), "slot"] = 80
+df.loc[(df.tot_duration_google_transit < 90) & (df.tot_duration_google_transit > 80), "slot"] = 90
+df.loc[df.tot_duration_google_transit > 90, "slot"] = 100
+
+df.groupby('slot')._id.count().apply(lambda x : x/float(len(df))).plot.bar()
+       
+df_ = df[df.tot_duration_google_transit < df.duration].set_index("start")
+df_.groupby(df_.index.map(lambda t: t.hour)).tot_duration_google_transit.mean().plot(figsize=(w,h), marker='o', label="car2go", color="blue")
+plt.legend()
+
 """
 Google stuff car2go
 """     
@@ -187,7 +205,7 @@ df.loc[(df.tot_duration_google_transit < 80) & (df.tot_duration_google_transit >
 df.loc[(df.tot_duration_google_transit < 90) & (df.tot_duration_google_transit > 80), "slot"] = 90
 df.loc[df.tot_duration_google_transit > 90, "slot"] = 100
 
-df.groupby('slot')._id.count().plot.bar()
+df.groupby('slot')._id.count().apply(lambda x : x/float(len(df))).plot.bar(color="blue")
        
 df_ = df[df.tot_duration_google_transit < df.duration].set_index("start")
 df_.groupby(df_.index.map(lambda t: t.hour)).tot_duration_google_transit.mean().plot(figsize=(w,h), marker='o', label="car2go", color="blue")
