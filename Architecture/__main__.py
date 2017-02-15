@@ -51,6 +51,9 @@ end = datetime.datetime(2017, 1, 8, 0, 0, 0)
 #enjoy_books_df = dbp.query_books_df_filtered("enjoy", "torino", start, end)
 #car2go_books_df = dbp.query_books_df_filtered("car2go", "torino", start, end)
 
+enjoy_improved = dbp.filter_books_df_outliers(enjoy_books_df)
+car2go_improved = dbp.filter_books_df_outliers(car2go_books_df)
+
 plt.figure()
 plt.title("Duration")
 enjoy_books_df.duration.plot(figsize=(13,6), marker='o', label="Enjoy")
@@ -61,7 +64,6 @@ plt.title("Duration without outliers")
 #enjoy_reservations, enjoy_with_ride, enjoy_with_ride_filtered = dbp.filter_books_df_outliers(enjoy_books_df)
 #enjoy_with_ride_filtered.duration.plot(figsize=(13,6), marker='o', label="Enjoy", color="red")
 #enjoy_with_ride_filtered.duration.plot(figsize=(13,6), marker='o', label="Enjoy", color="red")
-enjoy_improved = dbp.filter_books_df_outliers(enjoy_books_df)
 enjoy_improved[(enjoy_improved['ride'] == True) & \
                          (enjoy_improved['short_trips'] == True)].duration\
                          .plot(figsize=(13,6), marker='o', label="enjoy", color="red")
@@ -72,7 +74,6 @@ plt.title("Duration without outliers")
 #car2go_reservations, car2go_with_ride, car2go_with_ride_filtered = dbp.filter_books_df_outliers(car2go_books_df)
 #car2go_with_ride_filtered.duration.plot(figsize=(13,6), marker='o', label="Car2Go", color="blue")
 #car2go_with_ride_filtered.duration.plot(figsize=(13,6), marker='o', label="Car2Go", color="blue")
-car2go_improved = dbp.filter_books_df_outliers(car2go_books_df)
 car2go_improved[(car2go_improved['ride'] == True) & \
                          (car2go_improved['short_trips'] == True)].duration\
                          .plot(figsize=(13,6), marker='o', label="car2go", color="blue")
