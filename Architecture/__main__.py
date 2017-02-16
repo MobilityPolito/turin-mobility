@@ -49,7 +49,7 @@ Sketch
 """
 
 start = datetime.datetime(2016, 12, 10, 0, 0, 0)
-end = datetime.datetime(2017, 1, 30, 23, 59, 59)
+end = datetime.datetime(2017, 1, 31, 23, 59, 59)
 
 #
 enjoy_df = dbp.query_books_df_filtered_v3("enjoy", "torino", start, end)
@@ -131,4 +131,5 @@ car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
 
 pos_piazzaVittorio = [45.0650653, 7.6936148]
 pos_PortaNuova = [45.0620829, 7.6762908]
-g.isocore(enjoy_df, pos_PortaNuova)
+#g.isocore(enjoy_df, pos_PortaNuova)
+g.isocost(enjoy_df, pos_piazzaVittorio)

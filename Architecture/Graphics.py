@@ -13,7 +13,8 @@ matplotlib.style.use('ggplot')
 
 from pandas.tools.plotting import scatter_matrix
 
-from DataBaseProxy import haversine
+from DataBaseProxy import *
+dbp = DataBaseProxy()
 
 # from ParksAnalysis import car2go_parks
 # from ParksAnalysis import enjoy_parks
@@ -431,18 +432,6 @@ class Graphics():
 
         lat_s = pos[0]
         lon_s = pos[1]
-        #'''Trying isocrone'''
-        #
-#        lat_s = 45.0650653
-#        lon_s = 7.6936148
-        #
-        #
-#        lat_s = 45.0620829 #porta nuova coordinate
-#        lon_s = 7.6762908
-        #time_lower = 5
-        #time_upper = 20
-        #isocrone = enjoy
-
 
         df_isoc = df[(df["ride"] == True) &\
                                 (df["short_trips"] == True)]
@@ -452,7 +441,7 @@ class Graphics():
         
         df_isoc = df_isoc[(df_isoc["eucl_dist"] <= 0.5)]
         
-        zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
+        zones = gpd.read_file("../../../SHAPE/Zonizzazione.dbf")\
                .to_crs({"init": "epsg:4326"})
         zones_geo = zones["geometry"]
         
@@ -484,7 +473,41 @@ class Graphics():
                df_isoc_time.plot.scatter(x="end_lon", y='end_lat', label=t, s=100, ax=ax, color=colors[t/10])
           
         plt.legend()
-                
-                
-                
-                
+
+    def isocost(self, df, pos):
+
+        lat_s = pos[0]
+        lon_s = pos[1]
+        
+        df_isoc = df[(df["ride"] == True) &\
+                                (df["short_trips"] == True)]
+
+        df_isoc['eucl_dist'] = df_isoc[['start_lat', 'start_lon', 'end_lat', 'end_lon']].apply\
+        (lambda x : haversine(x['start_lat'],x['start_lon'], lat_s, lon_s),axis=1)
+        
+        df_isoc = df_isoc[(df_isoc["eucl_dist"] <= 0.5)]
+        
+        zones = gpd.read_file("../../../SHAPE/Zonizzazione.dbf")\
+               .to_crs({"init": "epsg:4326"})
+        zones_geo = zones["geometry"]
+
+        fig, ax = plt.subplots(1,1,figsize=(10,10))
+        zones_geo.plot(color="white",ax=ax)
+        ax.set_xlim([7.6, 7.74])
+        ax.set_ylim([45.0, 45.11])
+
+        colors=['red','green','orange', 'blue', 'yellow', 'gray']
+
+        hull= ConvexHull(df_isoc[['start_lon','start_lat']])
+        for simplex in hull.simplices:
+           plt.plot(df_isoc['start_lon'].iloc[simplex], df_isoc['start_lat'].iloc[simplex], color='red', linewidth=3, label='_nolegend_' )
+
+        for t in range(2,8,2):
+           df_isoc_time = df_isoc[(df_isoc['max_bill'] <= t) & (df_isoc['max_bill']>(t-2))]
+           if(len(df_isoc_time) > 0):
+               print 'in {} minuti : {}'.format(t, len(df_isoc_time))
+               if len(df_isoc_time) >=3:
+                   hull= ConvexHull(df_isoc_time[['end_lon','end_lat']])
+                   for simplex in hull.simplices:
+                       plt.plot(df_isoc_time['end_lon'].iloc[simplex], df_isoc_time['end_lat'].iloc[simplex],color=colors[t/2], linewidth=3, label='_nolegend_' )
+               df_isoc_time.plot.scatter(x="end_lon", y='end_lat', label=str(t)+' euro', s=100, ax=ax, color=colors[t/2])
