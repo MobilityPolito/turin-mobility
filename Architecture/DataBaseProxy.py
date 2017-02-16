@@ -525,7 +525,7 @@ class DataBaseProxy (object):
     def query_books_df_filtered_v3 (self, provider, city, start, end):
 
         books_df = self.query_books_df_aggregated(provider, city, start, end)
-        return self.filter_df_days(books_df, start, end)
+        return self.filter_books_df_outliers(self.filter_df_days(books_df, start, end))
 
     def query_fleetsize_series (self, provider, city):
 
