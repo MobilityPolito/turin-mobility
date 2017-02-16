@@ -63,7 +63,6 @@ car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
 #plt.figure()   
 #g.car_vs_transit(enjoy_df)
 
-<<<<<<< HEAD
 plt.figure()   
 g.car_vs_transit(car2go_df)
 
@@ -89,12 +88,10 @@ g.faster_car_PTtime_hours(enjoy_df)
 g.faster_car_PTtime_hours(car2go_df)
 
 
-
-=======
 #plt.figure()
 #df[df.tot_duration_google_transit < df.duration].set_index("start").duration.plot(figsize=(w,h), marker='o', label="enjoy")
 #plt.legend()
->>>>>>> 6f93f437994fa294ee404f6aaa6c346f5a6bc584
+
 ### ******* COUNT
 ### ******* BILLS
 

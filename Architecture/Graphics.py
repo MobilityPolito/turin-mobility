@@ -438,7 +438,6 @@ class Graphics():
         plt.ylabel('Tcar [m]') 
         plt.show()        
         
-<<<<<<< HEAD
     def car_vs_transit_bar(self, df_):
         df = self.slotted_df(df_)
         fig, ax = plt.subplots(figsize=(13, 6))       
@@ -495,7 +494,7 @@ class Graphics():
         plt.xticks(np.arange(0,23+1, 1.0))
         plt.xlabel('Hours of a day')
         plt.legend()
-=======
+
     def isocore(self, df, pos):
 
         lat_s = pos[0]
@@ -553,9 +552,6 @@ class Graphics():
                df_isoc_time.plot.scatter(x="end_lon", y='end_lat', label=t, s=100, ax=ax, color=colors[t/10])
           
         plt.legend()
-                
-                
->>>>>>> 6f93f437994fa294ee404f6aaa6c346f5a6bc584
                 
     def faster_car_PTtime_hours(self, df1):
         df = df1[(df1['ride'] == True) & \
