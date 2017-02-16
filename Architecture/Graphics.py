@@ -372,7 +372,7 @@ class Graphics():
         fig, ax = plt.subplots(figsize=(13, 6))
         plt.title (str(df['provider'][0]) + " - Duration vs Google forecast time")
         ax.set_xlabel('Duration')
-        ax.set_ylabel('Gogole Duration')
+        ax.set_ylabel('Google Duration')
 
         ax.scatter(enj['duration_driving'],enj['duration'],
                    s=0.5, label= "Trips", color= color(df))
