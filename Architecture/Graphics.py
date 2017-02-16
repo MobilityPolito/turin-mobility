@@ -2,7 +2,7 @@ import datetime
 
 import numpy as np
 import pandas as pd
-import geopandas as gpd
+#import geopandas as gpd
 
 from scipy import ndimage
 from scipy.spatial import ConvexHull
@@ -389,7 +389,7 @@ class Graphics():
         plt.show()
 
     def car_vs_google_comparison(self, df_provider1, df_provider2):
-        
+        plt.figure()
         df1 = df_provider1[(df_provider1['ride'] == True) &\
                      (df_provider1['short_trips'] == True) ]
 
@@ -414,6 +414,7 @@ class Graphics():
         plt.show()
         
     def car_vs_transit(self, df):
+        plt.figure()
         df_ = df[(df['ride'] == True) & \
                 (df['short_trips'] == True) & \
                 (df['tot_duration_google_transit'].isnull() == False) ]           
@@ -427,6 +428,7 @@ class Graphics():
         plt.show()
                    
     def car_vs_transit_resampled(self, df_):
+        plt.figure()
         df = self.slotted_df(df_)
         fig, ax = plt.subplots(figsize=(13, 6))       
         plt.axis([0, 80,0,40])
@@ -439,6 +441,7 @@ class Graphics():
         plt.show()        
         
     def car_vs_transit_bar(self, df_):
+        plt.figure()
         df = self.slotted_df(df_)
         fig, ax = plt.subplots(figsize=(13, 6))       
         ax = df.groupby('slot')._id.count().apply(lambda x : x/float(len(df)))
@@ -466,6 +469,8 @@ class Graphics():
         return df
 
     def faster_PT_hours(self, df1):
+        plt.figure()
+
         df = df1[(df1['ride'] == True) & \
                 (df1['short_trips'] == True) & \
                 (df1['tot_duration_google_transit'].isnull() == False) ] 
@@ -481,6 +486,7 @@ class Graphics():
         plt.legend()
         
     def faster_car_hours(self, df1):
+        plt.figure()
         df = df1[(df1['ride'] == True) & \
                 (df1['short_trips'] == True) & \
                 (df1['tot_duration_google_transit'].isnull() == False) ] 
@@ -495,68 +501,69 @@ class Graphics():
         plt.xlabel('Hours of a day')
         plt.legend()
 
-    def isocore(self, df, pos):
-
-        lat_s = pos[0]
-        lon_s = pos[1]
-        #'''Trying isocrone'''
-        #
-#        lat_s = 45.0650653
-#        lon_s = 7.6936148
-        #
-        #
-#        lat_s = 45.0620829 #porta nuova coordinate
-#        lon_s = 7.6762908
-        #time_lower = 5
-        #time_upper = 20
-        #isocrone = enjoy
-
-
-        df_isoc = df[(df["ride"] == True) &\
-                                (df["short_trips"] == True)]
-        
-        df_isoc['eucl_dist'] = df_isoc[['start_lat', 'start_lon', 'end_lat', 'end_lon']].apply\
-        (lambda x : haversine(x['start_lat'],x['start_lon'], lat_s, lon_s),axis=1)
-        
-        df_isoc = df_isoc[(df_isoc["eucl_dist"] <= 0.5)]
-        
-        zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
-               .to_crs({"init": "epsg:4326"})
-        zones_geo = zones["geometry"]
-        
-        fig, ax = plt.subplots(1,1,figsize=(10,10))
-        
-        zones_geo.plot(color="white",ax=ax)
-        ##del df_isoc["start_lat"]
-        ##del df_isoc["start_lon"]
-        ##-car2go
-        ax.set_xlim([7.6, 7.74])
-        ax.set_ylim([45.0, 45.11])
-        ##-enjoy
-        ##ax.set_xlim([7.6, 7.8])
-        ##ax.set_ylim([44.95,45.12])
-        colors=['red','green','orange', 'blue', 'yellow', 'gray']
-        #
-        hull= ConvexHull(df_isoc[['start_lon','start_lat']])
-        for simplex in hull.simplices:
-           plt.plot(df_isoc['start_lon'].iloc[simplex], df_isoc['start_lat'].iloc[simplex], color='red', linewidth=3, label='_nolegend_' )
-        #
-        for t in range(10,100,10):
-           df_isoc_time = df_isoc[(df_isoc['duration'] <= t)& (df_isoc['duration']>(t-10))]
-           if(len(df_isoc_time) > 0):
-               print 'in {} minuti : {}'.format(t, len(df_isoc_time))
-               if len(df_isoc_time) >=3:
-                   hull= ConvexHull(df_isoc_time[['end_lon','end_lat']])
-                   for simplex in hull.simplices:
-                       plt.plot(df_isoc_time['end_lon'].iloc[simplex], df_isoc_time['end_lat'].iloc[simplex],color=colors[t/10], linewidth=3, label='_nolegend_' )
-               df_isoc_time.plot.scatter(x="end_lon", y='end_lat', label=t, s=100, ax=ax, color=colors[t/10])
-          
-        plt.legend()
-                
+#    def isocore(self, df, pos):
+#
+#        lat_s = pos[0]
+#        lon_s = pos[1]
+#        #'''Trying isocrone'''
+#        #
+##        lat_s = 45.0650653
+##        lon_s = 7.6936148
+#        #
+#        #
+##        lat_s = 45.0620829 #porta nuova coordinate
+##        lon_s = 7.6762908
+#        #time_lower = 5
+#        #time_upper = 20
+#        #isocrone = enjoy
+#
+#
+#        df_isoc = df[(df["ride"] == True) &\
+#                                (df["short_trips"] == True)]
+#        
+#        df_isoc['eucl_dist'] = df_isoc[['start_lat', 'start_lon', 'end_lat', 'end_lon']].apply\
+#        (lambda x : haversine(x['start_lat'],x['start_lon'], lat_s, lon_s),axis=1)
+#        
+#        df_isoc = df_isoc[(df_isoc["eucl_dist"] <= 0.5)]
+#        
+#        zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf")\
+#               .to_crs({"init": "epsg:4326"})
+#        zones_geo = zones["geometry"]
+#        
+#        fig, ax = plt.subplots(1,1,figsize=(10,10))
+#        
+#        zones_geo.plot(color="white",ax=ax)
+#        ##del df_isoc["start_lat"]
+#        ##del df_isoc["start_lon"]
+#        ##-car2go
+#        ax.set_xlim([7.6, 7.74])
+#        ax.set_ylim([45.0, 45.11])
+#        ##-enjoy
+#        ##ax.set_xlim([7.6, 7.8])
+#        ##ax.set_ylim([44.95,45.12])
+#        colors=['red','green','orange', 'blue', 'yellow', 'gray']
+#        #
+#        hull= ConvexHull(df_isoc[['start_lon','start_lat']])
+#        for simplex in hull.simplices:
+#           plt.plot(df_isoc['start_lon'].iloc[simplex], df_isoc['start_lat'].iloc[simplex], color='red', linewidth=3, label='_nolegend_' )
+#        #
+#        for t in range(10,100,10):
+#           df_isoc_time = df_isoc[(df_isoc['duration'] <= t)& (df_isoc['duration']>(t-10))]
+#           if(len(df_isoc_time) > 0):
+#               print 'in {} minuti : {}'.format(t, len(df_isoc_time))
+#               if len(df_isoc_time) >=3:
+#                   hull= ConvexHull(df_isoc_time[['end_lon','end_lat']])
+#                   for simplex in hull.simplices:
+#                       plt.plot(df_isoc_time['end_lon'].iloc[simplex], df_isoc_time['end_lat'].iloc[simplex],color=colors[t/10], linewidth=3, label='_nolegend_' )
+#               df_isoc_time.plot.scatter(x="end_lon", y='end_lat', label=t, s=100, ax=ax, color=colors[t/10])
+#          
+#        plt.legend()
+#                
     def faster_car_PTtime_hours(self, df1):
+        plt.figure()
         df = df1[(df1['ride'] == True) & \
                 (df1['short_trips'] == True) & \
-                (df1['tot_duration_google_transit'].isnull() == False) ] 
+                (df1['tot_duration_google_transit'].isnull() == False)] 
         df3= df[(df.tot_duration_google_transit >= df.tot_duration_google_transit.quantile(q=0.01))\
                          & (df.tot_duration_google_transit <= df.tot_duration_google_transit.quantile(q=1.0-0.02))]      
         df2= df3[(df3.duration >= df3.duration.quantile(q=0.01))\
@@ -568,3 +575,35 @@ class Graphics():
         plt.xlabel('Hours of a day')
         plt.legend()        
         
+    def car_vs_pt(self, df1):
+        plt.figure()
+        df = df1[(df1['ride'] == True) & \
+                 (df1['short_trips'] == True) & \
+                 (df1['tot_duration_google_transit'].isnull() == False)]   
+        df_ = df.set_index("start")
+        df_.groupby(df_.index.map(lambda t: t.hour)).duration.mean().plot(figsize=(13, 6), marker='o', color=color(df), label = 'avg CS duration')
+        df_.groupby(df_.index.map(lambda t: t.hour)).tot_duration_google_transit.mean().plot(figsize=(13, 6), marker='o', color='orange', label = 'avg PT duration')
+        plt.xticks(np.arange(0,23+1, 1.0))
+        plt.xlabel('Hours of a day')
+        plt.legend()
+
+    def cars_vs_pt(self, df1, df2):
+        plt.figure()
+        df = df1[(df1['ride'] == True) & \
+                 (df1['short_trips'] == True) & \
+                 (df1['tot_duration_google_transit'].isnull() == False)]   
+        df_ = df.set_index("start")
+        df_.groupby(df_.index.map(lambda t: t.hour)).duration.mean().plot(figsize=(13, 6), marker='o', color=color(df1), label = 'avg CS duration')
+        _df = df2[(df2['ride'] == True) & \
+                 (df2['short_trips'] == True) & \
+                 (df2['tot_duration_google_transit'].isnull() == False)]   
+        __df = _df.set_index("start")
+        __df.groupby(__df.index.map(lambda t: t.hour)).duration.mean().plot(figsize=(13, 6), marker='o', color=color(df2), label = 'avg CS duration')
+                
+        dur_pt = (df_.groupby(df_.index.map(lambda t: t.hour)).tot_duration_google_transit.mean()\
+         + __df.groupby(__df.index.map(lambda t: t.hour)).tot_duration_google_transit.mean())/2.0
+        dur_pt.plot(figsize=(13, 6), marker='o', color='orange', label = 'avg PT duration')
+        
+        plt.xticks(np.arange(0,23+1, 1.0))
+        plt.xlabel('Hours of a day')
+        plt.legend()        

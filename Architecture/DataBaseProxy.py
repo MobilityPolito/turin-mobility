@@ -36,7 +36,7 @@ books_cols = [
                  "fare_google_transit",
                  "arrival_time_google_transit",
                  "departure_time_google",
-                 "duration_google_transit"
+                 "duration_in_traffic_google"
              ]
              
              
