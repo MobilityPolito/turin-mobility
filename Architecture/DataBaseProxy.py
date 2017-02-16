@@ -248,6 +248,18 @@ class DataBaseProxy (object):
                      "city":city
                     }).sort([("_id", 1)])
 
+    def query_books_group (self, provider, city, start, end):
+        
+        return self.db["books_aggregated"].find \
+                    ({"day":
+                         {
+                             '$gt': start,
+                             '$lt': end
+                         },
+                     "provider":provider,
+                     "city":city
+                    }).sort([("_id", 1)])
+
     def process_books_df (self, provider, books_df):
 
         def riding_time (provider, df):    
@@ -341,6 +353,19 @@ class DataBaseProxy (object):
         for doc in books_cursor:
             s = pd.Series(doc)
             books_df = pd.concat([books_df, pd.DataFrame(s).T], ignore_index=True)           
+        
+        return self.process_books_df(provider, books_df)[books_cols].replace({None:np.NaN})
+
+    def query_books_df_aggregated (self, provider, city, start, end):
+        
+        books_cursor = self.query_books_group(provider, city, start, end) 
+
+        books_df = pd.DataFrame()
+
+        for doc in books_cursor:
+  
+            s = pd.DataFrame(doc['books'])
+            books_df = pd.concat([books_df, s], ignore_index=True)           
         
         return self.process_books_df(provider, books_df)[books_cols].replace({None:np.NaN})
 
@@ -496,7 +521,12 @@ class DataBaseProxy (object):
         else:
             lista_date = self.filter_date(start, end, day_type)
             return self.query_parks_df_intervals(provider, city, lista_date)
-            
+
+    def query_books_df_filtered_v3 (self, provider, city, start, end):
+
+        books_df = self.query_books_df_aggregated(provider, city, start, end)
+        return self.filter_df_days(books_df, start, end)
+
     def query_fleetsize_series (self, provider, city):
 
         cursor = self.db['fleet'].aggregate([
