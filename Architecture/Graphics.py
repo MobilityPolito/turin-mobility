@@ -607,3 +607,5 @@ class Graphics():
         plt.xticks(np.arange(0,23+1, 1.0))
         plt.xlabel('Hours of a day')
         plt.legend()        
+    
+    def utilization(self, df):
