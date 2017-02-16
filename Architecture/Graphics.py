@@ -372,7 +372,7 @@ class Graphics():
         fig, ax = plt.subplots(figsize=(13, 6))
         plt.title (str(df['provider'][0]) + " - Duration vs Google forecast time")
         ax.set_xlabel('Duration')
-        ax.set_ylabel('Gogole Duration')
+        ax.set_ylabel('Google Duration')
 
         ax.scatter(enj['duration_driving'],enj['duration'],
                    s=0.5, label= "Trips", color= color(df))
@@ -396,7 +396,7 @@ class Graphics():
         fig, ax = plt.subplots(figsize=(13, 6))
         plt.title (" - Duration vs Google forecast time")
         ax.set_xlabel('Duration')
-        ax.set_ylabel('Gogole Duration')
+        ax.set_ylabel('Google Duration')
         ax.scatter(df1['duration_driving'],df1['duration'],
                    s=1, label= "Trips", color= color(df1))
         ax.scatter(df2['duration_driving'],df2['duration'],

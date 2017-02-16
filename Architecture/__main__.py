@@ -51,8 +51,8 @@ Sketch
 start = datetime.datetime(2017, 1, 1, 0, 0, 0)
 end = datetime.datetime(2017, 1, 8, 0, 0, 0)
 
-#enjoy_df = dbp.query_books_df_filtered("enjoy", "torino", start, end)
-#car2go_df = dbp.query_books_df_filtered("car2go", "torino", start, end)
+enjoy_df = dbp.query_books_df_filtered("enjoy", "torino", start, end)
+car2go_df = dbp.query_books_df_filtered("car2go", "torino", start, end)
 
 enjoy_improved = dbp.filter_books_df_outliers(dbp.query_books_df_filtered_v3("enjoy", "torino", start, end))
 car2go_improved = dbp.filter_books_df_outliers(dbp.query_books_df_filtered_v3("car2go", "torino", start, end))
