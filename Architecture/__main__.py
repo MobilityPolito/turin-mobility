@@ -63,9 +63,32 @@ g.plot_samples_vs(enjoy_df, car2go_df, "riding_time", "ride")
 plt.figure()   
 g.car_vs_transit(enjoy_df)
 
+plt.figure()   
+g.car_vs_transit(car2go_df)
+
 plt.figure()
-df[df.tot_duration_google_transit < df.duration].set_index("start").duration.plot(figsize=(w,h), marker='o', label="enjoy")
-plt.legend()
+g.car_vs_transit_bar(enjoy_df)
+g.car_vs_transit_bar(car2go_df)
+
+#
+plt.figure()
+g.car_vs_transit_resampled(enjoy_df)
+plt.figure()
+g.car_vs_transit_resampled(car2go_df)
+
+#g.faster_PT_hours(enjoy_df)
+#  night problem
+#g.faster_PT_hours(car2go_df)
+plt.figure()
+g.faster_car_hours(enjoy_df)
+g.faster_car_hours(car2go_df)
+
+plt.figure()
+g.faster_car_PTtime_hours(enjoy_df)
+g.faster_car_PTtime_hours(car2go_df)
+
+
+
 ### ******* COUNT
 ### ******* BILLS
 

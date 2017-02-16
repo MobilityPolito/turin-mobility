@@ -60,10 +60,10 @@ from pandas.tools.plotting import scatter_matrix
 # plt.show()
 
 def color(df):
-    if df['provider'][1] == 'car2go':
-        return 'blue'
-    else:
+    if df['provider'][2] == 'enjoy':
         return 'red'
+    else:
+        return 'blue'
 
 class Graphics():
 
@@ -394,7 +394,7 @@ class Graphics():
 
         bis_y = bis_x = range(1,int(df1.duration.max()))
         fig, ax = plt.subplots(figsize=(13, 6))
-        plt.title (" - Duration vs Google forecast time")
+        plt.title ("Duration vs Google forecast time")
         ax.set_xlabel('Duration')
         ax.set_ylabel('Google Duration')
         ax.scatter(df1['duration_driving'],df1['duration'],
@@ -412,19 +412,97 @@ class Graphics():
     def car_vs_transit(self, df):
         df_ = df[(df['ride'] == True) & \
                 (df['short_trips'] == True) & \
-                (df['tot_duration_google_transit'].isnull() == False) ]  
-                
+                (df['tot_duration_google_transit'].isnull() == False) ]           
         fig, ax = plt.subplots(figsize=(13, 6))
         plt.title ("Duration vs Google Transit")
-        ax.set_xlabel('Google transit [m]')
-        ax.set_ylabel('Booking Duration [m]')
-        ax.axis([0,100,0,50])                                       
-        ax.scatter(df_.tot_duration_google_transit, df_.duration, color=color(df),s=0.5,)
-        ax.plot(df_.duration, df_.duration, color="gray")
+        ax.set_xlabel('Tbus [m]')
+        ax.set_ylabel('Tcar [m]')
+        ax.axis([0,100,0,45])                                       
+        ax.scatter(df_.tot_duration_google_transit, df_.duration, color=color(df),s=0.5)
+        ax.plot(df_.duration, df_.duration, color="green")
+        plt.show()
+                   
+    def car_vs_transit_resampled(self, df_):
+        df = self.slotted_df(df_)
+        fig, ax = plt.subplots(figsize=(13, 6))       
+        plt.axis([0, 80,0,40])
+        df_ = df.set_index("start").resample("5Min").mean()
+        ax.scatter(df_.tot_duration_google_transit, df_.duration, color=color(df),s=0.5)
+        bis_y = bis_x = range(1,int(df_.duration.max()))
+        ax.plot(bis_x, bis_y, color="green", linestyle='--', ) 
+        plt.xlabel('Tbus [m]')
+        plt.ylabel('Tcar [m]') 
+        plt.show()        
+        
+    def car_vs_transit_bar(self, df_):
+        df = self.slotted_df(df_)
+        fig, ax = plt.subplots(figsize=(13, 6))       
+        ax = df.groupby('slot')._id.count().apply(lambda x : x/float(len(df)))
+        ax.plot.bar(color=color(df_))
+        plt.xlabel('Google transit durations slots [m]')
+        plt.ylabel('Booking Frequencies') 
         plt.show()
         
+    def slotted_df(self, df_):
+        df = df_[(df_['ride'] == True) & \
+                 (df_['short_trips'] == True) & \
+                 (df_['tot_duration_google_transit'].isnull() == False) &\
+                 (df_['tot_duration_google_transit']< 100)] 
+        df["slot"] = pd.Series()
+        df.loc[df.tot_duration_google_transit < 10, "slot"] = 10
+        df.loc[(df.tot_duration_google_transit < 20) & (df.tot_duration_google_transit > 10), "slot"] = 20
+        df.loc[(df.tot_duration_google_transit < 30) & (df.tot_duration_google_transit > 20), "slot"] = 30
+        df.loc[(df.tot_duration_google_transit < 40) & (df.tot_duration_google_transit > 30), "slot"] = 40
+        df.loc[(df.tot_duration_google_transit < 50) & (df.tot_duration_google_transit > 40), "slot"] = 50
+        df.loc[(df.tot_duration_google_transit < 60) & (df.tot_duration_google_transit > 50), "slot"] = 60
+        df.loc[(df.tot_duration_google_transit < 70) & (df.tot_duration_google_transit > 60), "slot"] = 70
+        df.loc[(df.tot_duration_google_transit < 80) & (df.tot_duration_google_transit > 70), "slot"] = 80
+        df.loc[(df.tot_duration_google_transit < 90) & (df.tot_duration_google_transit > 80), "slot"] = 90
+        df.loc[df.tot_duration_google_transit > 90, "slot"] = 100
+        return df
 
+    def faster_PT_hours(self, df1):
+        df = df1[(df1['ride'] == True) & \
+                (df1['short_trips'] == True) & \
+                (df1['tot_duration_google_transit'].isnull() == False) ] 
+        df3= df[(df.tot_duration_google_transit >= df.tot_duration_google_transit.quantile(q=0.01))\
+                         & (df.tot_duration_google_transit <= df.tot_duration_google_transit.quantile(q=1.0-0.02))]      
+        df2= df3[(df3.duration >= df3.duration.quantile(q=0.01))\
+                         & (df3.duration <= df3.duration.quantile(q=1.0-0.02))]  
+        df_ = df2[df2.tot_duration_google_transit < df2.duration].set_index("start")
+        df_.groupby(df_.index.map(lambda t: t.hour)).tot_duration_google_transit.mean()\
+                    .plot(figsize=(13, 6), marker='o', color=color(df), label = 'mean PT time when PT faster than CS')
+        plt.xticks(np.arange(0,23+1, 1.0))
+        plt.xlabel('Hours of a day')
+        plt.legend()
+        
+    def faster_car_hours(self, df1):
+        df = df1[(df1['ride'] == True) & \
+                (df1['short_trips'] == True) & \
+                (df1['tot_duration_google_transit'].isnull() == False) ] 
+        df3= df[(df.tot_duration_google_transit >= df.tot_duration_google_transit.quantile(q=0.01))\
+                         & (df.tot_duration_google_transit <= df.tot_duration_google_transit.quantile(q=1.0-0.02))]      
+        df2= df3[(df3.duration >= df3.duration.quantile(q=0.01))\
+                         & (df3.duration <= df3.duration.quantile(q=1.0-0.02))]  
+        df_ = df2[df2.tot_duration_google_transit > df2.duration].set_index("start")
+        df_.groupby(df_.index.map(lambda t: t.hour)).duration.mean()\
+                    .plot(figsize=(13, 6), marker='o', color=color(df), label = 'mean CS when CS faster than PT')
+        plt.xticks(np.arange(0,23+1, 1.0))
+        plt.xlabel('Hours of a day')
+        plt.legend()
                 
-                
-                
-                
+    def faster_car_PTtime_hours(self, df1):
+        df = df1[(df1['ride'] == True) & \
+                (df1['short_trips'] == True) & \
+                (df1['tot_duration_google_transit'].isnull() == False) ] 
+        df3= df[(df.tot_duration_google_transit >= df.tot_duration_google_transit.quantile(q=0.01))\
+                         & (df.tot_duration_google_transit <= df.tot_duration_google_transit.quantile(q=1.0-0.02))]      
+        df2= df3[(df3.duration >= df3.duration.quantile(q=0.01))\
+                         & (df3.duration <= df3.duration.quantile(q=1.0-0.02))]  
+        df_ = df2[df2.tot_duration_google_transit > df2.duration].set_index("start")
+        df_.groupby(df_.index.map(lambda t: t.hour)).tot_duration_google_transit.mean()\
+                    .plot(figsize=(13, 6), marker='o', color=color(df), label = 'mean PT time when CS faster')
+        plt.xticks(np.arange(0,23+1, 1.0))
+        plt.xlabel('Hours of a day')
+        plt.legend()        
+        
