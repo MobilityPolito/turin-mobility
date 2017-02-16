@@ -49,23 +49,17 @@ Sketch
 """
 
 start = datetime.datetime(2016, 12, 10, 0, 0, 0)
-end = datetime.datetime(2017, 1, 31, 23, 59, 59)
+end = datetime.datetime(2017, 1, 30, 23, 59, 59)
 
 #
-enjoy_df = dbp.query_books_df_filtered_v3("enjoy", "torino", start, end)
-car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
+#enjoy_df = dbp.query_books_df_filtered_v3("enjoy", "torino", start, end)
+#car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
 
-## ****** GOOGLE RESULTS ******
-
-
-#g.plot_samples_vs(enjoy_df, car2go_df, "riding_time", "ride")
-
-#plt.figure()   
-#g.car_vs_transit(enjoy_df)
 
 #plt.figure()
 #df[df.tot_duration_google_transit < df.duration].set_index("start").duration.plot(figsize=(w,h), marker='o', label="enjoy")
 #plt.legend()
+
 ### ******* COUNT
 ### ******* BILLS
 
@@ -104,6 +98,37 @@ car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
 #g.car_vs_google(car2go_df)
 #g.car_vs_google_comparison(enjoy_df, car2go_df)
 
+"""
+ ****** GOOGLE RESULTS ******
+"""
+
+#g.plot_samples_vs(enjoy_df, car2go_df, "riding_time", "ride")
+
+#g.car_vs_transit(enjoy_df)
+
+#g.car_vs_transit(car2go_df)
+
+#g.car_vs_transit_bar(enjoy_df)
+#g.car_vs_transit_bar(car2go_df)
+
+#
+#g.car_vs_transit_resampled(enjoy_df)
+#g.car_vs_transit_resampled(car2go_df)
+
+#g.faster_PT_hours(enjoy_df)
+#  night problem
+#g.faster_PT_hours(car2go_df)
+#g.faster_car_hours(enjoy_df)
+#g.faster_car_hours(car2go_df)
+
+#g.faster_car_PTtime_hours(enjoy_df)
+#g.faster_car_PTtime_hours(car2go_df)
+
+#g.car_vs_pt(enjoy_df)
+#g.car_vs_pt(car2go_df)
+
+#g.cars_vs_pt(enjoy_df,car2go_df)
+
 #def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
 #
 #    heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
@@ -129,7 +154,9 @@ car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
 #            grouped.get_group(hour).start_lon.values,
 #            bins=20)
 
+
+
 pos_piazzaVittorio = [45.0650653, 7.6936148]
 pos_PortaNuova = [45.0620829, 7.6762908]
-#g.isocore(enjoy_df, pos_PortaNuova)
+g.isocrono(enjoy_df, pos_piazzaVittorio)
 g.isocost(enjoy_df, pos_piazzaVittorio)
