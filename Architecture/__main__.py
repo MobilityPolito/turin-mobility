@@ -17,30 +17,32 @@ matplotlib.style.use('ggplot')
 
 #from pandas.tools.plotting import scatter_matrix
 
-from Car2GoProvider import Car2Go
-from EnjoyProvider import Enjoy
-
 from Graphics import Graphics
+g = Graphics()
+
 from DataBaseProxy import DataBaseProxy
 dbp = DataBaseProxy()
-g = Graphics()
+
+from EnjoyProvider import Enjoy
 enjoy = Enjoy()
+
+from Car2GoProvider import Car2Go
 car2go = Car2Go()
 
 """
 Fleet
 """
 
-enjoy_fleetsize_series = enjoy.get_fleetsize_info().dropna()
-car2go_fleetsize_series = car2go.get_fleetsize_info().dropna()
-
-fig, axs = plt.subplots(1,1)
-enjoy_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Enjoy")
-car2go_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Car2Go")
-plt.legend()
-plt.title("Fleet size evolution")
-
-plt.show()
+#enjoy_fleetsize_series = enjoy.get_fleetsize_info().dropna()
+#car2go_fleetsize_series = car2go.get_fleetsize_info().dropna()
+#
+#fig, axs = plt.subplots(1,1)
+#enjoy_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Enjoy")
+#car2go_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Car2Go")
+#plt.legend()
+#plt.title("Fleet size evolution")
+#
+#plt.show()
 
 """
 Sketch
@@ -49,84 +51,69 @@ Sketch
 start = datetime.datetime(2017, 1, 1, 0, 0, 0)
 end = datetime.datetime(2017, 1, 8, 0, 0, 0)
 
-enjoy_books_df = dbp.query_books_df_filtered("enjoy", "torino", start, end)
-car2go_books_df = dbp.query_books_df_filtered("car2go", "torino", start, end)
-enjoy_improved = dbp.filter_books_df_outliers(enjoy_books_df)
-car2go_improved = dbp.filter_books_df_outliers(car2go_books_df)
+#enjoy_df = dbp.query_books_df_filtered("enjoy", "torino", start, end)
+#car2go_df = dbp.query_books_df_filtered("car2go", "torino", start, end)
 
-### DURATION FULL ##
-g.duration_all(enjoy_books_df, car2go_books_df)
+### ******* COUNT
+### ******* BILLS
 
-### DURATION WITHOUT OUTLIERS ###
-g.duration(enjoy_improved)
-g.duration(car2go_improved)
+plt.figure()
+g.plot_aggregated_count_vs(enjoy_df, car2go_df, "distance", "ride", quantile=0.01)
 
-### HISTS ###
-g.hist(enjoy_improved, cumulative=False)
-g.hist(car2go_improved, cumulative=False)
-g.hist(enjoy_improved, cumulative=True)
-g.hist(car2go_improved, cumulative=True)
+col = "duration"
 
-### AGGREGATED 30 MIIN ###
+g.plot_samples_vs(enjoy_df, car2go_df, col, "ride")
+g.plot_samples_vs(enjoy_df, car2go_df, col, "ride", quantile=0.01)
 
-g.duration_aggregated(enjoy_improved, car2go_improved)
-g.bookings_aggregated(enjoy_improved, car2go_improved)
+plt.figure()
+g.hist(enjoy_df, col, "ride", "Enjoy", "red", quantile=0.01)
+plt.figure()
+g.hist(car2go_df, col, "ride", "Car2Go", "blue", quantile=0.01)
 
-### MEAN ###
-g.mean_bookings_aggregated(enjoy_improved, car2go_improved)
-g.mean_daily_duration(enjoy_improved, car2go_improved)
+plt.figure()
+g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all")
+plt.figure()
+g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all", quantile=0.01)
 
-
-### BILL ###
-g.daily_min_bill_aggregated(enjoy_improved, car2go_improved)
-g.daily_max_bill_aggregated(enjoy_improved, car2go_improved)
-g.daily_bills_aggregated(enjoy_improved, car2go_improved)
-
+plt.figure()
+g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "min_bill", "all", quantile=0.01)
+g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "max_bill", "all", quantile=0.01)
 
 ### CDF WEEKS ###
-g.cdf_weeks_duration(enjoy_improved, car2go_improved)
-g.cdf_weeks_distance(enjoy_improved, car2go_improved)
+g.cdf_weeks_duration(enjoy_df, car2go_df)
+g.cdf_weeks_distance(enjoy_df, car2go_df)
 
 ### CDF BUSINESS VS WEEKEND ###
-g.cdf_business_weekend(enjoy_improved)
-g.cdf_business_weekend(car2go_improved)
-
-### BOOKS NUMBER MEAN BUSINESS VS WEEKEND ###
-g.number_books_aggregated(enjoy_improved)
-g.number_books_aggregated(car2go_improved)
+g.cdf_business_weekend(enjoy_df)
+g.cdf_business_weekend(car2go_df)
 
 ### REAL DURATION VS GOOGLE ###
-g.car_vs_google(enjoy_improved)
-g.car_vs_google(car2go_improved)
-g.car_vs_google_comparison(enjoy_improved, car2go_improved)
+g.car_vs_google(enjoy_df)
+g.car_vs_google(car2go_df)
+g.car_vs_google_comparison(enjoy_df, car2go_df)
 
-#def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
-#
-#    heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
-#    
-#    logheatmap = np.log(heatmap)
-#    logheatmap[np.isneginf(logheatmap)] = 0
-#    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
-#    
-#    plt.imshow(heatmap, cmap=cmap, extent=[yedges[0], yedges[-1], xedges[-1], xedges[0]], 
-#               aspect='auto')
-#    plt.colorbar()
-#    plt.gca().invert_yaxis()
-#    plt.show()
-#
-#    return
-#
-#["hour"] = car2go_with_ride_filtered["start"].apply(lambda d: d.hour)
-#grouped = car2go_with_ride_filtered.groupby("hour")
-#for hour in range(24):
-#    plt.title(str(hour) + ":00")
-#    plt.xlim((7.61, 7.73))
-#    heatmap(grouped.get_group(hour).start_lat.values, 
-#            grouped.get_group(hour).start_lon.values,
-#            bins=100)
+def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
+
+    heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
     
-#import imageio
-#images = []
-#for filename in filenames:
-#    images.append(imageio.imread(filename))
-#imageio.mimsave('/path/to/movie.gif', images)
+    logheatmap = np.log(heatmap)
+    logheatmap[np.isneginf(logheatmap)] = 0
+    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
+    
+    plt.imshow(heatmap, cmap=cmap, extent=[yedges[0], yedges[-1], xedges[-1], xedges[0]], 
+               aspect='auto')
+    plt.colorbar()
+    plt.gca().invert_yaxis()
+    plt.show()
+
+    return
+
+car2go_df["hour"] = car2go_df["start"].apply(lambda d: d.hour)
+grouped = car2go_df.groupby("hour")
+for hour in range(24):
+    plt.title(str(hour) + ":00")
+    plt.xlim((7.61, 7.73))
+    heatmap(grouped.get_group(hour).start_lat.values, 
+            grouped.get_group(hour).start_lon.values,
+            bins=20)
+

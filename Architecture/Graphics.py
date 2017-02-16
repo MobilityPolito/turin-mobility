@@ -70,155 +70,235 @@ class Graphics():
     def __init__(self):
         pass
 
-    def duration_all(self, df1, df2):
+    def plot_samples(self, 
+                     df, 
+                     col, 
+                     filter_col, 
+                     provider, 
+                     color,
+                     quantile=0.0,
+                     figsize=(13,6)):
+        
+        plt.title(col)
+        s = df.loc[df[filter_col] == True, col].dropna()
+        s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
+        s.plot(marker='o', figsize=figsize, label=provider, color=color)
+
+    def plot_samples_vs(self, 
+                        enjoy_df, 
+                        car2go_df, 
+                        col, 
+                        filter_col, 
+                        quantile=0.0,
+                        figsize=(13,6)):
+
         plt.figure()
-        plt.title("Duration")
-        df1.duration.plot(figsize=(13,6), marker='o', label="Enjoy")
-        df2.duration.plot(figsize=(13,6), marker='o', label="car2go")
+        self.plot_samples(enjoy_df, col, filter_col, "Enjoy", "red", quantile, figsize=figsize)
+        self.plot_samples(car2go_df, col, filter_col, "Car2Go", "blue", quantile, figsize=figsize)
+        plt.legend()        
 
-    def duration(self, df):
+    def hist(self, 
+             df, 
+             col, 
+             filter_col, 
+             provider, 
+             color, 
+             quantile=0.00,
+             bins=100,
+             cumulative=False,
+             figsize=(13,6)):
+        
+        plt.title(col)
+        s = df.loc[df[filter_col] == True, col].dropna()
+        s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
+        s.hist(figsize=figsize, label=provider, color=color, cumulative=cumulative, bins=bins)        
+
+    def plot_aggregated_count(self, 
+                                df, 
+                                col, 
+                                filter_col, 
+                                provider, 
+                                color,
+                                freq="30Min",
+                                quantile=0.0,
+                                figsize=(13,6)):
+        
+        plt.title("Number of bookings")
+        df_ = df.loc[df[filter_col] == True].set_index("start")
+        s = df_[col].dropna()
+        s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
+        s = s.resample(freq).count()
+        s.plot(marker='o', figsize=figsize, label=provider, color=color)
+
+    def plot_aggregated_count_vs(self, 
+                                enjoy_df, 
+                                car2go_df, 
+                                col, 
+                                filter_col,
+                                freq="30Min",
+                                quantile=0.0,
+                                figsize=(13,6)):
+
         plt.figure()
-        plt.title("Duration without outliers " +str(df['provider'][0]))
-        df[(df['ride'] == True) & \
-             (df['short_trips'] == True)].duration\
-             .plot(figsize=(13,6), marker='o', label=str(df['provider'][0]), color=color(df))
+        self.plot_aggregated_count(enjoy_df, col, filter_col, "Enjoy", "red", freq=freq, quantile=quantile)
+        self.plot_aggregated_count(car2go_df, col, filter_col, "Car2Go", "blue", freq=freq, quantile=quantile)
+        plt.legend()        
+        
+    def plot_aggregated_mean(self, 
+                        df, 
+                        col, 
+                        filter_col, 
+                        provider, 
+                        color,
+                        freq="30Min",
+                        quantile=0.0,
+                        figsize=(13,6)):
+        
+        plt.title(col)
+        df_ = df.loc[df[filter_col] == True].set_index("start")
+        s = df_[col].dropna()
+        s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
+        s = s.resample(freq).mean()
+        s.plot(marker='o', figsize=figsize, label=provider, color=color)
 
-    def hist(sefl, df, cumulative):
-        if (cumulative):
-            plt.figure()
-            df[(df['ride'] == True) & \
-                 (df['short_trips'] == True)].duration\
-                 .hist(figsize=(13,6), label=str(df['provider'][0]), color=color(df), bins=100, cumulative=True)
-        else:
-            plt.figure()
-            df[(df['ride'] == True) & \
-                         (df['short_trips'] == True)].duration\
-                         .hist(figsize=(13,6), label=str(df['provider'][0]), color=color(df), bins=100)
+    def plot_aggregated_mean_vs(self, 
+                            enjoy_df, 
+                            car2go_df, 
+                            col, 
+                            filter_col,
+                            freq="30Min",
+                            quantile=0.0,
+                            figsize=(13,6)):
 
-    def duration_aggregated(self, df1, df2):
         plt.figure()
-        plt.title('Duration aggregated by 30 min')
-        df1[(df1['ride'] == True)\
-                     & (df1['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min").duration.mean()\
-                                 .plot(figsize=(13,6), marker='o', label=str(df1['provider'][0]))
+        self.plot_aggregated_mean(enjoy_df, col, filter_col, "Enjoy", "red", freq=freq, quantile=quantile)
+        self.plot_aggregated_mean(car2go_df, col, filter_col, "Car2Go", "blue", freq=freq, quantile=quantile)
+        plt.legend()        
 
-        df2[(df2['ride'] == True)\
-                     & (df2['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min").duration.mean()\
-                                 .plot(figsize=(13,6), marker='o', label=str(df2['provider'][0]))
-        plt.legend()
+    def plot_aggregated_sum(self, 
+                        df, 
+                        col, 
+                        filter_col, 
+                        provider, 
+                        color,
+                        freq="30Min",
+                        quantile=0.0,
+                        figsize=(13,6)):
+        
+        plt.title(col)
+        df_ = df.loc[df[filter_col] == True].set_index("start")
+        s = df_[col].dropna()
+        s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
+        s = s.resample(freq).sum()
+        s.plot(marker='o', figsize=figsize, label=provider, color=color)
 
-    def bookings_aggregated(self, df1, df2):
+    def plot_aggregated_sum_vs(self, 
+                            enjoy_df, 
+                            car2go_df, 
+                            col, 
+                            filter_col,
+                            freq="30Min",
+                            quantile=0.0,
+                            figsize=(13,6)):
+
         plt.figure()
-        plt.title("Number of bookings aggregated by 30 min")
-        df1[(df1['ride'] == True)\
-                     & (df1['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min")._id.count()\
-                                 .plot(figsize=(13,6), marker='o', label=str(df1['provider'][0]))
+        self.plot_aggregated_sum(enjoy_df, col, filter_col, "Enjoy", "red", freq=freq, quantile=quantile)
+        self.plot_aggregated_sum(car2go_df, col, filter_col, "Car2Go", "blue", freq=freq, quantile=quantile)
+        plt.legend()        
+        
+    def plot_daily_count(self, 
+                        df, 
+                        col, 
+                        filter_col, 
+                        provider, 
+                        color,
+                        quantile=0.0,
+                        figsize=(13,6)):
+        
+        plt.title("Number of bookings")
+        df_ = df.loc[df[filter_col] == True].set_index("start")
+        s = df_[col].dropna()
+        s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
+        s = s.groupby(s.index.map(lambda t: t.hour)).count()
+        s.plot(marker='o', figsize=figsize, label=provider, color=color)
+        
+    def plot_daily_count_vs(self, 
+                            enjoy_df, 
+                            car2go_df, 
+                            col, 
+                            filter_col,
+                            quantile=0.0,
+                            figsize=(13,6)):
 
-        df2[(df2['ride'] == True)\
-                     & (df2['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min")._id.count()\
-                                 .plot(figsize=(13,6), marker='o', label=str(df2['provider'][0]))
-        plt.legend()
-
-    def mean_bookings_aggregated(self, df1, df2):
         plt.figure()
-        plt.title("Mean daily Number of bookings aggregated by hour")
-        enjoy_nbooks = df1[(df1['ride'] == True)\
-                             & (df1['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min")._id.count()
-        enjoy_nbooks.groupby(enjoy_nbooks.index.map(lambda t: t.hour)).mean().plot(figsize=(13,6), marker='o', label="Enjoy N books", color="red")
-        car2go_nbooks = df2[(df2['ride'] == True)\
-                             & (df2['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min")._id.count()
-        car2go_nbooks.groupby(car2go_nbooks.index.map(lambda t: t.hour)).mean().plot(figsize=(13,6), marker='o', label="Car2Go N books", color="blue")
-        plt.legend()
+        self.plot_daily_count(enjoy_df, col, filter_col, "Enjoy", "red", quantile=quantile)
+        self.plot_daily_count(car2go_df, col, filter_col, "Car2Go", "blue", quantile=quantile)
+        plt.legend()        
+        
+    def plot_daily_mean(self, 
+                        df, 
+                        col, 
+                        filter_col, 
+                        provider, 
+                        color,
+                        freq="30Min",
+                        quantile=0.0,
+                        figsize=(13,6)):
+        
+        plt.title(col)
+        df_ = df.loc[df[filter_col] == True].set_index("start")
+        s = df_[col].dropna()
+        s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
+        s = s.groupby(s.index.map(lambda t: t.hour)).mean()
+        s.plot(marker='o', figsize=figsize, label=provider, color=color)
+        
+    def plot_daily_mean_vs(self, 
+                            enjoy_df, 
+                            car2go_df, 
+                            col, 
+                            filter_col,
+                            freq="30Min",
+                            quantile=0.0,
+                            figsize=(13,6)):
 
-    def mean_daily_duration(self, df1, df2):
         plt.figure()
-        plt.title("Mean daily duration aggregated by hour")
-        enjoy_duration = df1[(df1['ride'] == True)\
-                             & (df1['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min")\
-                                 .duration.mean()
-        enjoy_duration.groupby(enjoy_duration.index.map(lambda t: t.hour)).mean().plot(figsize=(13,6), marker='o', label="Enjoy duration", color="red")
-        car2go_duration = df2[(df2['ride'] == True)\
-                             & (df2['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min")\
-                                 .duration.mean()
-        car2go_duration.groupby(car2go_duration.index.map(lambda t: t.hour)).mean().plot(figsize=(13,6), marker='o', label="Car2Go duration", color="blue")
-        plt.legend()
+        self.plot_daily_mean(enjoy_df, col, filter_col, "Enjoy", "red", freq=freq, quantile=quantile)
+        self.plot_daily_mean(car2go_df, col, filter_col, "Car2Go", "blue", freq=freq, quantile=quantile)
+        plt.legend()        
 
-    def daily_min_bill_aggregated(self, df1, df2):
+    def plot_daily_sum(self, 
+                        df, 
+                        col, 
+                        filter_col, 
+                        provider, 
+                        color,
+                        freq="30Min",
+                        quantile=0.0,
+                        figsize=(13,6)):
+        
+        plt.title(col)
+        df_ = df.loc[df[filter_col] == True].set_index("start")
+        s = df_[col].dropna()
+        s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
+        s = s.groupby(s.index.map(lambda t: t.hour)).sum()
+        s.plot(marker='o', figsize=figsize, label=provider, color=color)
+        
+    def plot_daily_sum_vs(self, 
+                            enjoy_df, 
+                            car2go_df, 
+                            col, 
+                            filter_col,
+                            freq="30Min",
+                            quantile=0.0,
+                            figsize=(13,6)):
+
         plt.figure()
-        plt.title("Daily min bill aggregated by 30 min")
-        df1[(df1['ride'] == True)\
-                             & (df1['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min")\
-                                 .min_bill.sum()\
-                                 .plot(figsize=(13,6), marker='o', label="Enjoy")
-        df2[(df2['ride'] == True)\
-                             & (df2['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min")\
-                                 .min_bill.sum()\
-                                 .plot(figsize=(13,6), marker='o', label="car2go")
-        plt.legend()
-
-    def daily_max_bill_aggregated(self, df1, df2):
-        plt.figure()
-        plt.title("Daily max bill aggregated by 30 min")
-        df1[(df1['ride'] == True)\
-                             & (df1['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min")\
-                                 .max_bill.sum()\
-                                 .plot(figsize=(13,6), marker='o', label="Enjoy")
-        df2[(df2['ride'] == True)\
-                             & (df2['short_trips'] == True)]\
-                                 .set_index("start")\
-                                 .resample("30Min")\
-                                 .max_bill.sum()\
-                                 .plot(figsize=(13,6), marker='o', label="car2go")
-        plt.legend()
-
-    def daily_bills_aggregated(self, df1, df2):
-        plt.figure()
-        plt.title("Mean daily bills aggregated by hour")
-        enjoy_min = df1[(df1['ride'] == True)\
-                             & (df1['short_trips'] == True)]\
-                             .set_index("start")\
-                             .resample("30Min").min_bill.sum()
-        enjoy_min.groupby(enjoy_min.index.map(lambda t: t.hour)).mean().plot(figsize=(13,6), marker='o', label="Enjoy min", color="red")
-        enjoy_max = df1[(df1['ride'] == True)\
-                             & (df1['short_trips'] == True)]\
-                             .set_index("start")\
-                             .resample("30Min").max_bill.sum()
-        enjoy_max.groupby(enjoy_min.index.map(lambda t: t.hour)).mean().plot(figsize=(13,6), marker='o', label="Enjoy max", color="red")
-        car2go_min = df2[(df2['ride'] == True)\
-                             & (df2['short_trips'] == True)]\
-                             .set_index("start")\
-                             .resample("30Min").min_bill.sum()
-        car2go_min.groupby(car2go_min.index.map(lambda t: t.hour)).mean().plot(figsize=(13,6), marker='o', label="car2go min", color="blue")
-        car2go_max = df2[(df2['ride'] == True)\
-                             & (df2['short_trips'] == True)]\
-                             .set_index("start")\
-                             .resample("30Min").max_bill.sum()
-        car2go_max.groupby(car2go_min.index.map(lambda t: t.hour)).mean().plot(figsize=(13,6), marker='o', label="car2go max", color="blue")
-        plt.legend()
-
+        self.plot_daily_sum(enjoy_df, col, filter_col, "Enjoy", "red", freq=freq, quantile=quantile)
+        self.plot_daily_sum(car2go_df, col, filter_col, "Car2Go", "blue", freq=freq, quantile=quantile)
+        plt.legend()        
+        
     def cdf_weeks_duration(self, df1, df2):
+        
         plt.figure()
         plt.title('CDF by weeks duration')
         weeks_number = df1['week'].unique()
@@ -238,6 +318,7 @@ class Graphics():
         plt.legend(loc=4)
 
     def cdf_weeks_distance(self, df1, df2):
+
         plt.figure()
         plt.title('CDF : weeks distance')
         weeks_number = df1['week'].unique()
@@ -261,20 +342,18 @@ class Graphics():
 
     def cdf_business_weekend(self, df):
 
+        df_ = df[(df.duration >= df.duration.quantile(q=0.01))\
+                 & (df.duration <= df.duration.quantile(q=1.0-0.02))]        
+        
         fig, ax = plt.subplots(figsize=(13, 6))
         plt.title(str(df['provider'][0]) + " - Business days vs Weekend days duration CDF")
-        bd_df = df[(df['business'] == True) & \
-                               (df['ride'] == True) &\
-                               (df['quantile'] == True) 
-                               ]
+
+        bd_df = df_[(df_['business'] == True) & (df_['ride'] == True)]
         n, bins, patches = ax.hist(bd_df.duration, 1000, histtype='step',
                                    cumulative=True, label="Business day",
                                    rwidth=2.0, color=color(df), normed=1)
 
-        we_df = df[(df['weekend'] == True) & \
-                               (df['ride'] == True) &\
-                               (df['quantile'] == True) 
-                               ]
+        we_df = df_[(df_['weekend'] == True) & (df_['ride'] == True)]
         n, bins, patches = ax.hist(we_df.duration, 1000, histtype='step',
                                    cumulative=True, label="Week end", linestyle="--",
                                    rwidth=2.0, color=color(df), normed=1)
@@ -283,32 +362,8 @@ class Graphics():
         ax.set_ylabel('CDF probability')
         plt.show()
 
-    def number_books_aggregated(self, df):
-        df1 = df[(df['business'] == True) & \
-                       (df['ride'] == True) &\
-                       (df['quantile'] == True) 
-                       ]
-        df1 = df1.set_index("start").resample("60Min")._id.count().replace({0:np.NaN}).dropna()
-        df1 = df1.groupby(df1.index.map(lambda t: t.hour)).mean()
-
-        df2 = df[(df['weekend'] == True) & \
-                               (df['ride'] == True) &\
-                               (df['quantile'] == True) 
-                               ]
-        df2 = df2.set_index("start").resample("60Min")._id.count().replace({0:np.NaN}).dropna()
-        df2 = df2.groupby(df2.index.map(lambda t: t.hour)).mean()
-
-        fig, ax = plt.subplots(figsize=(13, 6))
-        plt.title (str(df['provider'][0])+" rents in business day and week-ends")
-        ax.set_xlabel('Time')
-        ax.set_ylabel('Rents')
-
-        plt_date = range(0,24)
-        ax.plot(df1,linewidth=2.0, label= "Business days", color= color(df))
-        ax.plot(df2,linewidth=2.0, linestyle='--', label= "weekends", color= color(df))
-        plt.show()
-
     def car_vs_google(self, df):
+        
         enj = df[(df['ride'] == True) &\
                      (df['short_trips'] == True) ]
 
@@ -330,6 +385,7 @@ class Graphics():
         plt.show()
 
     def car_vs_google_comparison(self, df_provider1, df_provider2):
+        
         df1 = df_provider1[(df_provider1['ride'] == True) &\
                      (df_provider1['short_trips'] == True) ]
 

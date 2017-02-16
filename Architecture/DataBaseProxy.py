@@ -345,27 +345,11 @@ class DataBaseProxy (object):
         return self.process_books_df(provider, books_df)[books_cols].replace({None:np.NaN})
 
     def filter_books_df_outliers (self, df):
-        '''
-        mc idea: 
-            remove all the rent with distance = 0 fuel_cons = 0
-            on this compute the cdf, compute the 5 and 95 quantile and remove them
-            return this df
-        '''
-        #only reservations
-        # reservations = df[(df.distance == 0)  & (df.fuel_consumption == 0)]
-                          
-        #there should be a ride
-        with_ride = df[(df.distance > 0.05)]
 
-        #filter
-        min_perc = with_ride['duration'].quantile(q=0.05)
-        max_perc = with_ride['duration'].quantile(q=0.95)
-        # with_ride_filtered = with_ride[(with_ride.duration >= min_perc) & (with_ride.duration <= max_perc)]
-                
-        df['ride'] = df['distance'].apply(lambda w: (w > 0.05))
-        df['quantile'] = df['duration'].apply(lambda w: (w >= min_perc) and (w <= max_perc))
         df['reservations'] = df['distance'].apply(lambda w: (w == 0)) 
-        df['short_trips'] = df['duration'].apply(lambda w: (w < 120))
+        df['ride'] = df['distance'].apply(lambda w: (w > 0.05))
+        df['short_trips'] = df['duration'].apply(lambda w: (w < 40))
+        df['medium_trips'] = df['duration'].apply(lambda w: (w > 40) and (w < 120))
         df['long_trips'] = df['duration'].apply(lambda w: (w > 120) and (w < 1440))
         
         return df
@@ -390,6 +374,7 @@ class DataBaseProxy (object):
             if (d - datetime.timedelta(days = 1)) not in holidays:
                 pre_holidays.append(d - datetime.timedelta(days = 1))
                              
+        df['all'] = True                
         df['week_day'] = df['start'].apply(lambda x: x.weekday())
         df['business'] = df['week_day'].apply(lambda w: (0 <= w) and (w <= 4))
         df['weekend'] = df['week_day'].apply(lambda w: (5 <= w) and (w <= 6))
@@ -489,7 +474,7 @@ class DataBaseProxy (object):
     def query_books_df_filtered (self, provider, city, start, end):
 
         books_df = self.query_books_df(provider, city, start, end)
-        return self.filter_df_days(books_df, start, end)
+        return self.filter_books_df_outliers(self.filter_df_days(books_df, start, end))
 
     def query_parks_df_filtered (self, provider, city, start, end):
         
