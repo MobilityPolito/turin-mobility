@@ -60,7 +60,7 @@ from pandas.tools.plotting import scatter_matrix
 # plt.show()
 
 def color(df):
-    if df['provider'][0] == 'car2go':
+    if df['provider'][1] == 'car2go':
         return 'blue'
     else:
         return 'red'
@@ -408,3 +408,23 @@ class Graphics():
         plt.axis([0, 50, 0, 50])
         plt.legend(loc=4)
         plt.show()
+        
+    def car_vs_transit(self, df):
+        df_ = df[(df['ride'] == True) & \
+                (df['short_trips'] == True) & \
+                (df['tot_duration_google_transit'].isnull() == False) ]  
+                
+        fig, ax = plt.subplots(figsize=(13, 6))
+        plt.title ("Duration vs Google Transit")
+        ax.set_xlabel('Google transit [m]')
+        ax.set_ylabel('Booking Duration [m]')
+        ax.axis([0,100,0,50])                                       
+        ax.scatter(df_.tot_duration_google_transit, df_.duration, color=color(df),s=0.5,)
+        ax.plot(df_.duration, df_.duration, color="gray")
+        plt.show()
+        
+
+                
+                
+                
+                

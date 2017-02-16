@@ -48,75 +48,84 @@ Fleet
 Sketch
 """
 
-start = datetime.datetime(2017, 1, 1, 0, 0, 0)
-end = datetime.datetime(2017, 1, 8, 0, 0, 0)
+start = datetime.datetime(2016, 12, 10, 0, 0, 0)
+end = datetime.datetime(2017, 1, 30, 23, 59, 59)
 
-#enjoy_df = dbp.query_books_df_filtered("enjoy", "torino", start, end)
-#car2go_df = dbp.query_books_df_filtered("car2go", "torino", start, end)
+#
+#enjoy_df = dbp.query_books_df_filtered_v3("enjoy", "torino", start, end)
+#car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
 
-enjoy_df = dbp.query_books_df_filtered_v3("enjoy", "torino", start, end)
-car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
+## ****** GOOGLE RESULTS ******
 
+
+g.plot_samples_vs(enjoy_df, car2go_df, "riding_time", "ride")
+
+plt.figure()   
+g.car_vs_transit(enjoy_df)
+
+plt.figure()
+df[df.tot_duration_google_transit < df.duration].set_index("start").duration.plot(figsize=(w,h), marker='o', label="enjoy")
+plt.legend()
 ### ******* COUNT
 ### ******* BILLS
 
-plt.figure()
-g.plot_aggregated_count_vs(enjoy_df, car2go_df, "distance", "ride", quantile=0.01)
+#plt.figure()
+#g.plot_aggregated_count_vs(enjoy_df, car2go_df, "distance", "ride", quantile=0.01)
+#
+#col = "duration"
+#
+#g.plot_samples_vs(enjoy_df, car2go_df, col, "ride")
+#g.plot_samples_vs(enjoy_df, car2go_df, col, "ride", quantile=0.01)
+#
+#plt.figure()
+#g.hist(enjoy_df, col, "ride", "Enjoy", "red", quantile=0.01)
+#plt.figure()
+#g.hist(car2go_df, col, "ride", "Car2Go", "blue", quantile=0.01)
+#
+#plt.figure()
+#g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all")
+#plt.figure()
+#g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all", quantile=0.01)
+#
+#plt.figure()
+#g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "min_bill", "all", quantile=0.01)
+#g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "max_bill", "all", quantile=0.01)
+#
+#### CDF WEEKS ###
+#g.cdf_weeks_duration(enjoy_df, car2go_df)
+#g.cdf_weeks_distance(enjoy_df, car2go_df)
+#
+#### CDF BUSINESS VS WEEKEND ###
+#g.cdf_business_weekend(enjoy_df)
+#g.cdf_business_weekend(car2go_df)
+#
+#### REAL DURATION VS GOOGLE ###
+#g.car_vs_google(enjoy_df)
+#g.car_vs_google(car2go_df)
+#g.car_vs_google_comparison(enjoy_df, car2go_df)
 
-col = "duration"
-
-g.plot_samples_vs(enjoy_df, car2go_df, col, "ride")
-g.plot_samples_vs(enjoy_df, car2go_df, col, "ride", quantile=0.01)
-
-plt.figure()
-g.hist(enjoy_df, col, "ride", "Enjoy", "red", quantile=0.01)
-plt.figure()
-g.hist(car2go_df, col, "ride", "Car2Go", "blue", quantile=0.01)
-
-plt.figure()
-g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all")
-plt.figure()
-g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all", quantile=0.01)
-
-plt.figure()
-g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "min_bill", "all", quantile=0.01)
-g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "max_bill", "all", quantile=0.01)
-
-### CDF WEEKS ###
-g.cdf_weeks_duration(enjoy_df, car2go_df)
-g.cdf_weeks_distance(enjoy_df, car2go_df)
-
-### CDF BUSINESS VS WEEKEND ###
-g.cdf_business_weekend(enjoy_df)
-g.cdf_business_weekend(car2go_df)
-
-### REAL DURATION VS GOOGLE ###
-g.car_vs_google(enjoy_df)
-g.car_vs_google(car2go_df)
-g.car_vs_google_comparison(enjoy_df, car2go_df)
-
-def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
-
-    heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
-    
-    logheatmap = np.log(heatmap)
-    logheatmap[np.isneginf(logheatmap)] = 0
-    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
-    
-    plt.imshow(heatmap, cmap=cmap, extent=[yedges[0], yedges[-1], xedges[-1], xedges[0]], 
-               aspect='auto')
-    plt.colorbar()
-    plt.gca().invert_yaxis()
-    plt.show()
-
-    return
-
-car2go_df["hour"] = car2go_df["start"].apply(lambda d: d.hour)
-grouped = car2go_df.groupby("hour")
-for hour in range(24):
-    plt.title(str(hour) + ":00")
-    plt.xlim((7.61, 7.73))
-    heatmap(grouped.get_group(hour).start_lat.values, 
-            grouped.get_group(hour).start_lon.values,
-            bins=20)
+#def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
+#
+#    heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
+#    
+#    logheatmap = np.log(heatmap)
+#    logheatmap[np.isneginf(logheatmap)] = 0
+#    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
+#    
+#    plt.imshow(heatmap, cmap=cmap, extent=[yedges[0], yedges[-1], xedges[-1], xedges[0]], 
+#               aspect='auto')
+#    plt.colorbar()
+#    plt.gca().invert_yaxis()
+#    plt.show()
+#
+#    return
+#
+#car2go_df["hour"] = car2go_df["start"].apply(lambda d: d.hour)
+#grouped = car2go_df.groupby("hour")
+#for hour in range(24):
+#    plt.title(str(hour) + ":00")
+#    plt.xlim((7.61, 7.73))
+#    heatmap(grouped.get_group(hour).start_lat.values, 
+#            grouped.get_group(hour).start_lon.values,
+#            bins=20)
 
