@@ -9,7 +9,7 @@ import numpy as np
 from scipy import ndimage
 
 import pandas as pd
-import geopandas as gpd
+#import geopandas as gpd
 
 #import statsmodels.api as sm
 #import statsmodels.formula.api as smf
@@ -31,22 +31,22 @@ enjoy = Enjoy()
 from Car2GoProvider import Car2Go
 car2go = Car2Go()
 
-from area_enjoy import create_zones_enjoy
-from area_car2go import create_zones_car2go
+#from area_enjoy import create_zones_enjoy
+#from area_car2go import create_zones_car2go
 import os
 """
 Load data structure
 """
 
 start = datetime.datetime(2016, 12, 10, 0, 0, 0)
-end = datetime.datetime(2016, 12, 31, 23, 59, 59)
-
+end = datetime.datetime(2017, 1, 31, 23, 59, 59)
+#
 #enjoy_df = dbp.query_books_df_filtered_v3("enjoy", "torino", start, end)
 #car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
 
-zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
+#zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
 
-g.heatmaps_per_hour(car2go_df)
+#g.heatmaps_per_hour(car2go_df)
 #
 #demography = gpd.read_file("../../dati_torino/zonestat_popolazione_residente_2015_geo.dbf")\
 #    .to_crs({"init": "epsg:4326"})
@@ -56,7 +56,7 @@ g.heatmaps_per_hour(car2go_df)
 #car2go_airport = create_zones_car2go('airport')
 #car2go_ikea = create_zones_car2go('ikea')
 #
-#frames = [enjoy_operational_zones, 
+#frames = [enjoy_operational_zones,     
 #          car2go_operational_zones, 
 #          car2go_airport, 
 #          car2go_ikea]
@@ -67,43 +67,70 @@ g.heatmaps_per_hour(car2go_df)
 Fleet
 """
 
-#enjoy_fleetsize_series = enjoy.get_fleetsize_info().dropna()
-#car2go_fleetsize_series = car2go.get_fleetsize_info().dropna()
-#
-#fig, axs = plt.subplots(1,1)
-#enjoy_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Enjoy")
-#car2go_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Car2Go")
-#plt.legend()
-#plt.title("Fleet size evolution")
-#
-#plt.show()
+enjoy_fleetsize_series = enjoy.get_fleetsize_info().dropna()
+car2go_fleetsize_series = car2go.get_fleetsize_info().dropna()
+
+fig, axs = plt.subplots(1,1)
+enjoy_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Enjoy")
+car2go_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Car2Go")
+plt.legend()
+plt.title("Fleet size evolution")
+
+plt.show()
 
 """
 Sketch
 """
+# * SAMPLES *
 
-#plt.figure()
-#df[df.tot_duration_google_transit < df.duration].set_index("start").duration.plot(figsize=(w,h), marker='o', label="enjoy")
-#plt.legend()
-
-#plt.figure()
-#g.plot_aggregated_count_vs(enjoy_df, car2go_df, "distance", "ride", quantile=0.01)
-#
+filter_name = "ride"
+col = "distance"
+#col = "tot_duration_in_traffic"
+#col = "riding_time"
 #col = "duration"
+g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name)
+g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
+g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.05)
+
+g.plot_samples(car2go_df, col, filter_name, "car2go")
+g.plot_samples(car2go_df, col, filter_name, "car2go", quantile=0.01)
+g.plot_samples(car2go_df, col, filter_name, "car2go", quantile=0.05)
+
+g.plot_samples(enjoy_df, col, filter_name, "enjoy")
+g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.01)
+g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.05)
+
+
+g.plot_samples(enjoy_df, col, filter_name, "enjoy")
+g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.01)
+g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.05)
+
+# HISTOGRAMS 
+col = "duration"
+g.hist(enjoy_df, col, filter_name, "Enjoy", "red")
+g.hist(enjoy_df, col, filter_name, "Enjoy", "red", quantile=0.05)
+g.hist(enjoy_df, col, filter_name, "Enjoy", "red", quantile=0.05, cumulative= True)
+
+g.hist(car2go_df, col, filter_name, "Car2Go", "blue")
+g.hist(car2go_df, col, filter_name, "Car2Go", "blue", quantile=0.05)
+g.hist(car2go_df, col, filter_name, "Car2Go", "blue", quantile=0.05, cumulative= True)
+
+#### CDF WEEKS ###
+g.cdf_weeks_duration(enjoy_df, car2go_df)
+g.cdf_weeks_distance(enjoy_df, car2go_df)
 #
-#g.plot_samples_vs(enjoy_df, car2go_df, col, "ride")
-#g.plot_samples_vs(enjoy_df, car2go_df, col, "ride", quantile=0.01)
-#g.plot_samples_vs(enjoy_df, car2go_df, col, "ride", quantile=0.05)
-#
-#plt.figure()
-#g.hist(enjoy_df, col, "ride", "Enjoy", "red", quantile=0.01)
-#plt.figure()
-#g.hist(car2go_df, col, "ride", "Car2Go", "blue", quantile=0.01)
-#
-#plt.figure()
-#g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all")
-#plt.figure()
-#g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all", quantile=0.01)
+#### CDF BUSINESS VS WEEKEND ###
+g.cdf_business_weekend(enjoy_df)
+g.cdf_business_weekend(car2go_df)
+
+# AGGREGATED PLOTS
+col = "distance"
+g.plot_aggregated_count_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
+g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all")
+g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all", quantile=0.01)
+
+
+
 #
 #plt.figure()
 #g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "min_bill", "all", quantile=0.01)
@@ -126,22 +153,18 @@ Sketch
  ****** GOOGLE RESULTS ******
 """
 
-#g.plot_samples_vs(enjoy_df, car2go_df, "riding_time", "ride")
+g.plot_samples_vs(enjoy_df, car2go_df, "riding_time", "ride")
 #
-#g.car_vs_transit(enjoy_df)
+
+g.car_vs_transit(enjoy_df)
+g.car_vs_transit(car2go_df)
 #
-#g.car_vs_transit(car2go_df)
-#
-#g.car_vs_transit(enjoy_df)
-#
-#g.car_vs_transit(car2go_df)
-#
-#g.car_vs_transit_bar(enjoy_df)
-#g.car_vs_transit_bar(car2go_df)
+g.car_vs_transit_bar(enjoy_df)
+g.car_vs_transit_bar(car2go_df)
 #
 #
-#g.car_vs_transit_resampled(enjoy_df)
-#g.car_vs_transit_resampled(car2go_df)
+g.car_vs_transit_resampled(enjoy_df)
+g.car_vs_transit_resampled(car2go_df)
 #
 #g.faster_PT_hours(enjoy_df)
 ##  night problem
@@ -149,8 +172,8 @@ Sketch
 #g.faster_car_hours(enjoy_df)
 #g.faster_car_hours(car2go_df)
 #
-#g.faster_car_PTtime_hours(enjoy_df)
-#g.faster_car_PTtime_hours(car2go_df)
+g.faster_car_PTtime_hours(enjoy_df)
+g.faster_car_PTtime_hours(car2go_df)
 
 #g.car_vs_pt(enjoy_df)
 #g.car_vs_pt(car2go_df)

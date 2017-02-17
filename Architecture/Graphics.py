@@ -2,7 +2,7 @@ import datetime
 
 import numpy as np
 import pandas as pd
-import geopandas as gpd
+#import geopandas as gpd
 
 from scipy import ndimage
 from scipy.spatial import ConvexHull
@@ -98,15 +98,14 @@ class Graphics():
                      df, 
                      col, 
                      filter_col, 
-                     provider, 
-                     color,
+                     provider,
                      quantile=0.0,
                      figsize=(13,6)):
-        
+        plt.figure()
         plt.title(col)
         s = df.loc[df[filter_col] == True, col].dropna()
         s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
-        s.plot(marker='o', figsize=figsize, label=provider, color=color)
+        s.plot(marker='o', figsize=figsize, label=provider, color=color(df))
 
     def plot_samples_vs(self, 
                         enjoy_df, 
@@ -116,9 +115,8 @@ class Graphics():
                         quantile=0.0,
                         figsize=(13,6)):
 
-        plt.figure()
-        self.plot_samples(enjoy_df, col, filter_col, "Enjoy", "red", quantile, figsize=figsize)
-        self.plot_samples(car2go_df, col, filter_col, "Car2Go", "blue", quantile, figsize=figsize)
+        self.plot_samples(enjoy_df, col, filter_col, "Enjoy", quantile, figsize=figsize)
+        self.plot_samples(car2go_df, col, filter_col, "Car2Go", quantile, figsize=figsize)
         plt.legend()        
 
     def hist(self, 
@@ -131,7 +129,7 @@ class Graphics():
              bins=100,
              cumulative=False,
              figsize=(13,6)):
-        
+        plt.figure()
         plt.title(col)
         s = df.loc[df[filter_col] == True, col].dropna()
         s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
@@ -395,7 +393,6 @@ class Graphics():
         plt.ylabel('p')
         plt.xlabel('distance [km]')
         plt.axis([0, 20, 0, 1.1])
-        plt.legend(loc=4)
 
     def cdf_business_weekend(self, df):
 
@@ -498,7 +495,7 @@ class Graphics():
         df_ = df.set_index("start").resample("5Min").mean()
         ax.scatter(df_.tot_duration_google_transit, df_.duration, color=color(df),s=0.5)
         bis_y = bis_x = range(1,int(df_.duration.max()))
-        ax.plot(bis_x, bis_y, color="green", linestyle='--', ) 
+        ax.plot(bis_x, bis_y, color="green", linestyle='--' ) 
         plt.xlabel('Tbus [m]')
         plt.ylabel('Tcar [m]') 
         plt.show()        
@@ -612,133 +609,133 @@ class Graphics():
         plt.xticks(np.arange(0,23+1, 1.0))
         plt.xlabel('Hours of a day')
         plt.legend()   
-
-    def isocrono(self, df, pos):
-
-       lat_s = pos[0]
-       lon_s = pos[1]
-
-       df_isoc = df[(df["ride"] == True) &\
-                               (df["short_trips"] == True)]
-       
-       df_isoc['eucl_dist'] = df_isoc[['start_lat', 'start_lon', 'end_lat', 'end_lon']].apply\
-       (lambda x : haversine(x['start_lat'],x['start_lon'], lat_s, lon_s),axis=1)
-       
-       df_isoc = df_isoc[(df_isoc["eucl_dist"] <= 0.5)]
-       
-       zones = gpd.read_file("../../../SHAPE/Zonizzazione.dbf")\
-              .to_crs({"init": "epsg:4326"})
-       zones_geo = zones["geometry"]
-       
-       fig, ax = plt.subplots(1,1,figsize=(10,10))
-       
-       zones_geo.plot(color="white",ax=ax)
-       ##del df_isoc["start_lat"]
-       ##del df_isoc["start_lon"]
-       ##-car2go
-       ax.set_xlim([7.6, 7.74])
-       ax.set_ylim([45.0, 45.11])
-       ##-enjoy
-       ##ax.set_xlim([7.6, 7.8])
-       ##ax.set_ylim([44.95,45.12])
-       colors=['red','green','orange', 'blue', 'yellow', 'gray']
-       #
-       hull= ConvexHull(df_isoc[['start_lon','start_lat']])
-       for simplex in hull.simplices:
-          plt.plot(df_isoc['start_lon'].iloc[simplex], df_isoc['start_lat'].iloc[simplex], color='red', linewidth=3, label='_nolegend_' )
-       #
-       for t in range(10,100,10):
-          df_isoc_time = df_isoc[(df_isoc['duration'] <= t)& (df_isoc['duration']>(t-10))]
-          if(len(df_isoc_time) > 0):
-              print 'in {} minuti : {}'.format(t, len(df_isoc_time))
-              if len(df_isoc_time) >=3:
-                  hull= ConvexHull(df_isoc_time[['end_lon','end_lat']])
-                  for simplex in hull.simplices:
-                      plt.plot(df_isoc_time['end_lon'].iloc[simplex], df_isoc_time['end_lat'].iloc[simplex],color=colors[t/10], linewidth=3, label='_nolegend_' )
-              df_isoc_time.plot.scatter(x="end_lon", y='end_lat', label=t, s=100, ax=ax, color=colors[t/10])
-       plt.legend()
-
-    def isocost(self, df, pos):
-
-        lat_s = pos[0]
-        lon_s = pos[1]
-        
-        df_isoc = df[(df["ride"] == True) &\
-                                (df["short_trips"] == True)]
-
-        df_isoc['eucl_dist'] = df_isoc[['start_lat', 'start_lon', 'end_lat', 'end_lon']].apply\
-        (lambda x : haversine(x['start_lat'],x['start_lon'], lat_s, lon_s),axis=1)
-        
-        df_isoc = df_isoc[(df_isoc["eucl_dist"] <= 0.5)]
-        
-        zones = gpd.read_file("../../../SHAPE/Zonizzazione.dbf")\
-               .to_crs({"init": "epsg:4326"})
-        zones_geo = zones["geometry"]
-
-        fig, ax = plt.subplots(1,1,figsize=(10,10))
-        zones_geo.plot(color="white",ax=ax)
-        ax.set_xlim([7.6, 7.74])
-        ax.set_ylim([45.0, 45.11])
-
-        colors=['red','green','orange', 'blue', 'yellow', 'gray']
-
-        hull= ConvexHull(df_isoc[['start_lon','start_lat']])
-        for simplex in hull.simplices:
-           plt.plot(df_isoc['start_lon'].iloc[simplex], df_isoc['start_lat'].iloc[simplex], color='red', linewidth=3, label='_nolegend_' )
-
-        for t in range(2,8,2):
-           df_isoc_time = df_isoc[(df_isoc['max_bill'] <= t) & (df_isoc['max_bill']>(t-2))]
-           if(len(df_isoc_time) > 0):
-               print 'in {} minuti : {}'.format(t, len(df_isoc_time))
-               if len(df_isoc_time) >=3:
-                   hull= ConvexHull(df_isoc_time[['end_lon','end_lat']])
-                   for simplex in hull.simplices:
-                       plt.plot(df_isoc_time['end_lon'].iloc[simplex], df_isoc_time['end_lat'].iloc[simplex],color=colors[t/2], linewidth=3, label='_nolegend_' )
-               df_isoc_time.plot.scatter(x="end_lon", y='end_lat', label=str(t)+' euro', s=100, ax=ax, color=colors[t/2])
-               
-    def heatmaps_per_hour(self, df):
-            
-            df_ = df[(df['start_lon'] >= 7.60) &\
-                     (df['end_lon'] <= 7.80) &\
-                     (df['start_lat'] >= 45) &\
-                     (df['end_lat'] <= 45.25)]
-            df_["hour"] = df_["start"].apply(lambda d: d.hour)
-            
-            path = "../Images/"
-            if os.path.isdir(path) == False:
-                os.makedirs(path)
-                
-            provider = df_["provider"].iloc[0]
-            path += "../Images/"+provider
-            if os.path.isdir(path) == False:
-                os.makedirs(path)
-                
-            if os.path.isdir(path + "/initial_destination") == False:
-                os.makedirs(path + "/initial_destination")
-            i_path = path + "/initial_destination"
-                
-            if os.path.isdir(path + "/final_destination") == False:
-                os.makedirs(path + "/final_destination")
-            f_path = path + "/final_destination"
-                
-            grouped = df_.groupby("hour")
-            for hour in range(24):
-                zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
-                zones_geo = zones["geometry"]
-                zones_geo.plot(color="white").set_title(provider+" - Initial book position - "+str(hour) + ":00")
-                path = "/../Images/"
-                #heatmap defined at top
-                heatmap(grouped.get_group(hour).end_lat.values, 
-                        grouped.get_group(hour).end_lon.values,            
-                        hour, i_path, bins=20)
-                
-            for hour in range(24):
-                zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
-                zones_geo = zones["geometry"]
-                zones_geo.plot(color="white").set_title(provider+" - Final book position - "+str(hour) + ":00")
-                path = "/../Images/"
-                #heatmap defined at top
-                heatmap(grouped.get_group(hour).end_lat.values, 
-                        grouped.get_group(hour).end_lon.values,            
-                        hour, f_path, bins=20)
-            return
+#
+#    def isocrono(self, df, pos):
+#
+#       lat_s = pos[0]
+#       lon_s = pos[1]
+#
+#       df_isoc = df[(df["ride"] == True) &\
+#                               (df["short_trips"] == True)]
+#       
+#       df_isoc['eucl_dist'] = df_isoc[['start_lat', 'start_lon', 'end_lat', 'end_lon']].apply\
+#       (lambda x : haversine(x['start_lat'],x['start_lon'], lat_s, lon_s),axis=1)
+#       
+#       df_isoc = df_isoc[(df_isoc["eucl_dist"] <= 0.5)]
+#       
+#       zones = gpd.read_file("../../../SHAPE/Zonizzazione.dbf")\
+#              .to_crs({"init": "epsg:4326"})
+#       zones_geo = zones["geometry"]
+#       
+#       fig, ax = plt.subplots(1,1,figsize=(10,10))
+#       
+#       zones_geo.plot(color="white",ax=ax)
+#       ##del df_isoc["start_lat"]
+#       ##del df_isoc["start_lon"]
+#       ##-car2go
+#       ax.set_xlim([7.6, 7.74])
+#       ax.set_ylim([45.0, 45.11])
+#       ##-enjoy
+#       ##ax.set_xlim([7.6, 7.8])
+#       ##ax.set_ylim([44.95,45.12])
+#       colors=['red','green','orange', 'blue', 'yellow', 'gray']
+#       #
+#       hull= ConvexHull(df_isoc[['start_lon','start_lat']])
+#       for simplex in hull.simplices:
+#          plt.plot(df_isoc['start_lon'].iloc[simplex], df_isoc['start_lat'].iloc[simplex], color='red', linewidth=3, label='_nolegend_' )
+#       #
+#       for t in range(10,100,10):
+#          df_isoc_time = df_isoc[(df_isoc['duration'] <= t)& (df_isoc['duration']>(t-10))]
+#          if(len(df_isoc_time) > 0):
+#              print 'in {} minuti : {}'.format(t, len(df_isoc_time))
+#              if len(df_isoc_time) >=3:
+#                  hull= ConvexHull(df_isoc_time[['end_lon','end_lat']])
+#                  for simplex in hull.simplices:
+#                      plt.plot(df_isoc_time['end_lon'].iloc[simplex], df_isoc_time['end_lat'].iloc[simplex],color=colors[t/10], linewidth=3, label='_nolegend_' )
+#              df_isoc_time.plot.scatter(x="end_lon", y='end_lat', label=t, s=100, ax=ax, color=colors[t/10])
+#       plt.legend()
+#
+#    def isocost(self, df, pos):
+#
+#        lat_s = pos[0]
+#        lon_s = pos[1]
+#        
+#        df_isoc = df[(df["ride"] == True) &\
+#                                (df["short_trips"] == True)]
+#
+#        df_isoc['eucl_dist'] = df_isoc[['start_lat', 'start_lon', 'end_lat', 'end_lon']].apply\
+#        (lambda x : haversine(x['start_lat'],x['start_lon'], lat_s, lon_s),axis=1)
+#        
+#        df_isoc = df_isoc[(df_isoc["eucl_dist"] <= 0.5)]
+#        
+#        zones = gpd.read_file("../../../SHAPE/Zonizzazione.dbf")\
+#               .to_crs({"init": "epsg:4326"})
+#        zones_geo = zones["geometry"]
+#
+#        fig, ax = plt.subplots(1,1,figsize=(10,10))
+#        zones_geo.plot(color="white",ax=ax)
+#        ax.set_xlim([7.6, 7.74])
+#        ax.set_ylim([45.0, 45.11])
+#
+#        colors=['red','green','orange', 'blue', 'yellow', 'gray']
+#
+#        hull= ConvexHull(df_isoc[['start_lon','start_lat']])
+#        for simplex in hull.simplices:
+#           plt.plot(df_isoc['start_lon'].iloc[simplex], df_isoc['start_lat'].iloc[simplex], color='red', linewidth=3, label='_nolegend_' )
+#
+#        for t in range(2,8,2):
+#           df_isoc_time = df_isoc[(df_isoc['max_bill'] <= t) & (df_isoc['max_bill']>(t-2))]
+#           if(len(df_isoc_time) > 0):
+#               print 'in {} minuti : {}'.format(t, len(df_isoc_time))
+#               if len(df_isoc_time) >=3:
+#                   hull= ConvexHull(df_isoc_time[['end_lon','end_lat']])
+#                   for simplex in hull.simplices:
+#                       plt.plot(df_isoc_time['end_lon'].iloc[simplex], df_isoc_time['end_lat'].iloc[simplex],color=colors[t/2], linewidth=3, label='_nolegend_' )
+#               df_isoc_time.plot.scatter(x="end_lon", y='end_lat', label=str(t)+' euro', s=100, ax=ax, color=colors[t/2])
+#               
+#    def heatmaps_per_hour(self, df):
+#            
+#            df_ = df[(df['start_lon'] >= 7.60) &\
+#                     (df['end_lon'] <= 7.80) &\
+#                     (df['start_lat'] >= 45) &\
+#                     (df['end_lat'] <= 45.25)]
+#            df_["hour"] = df_["start"].apply(lambda d: d.hour)
+#            
+#            path = "../Images/"
+#            if os.path.isdir(path) == False:
+#                os.makedirs(path)
+#                
+#            provider = df_["provider"].iloc[0]
+#            path += "../Images/"+provider
+#            if os.path.isdir(path) == False:
+#                os.makedirs(path)
+#                
+#            if os.path.isdir(path + "/initial_destination") == False:
+#                os.makedirs(path + "/initial_destination")
+#            i_path = path + "/initial_destination"
+#                
+#            if os.path.isdir(path + "/final_destination") == False:
+#                os.makedirs(path + "/final_destination")
+#            f_path = path + "/final_destination"
+#                
+#            grouped = df_.groupby("hour")
+#            for hour in range(24):
+#                zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
+#                zones_geo = zones["geometry"]
+#                zones_geo.plot(color="white").set_title(provider+" - Initial book position - "+str(hour) + ":00")
+#                path = "/../Images/"
+#                #heatmap defined at top
+#                heatmap(grouped.get_group(hour).end_lat.values, 
+#                        grouped.get_group(hour).end_lon.values,            
+#                        hour, i_path, bins=20)
+#                
+#            for hour in range(24):
+#                zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
+#                zones_geo = zones["geometry"]
+#                zones_geo.plot(color="white").set_title(provider+" - Final book position - "+str(hour) + ":00")
+#                path = "/../Images/"
+#                #heatmap defined at top
+#                heatmap(grouped.get_group(hour).end_lat.values, 
+#                        grouped.get_group(hour).end_lon.values,            
+#                        hour, f_path, bins=20)
+#            return
