@@ -9,15 +9,16 @@ import numpy as np
 from scipy import ndimage
 
 import pandas as pd
-#import geopandas as gpd
+import geopandas as gpd
 
-#import statsmodels.api as sm
-#import statsmodels.formula.api as smf
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+
 import matplotlib
 import matplotlib.pyplot as plt
 matplotlib.style.use('ggplot')
 
-#from pandas.tools.plotting import scatter_matrix
+from pandas.tools.plotting import scatter_matrix
 
 from Graphics import Graphics
 g = Graphics()
@@ -31,37 +32,38 @@ enjoy = Enjoy()
 from Car2GoProvider import Car2Go
 car2go = Car2Go()
 
-#from area_enjoy import create_zones_enjoy
-#from area_car2go import create_zones_car2go
-import os
+from area_enjoy import create_zones_enjoy
+from area_car2go import create_zones_car2go
+
 """
 Load data structure
 """
 
 start = datetime.datetime(2016, 12, 10, 0, 0, 0)
-end = datetime.datetime(2017, 1, 31, 23, 59, 59)
-#
-#enjoy_df = dbp.query_books_df_filtered_v3("enjoy", "torino", start, end)
-#car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
+end = datetime.datetime(2017, 2, 1, 23, 59, 59)
 
-#zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
+enjoy_df = dbp.query_books_df_filtered_v3("enjoy", "torino", start, end)
+car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
 
-#g.heatmaps_per_hour(car2go_df)
-#
-#demography = gpd.read_file("../../dati_torino/zonestat_popolazione_residente_2015_geo.dbf")\
-#    .to_crs({"init": "epsg:4326"})
-#
-#enjoy_operational_zones = create_zones_enjoy()
-#car2go_operational_zones = create_zones_car2go('zones')
-#car2go_airport = create_zones_car2go('airport')
-#car2go_ikea = create_zones_car2go('ikea')
-#
-#frames = [enjoy_operational_zones,     
-#          car2go_operational_zones, 
-#          car2go_airport, 
-#          car2go_ikea]
-#
-#operational_zones = gpd.GeoDataFrame(pd.concat(frames))
+zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})\
+                     .sort_values("Denom_GTT").reset_index().drop("index", axis=1)
+
+centroids = gpd.read_file("../../SHAPE/Centroidi.dbf").to_crs({"init": "epsg:4326"})\
+                     .sort_values("Denom_GTT").reset_index().drop("index", axis=1)
+
+demography = gpd.read_file("../../dati_torino/zonestat_popolazione_residente_2015_geo.dbf").to_crs({"init": "epsg:4326"})
+
+enjoy_operational_zones = create_zones_enjoy()
+car2go_operational_zones = create_zones_car2go('zones')
+car2go_airport = create_zones_car2go('airport')
+car2go_ikea = create_zones_car2go('ikea')
+
+frames = [enjoy_operational_zones, 
+          car2go_operational_zones, 
+          car2go_airport, 
+          car2go_ikea]
+
+operational_zones = gpd.GeoDataFrame(pd.concat(frames))
 
 """
 Fleet
@@ -186,138 +188,106 @@ g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "max_bill", "all", quantile=0.01)
 g.plot_aggregated_sum_vs(enjoy_df.iloc[:30000], car2go_df[:30000], "min_bill", "all", quantile=0.01)
 g.plot_aggregated_sum_vs(enjoy_df.iloc[:30000], car2go_df[:30000], "max_bill", "all", quantile=0.01)
 
-#
-
-
-
 """
-Heatmap origins/destinations
+Isocronous / Isocost
 """
 
-#def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
-#
-#    heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
-#    
-#    logheatmap = np.log(heatmap)
-#    logheatmap[np.isneginf(logheatmap)] = 0
-#    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
-#    
-#    plt.imshow(heatmap, cmap=cmap, extent=[yedges[0], yedges[-1], xedges[-1], xedges[0]], 
-#               aspect='auto')
-#    plt.colorbar()
-#    plt.gca().invert_yaxis()
-#    plt.show()
-#
-#    return
-#
-#car2go_df["hour"] = car2go_df["start"].apply(lambda d: d.hour)
-#grouped = car2go_df.groupby("hour")
-#for hour in range(24):
-#    plt.title(str(hour) + ":00")
-#    plt.xlim((7.61, 7.73))
-#    heatmap(grouped.get_group(hour).start_lat.values, 
-#            grouped.get_group(hour).start_lon.values,
-#            bins=20)
-#
-#pos_piazzaVittorio = [45.0650653, 7.6936148]
-#pos_PortaNuova = [45.0620829, 7.6762908]
-#g.isocrono(enjoy_df, pos_piazzaVittorio)
-#g.isocost(enjoy_df, pos_piazzaVittorio)
-#
+pos_piazzaVittorio = [45.0650653, 7.6936148]
+pos_PortaNuova = [45.0620829, 7.6762908]
+g.isocrono(enjoy_df, pos_piazzaVittorio)
+g.isocost(enjoy_df, pos_piazzaVittorio)
 
-#"""
-#OD matrix
-#"""
-#
-#def getODmatrix (books_df, zones):
-#    
-#    origins = books_df[["start_lat","start_lon"]]
-#    origins.loc[:,"geometry"] = origins.apply\
-#        (lambda row: Point(row.loc["start_lon"], row.loc["start_lat"]), 
-#         axis=1)    
-#
-#    destinations = books_df[["end_lat","end_lon"]]
-#    destinations.loc[:,"geometry"] = destinations.apply\
-#        (lambda row: Point(row.loc["end_lon"], row.loc["end_lat"]), 
-#         axis=1)    
-#
-#    OD = pd.DataFrame(0.0, index = zones.index, columns = zones.index)
-#
-#    for i in range(len(books_df)):
-#        try:
-#            print i
-#            o = origins.ix[i, "geometry"]
-#            d = destinations.ix[i, "geometry"]
-#            intersect_o = zones.contains(o)
-#            intersect_d = zones.contains(d)
-#            zo = intersect_o[intersect_o == True].index.values[0]
-#            zd = intersect_d[intersect_d == True].index.values[0]
-#            OD.loc[zo, zd] += 1
-#        except:
-#            "Book" + str(i) + "has points not contained in any zone!"
-#
-#    return origins, destinations, OD
-#    
-#def filter_quantile(df, col, filter_col, quantile):
-#    
-#    s = df.loc[df[filter_col] == True, col].dropna()
-#    s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
-#    return df.loc[s.index]
-#
-#
-#origins, destinations, od = getODmatrix\
+"""
+Heatmap
+"""
+
+#g.heatmaps_per_hour(car2go_df)
+#g.heatmaps_per_hour(enjoy_df)
+
+"""
+OD matrix
+"""
+
+def getODmatrix (books_df, zones):
+    
+    origins = books_df[["start_lat","start_lon"]]
+    origins.loc[:,"geometry"] = origins.apply\
+        (lambda row: Point(row.loc["start_lon"], row.loc["start_lat"]), 
+         axis=1)    
+
+    destinations = books_df[["end_lat","end_lon"]]
+    destinations.loc[:,"geometry"] = destinations.apply\
+        (lambda row: Point(row.loc["end_lon"], row.loc["end_lat"]), 
+         axis=1)    
+
+    OD = pd.DataFrame(0.0, index = zones.index, columns = zones.index)
+
+    for i in range(len(books_df)):
+        try:
+            if i%10000 == 0:
+                print i
+            o = origins.ix[i, "geometry"]
+            d = destinations.ix[i, "geometry"]
+            intersect_o = zones.contains(o)
+            intersect_d = zones.contains(d)
+            zo = intersect_o[intersect_o == True].index.values[0]
+            zd = intersect_d[intersect_d == True].index.values[0]
+            OD.loc[zo, zd] += 1
+        except:
+            "Book" + str(i) + "has points not contained in any zone!"
+
+    return origins, destinations, OD
+    
+def filter_quantile(df, col, filter_col, quantile):
+    
+    s = df.loc[df[filter_col] == True, col].dropna()
+    s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
+    return df.loc[s.index]
+
+#origins, destinations, car2go_od = getODmatrix\
 #    (filter_quantile(car2go_df, "start_lat", "ride", 0.001), zones)
-#
-#dropped_od = od
-#for zone in od:
-#    zone_as_origin = od.iloc[zone]
-#    zone_as_dest = od.iloc[:,zone]
-#    if not zone_as_origin.sum() and not zone_as_dest.sum():
-#        dropped_od = dropped_od.drop(zone, axis=0)
-#        dropped_od = dropped_od.drop(zone, axis=1)
-#
-##
-##pos_piazzaVittorio = [45.0650653, 7.6936148]
-##pos_PortaNuova = [45.0620829, 7.6762908]
-##g.isocrono(enjoy_df, pos_piazzaVittorio)
-##g.isocost(enjoy_df, pos_piazzaVittorio)
-#edges = pd.DataFrame(columns = ["o","d","w"])
-#i = 0
-#for o in dropped_od:
-#    for d in dropped_od:
-#        edges.loc[i, "o"] = o
-#        edges.loc[i, "d"] = d
-#        edges.loc[i, "w"] = dropped_od.loc[o,d]
-#        i += 1
-#
-#edges = edges.dropna()
-#edges = edges.sort_values(by="w").head(100)
-#
-#import networkx as nx
-#G = nx.DiGraph()
-#G.add_nodes_from(dropped_od.index.values)
-#G.add_weighted_edges_from(edges.values)
-#nx.draw_circular(G)
-#
-#samples = 100
-#x = edges["o"].iloc[:samples].values
-#y = edges["d"].iloc[:samples].values
-#s = edges["w"].iloc[:samples].astype(int).values
-#plt.scatter(x, y, s=s)
-#
-###dropped_od = (dropped_od - dropped_od.mean())/dropped_od.std()
-#
-##dropped_od.plot(legend=False)
-#
-##plt.figure()
-##dropped_od.max(axis=0).plot(marker='o', label="Enjoy", color="red")
-##plt.figure()
-##dropped_od.max(axis=1).plot(marker='o', label="Enjoy", color="red")
-#
-#x = dropped_od.index.values
-#y = dropped_od.index.values
-#plt.figure()
-#plt.imshow(dropped_od, interpolation='nearest', cmap='YlOrRd')
-#plt.title('pcolor')
-#plt.axis([x.min(), 70, y.min(), 70])
-#plt.colorbar()
+#origins, destinations, enjoy_od = getODmatrix\
+#    (filter_quantile(enjoy_df, "start_lat", "ride", 0.001), zones)
+
+def drop_od (od):
+    dropped_od = od
+    for zone in od:
+        zone_as_origin = od.iloc[zone]
+        zone_as_dest = od.iloc[:,zone]
+        if not zone_as_origin.sum() and not zone_as_dest.sum():
+            dropped_od = od.drop(zone, axis=0)
+            dropped_od = od.drop(zone, axis=1)
+    return dropped_od
+
+def standardize (x):
+    return (x-x.mean())/x.std()
+
+def force_positive (x):
+    return x+abs(x.min())
+
+dropped_car2go_od = drop_od(car2go_od)
+dropped_enjoy_od = drop_od(enjoy_od)
+
+zones["car2go_d_tot"] = dropped_car2go_od.sum(axis=1)
+zones["car2go_o_tot"] = dropped_car2go_od.sum(axis=0)
+zones["car2go_tot"] = (zones["car2go_o_tot"]-zones["car2go_d_tot"])*(zones["car2go_o_tot"]+zones["car2go_d_tot"])
+
+zones["enjoy_d_tot"] = dropped_enjoy_od.sum(axis=1)
+zones["enjoy_o_tot"] = dropped_enjoy_od.sum(axis=0)
+zones["enjoy_tot"] = (zones["enjoy_o_tot"]-zones["enjoy_d_tot"])*(zones["enjoy_o_tot"]+zones["enjoy_d_tot"])
+
+fig, axs = plt.subplots(2, 2, figsize=(18,18))
+zones.plot(column='car2go_o_tot', cmap='Blues', ax=axs[0][0])
+zones.plot(column='car2go_d_tot', cmap='Blues', ax=axs[0][1])
+zones.where((zones.car2go_d_tot>0) & (zones.car2go_o_tot>0)).dropna()\
+           .plot(column='car2go_o_tot', cmap='Blues', ax=axs[1][0])
+zones.where((zones.car2go_d_tot>0) & (zones.car2go_o_tot>0)).dropna()\
+           .plot(column='car2go_d_tot', cmap='Blues', ax=axs[1][1])
+
+fig, axs = plt.subplots(2, 2, figsize=(18,18))
+zones.plot(column='enjoy_o_tot', cmap='OrRd', ax=axs[0][0])
+zones.plot(column='enjoy_d_tot', cmap='OrRd', ax=axs[0][1])
+zones.where((zones.enjoy_d_tot>0) & (zones.enjoy_o_tot>0)).dropna()\
+           .plot(column='enjoy_o_tot', cmap='OrRd', ax=axs[1][0])
+zones.where((zones.enjoy_d_tot>0) & (zones.enjoy_o_tot>0)).dropna()\
+           .plot(column='enjoy_d_tot', cmap='OrRd', ax=axs[1][1])
