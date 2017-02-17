@@ -2,7 +2,7 @@ import datetime
 
 import numpy as np
 import pandas as pd
-#import geopandas as gpd
+import geopandas as gpd
 
 from scipy import ndimage
 from scipy.spatial import ConvexHull
@@ -16,6 +16,8 @@ from pandas.tools.plotting import scatter_matrix
 
 from DataBaseProxy import *
 dbp = DataBaseProxy()
+
+import sys, os
 
 # from ParksAnalysis import car2go_parks
 # from ParksAnalysis import enjoy_parks
@@ -70,6 +72,22 @@ def color(df):
         return 'red'
     else:
         return 'blue'
+        
+def heatmap(lats, lons, hour, path, bins=(100,100), smoothing=1.3, cmap='jet'):
+    heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
+    
+    logheatmap = np.log(heatmap)
+    logheatmap[np.isneginf(logheatmap)] = 0
+    logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
+    
+    plt.imshow(heatmap, cmap=cmap, extent=[yedges[0], yedges[-1], xedges[-1], xedges[0]], 
+               aspect='auto')
+    plt.colorbar()
+    plt.gca().invert_yaxis()
+    plt.savefig(path+"/"+str(hour), dpi=250)
+    plt.show()
+
+    return
 
 class Graphics():
 
@@ -678,4 +696,49 @@ class Graphics():
                        plt.plot(df_isoc_time['end_lon'].iloc[simplex], df_isoc_time['end_lat'].iloc[simplex],color=colors[t/2], linewidth=3, label='_nolegend_' )
                df_isoc_time.plot.scatter(x="end_lon", y='end_lat', label=str(t)+' euro', s=100, ax=ax, color=colors[t/2])
                
-               
+    def heatmaps_per_hour(self, df):
+            
+            df_ = df[(df['start_lon'] >= 7.60) &\
+                     (df['end_lon'] <= 7.80) &\
+                     (df['start_lat'] >= 45) &\
+                     (df['end_lat'] <= 45.25)]
+            df_["hour"] = df_["start"].apply(lambda d: d.hour)
+            
+            path = "../Images/"
+            if os.path.isdir(path) == False:
+                os.makedirs(path)
+                
+            provider = df_["provider"].iloc[0]
+            path += "../Images/"+provider
+            if os.path.isdir(path) == False:
+                os.makedirs(path)
+                
+            if os.path.isdir(path + "/initial_destination") == False:
+                os.makedirs(path + "/initial_destination")
+            i_path = path + "/initial_destination"
+                
+            if os.path.isdir(path + "/final_destination") == False:
+                os.makedirs(path + "/final_destination")
+            f_path = path + "/final_destination"
+                
+            grouped = df_.groupby("hour")
+            for hour in range(24):
+                zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
+                zones_geo = zones["geometry"]
+                zones_geo.plot(color="white").set_title(provider+" - Initial book position - "+str(hour) + ":00")
+                path = "/../Images/"
+                #heatmap defined at top
+                heatmap(grouped.get_group(hour).end_lat.values, 
+                        grouped.get_group(hour).end_lon.values,            
+                        hour, i_path, bins=20)
+                
+            for hour in range(24):
+                zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
+                zones_geo = zones["geometry"]
+                zones_geo.plot(color="white").set_title(provider+" - Final book position - "+str(hour) + ":00")
+                path = "/../Images/"
+                #heatmap defined at top
+                heatmap(grouped.get_group(hour).end_lat.values, 
+                        grouped.get_group(hour).end_lon.values,            
+                        hour, f_path, bins=20)
+            return
