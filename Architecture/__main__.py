@@ -9,7 +9,6 @@ from scipy import ndimage
 #
 #import statsmodels.api as sm
 #import statsmodels.formula.api as smf
-
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
@@ -104,9 +103,9 @@ end = datetime.datetime(2017, 1, 30, 23, 59, 59)
 
 #g.plot_samples_vs(enjoy_df, car2go_df, "riding_time", "ride")
 
-#g.car_vs_transit(enjoy_df)
+g.car_vs_transit(enjoy_df)
 
-#g.car_vs_transit(car2go_df)
+g.car_vs_transit(car2go_df)
 
 #g.car_vs_transit_bar(enjoy_df)
 #g.car_vs_transit_bar(car2go_df)
@@ -124,10 +123,10 @@ end = datetime.datetime(2017, 1, 30, 23, 59, 59)
 #g.faster_car_PTtime_hours(enjoy_df)
 #g.faster_car_PTtime_hours(car2go_df)
 
-#g.car_vs_pt(enjoy_df)
-#g.car_vs_pt(car2go_df)
+g.car_vs_pt(enjoy_df)
+g.car_vs_pt(car2go_df)
 
-#g.cars_vs_pt(enjoy_df,car2go_df)
+g.cars_vs_pt(enjoy_df,car2go_df)
 
 #def heatmap(lats, lons, bins=(100,100), smoothing=1.3, cmap='jet'):
 #
@@ -155,8 +154,8 @@ end = datetime.datetime(2017, 1, 30, 23, 59, 59)
 #            bins=20)
 
 
-
-pos_piazzaVittorio = [45.0650653, 7.6936148]
-pos_PortaNuova = [45.0620829, 7.6762908]
-g.isocrono(enjoy_df, pos_piazzaVittorio)
-g.isocost(enjoy_df, pos_piazzaVittorio)
+#
+#pos_piazzaVittorio = [45.0650653, 7.6936148]
+#pos_PortaNuova = [45.0620829, 7.6762908]
+#g.isocrono(enjoy_df, pos_piazzaVittorio)
+#g.isocost(enjoy_df, pos_piazzaVittorio)

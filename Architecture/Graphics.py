@@ -2,10 +2,11 @@ import datetime
 
 import numpy as np
 import pandas as pd
-import geopandas as gpd
+#import geopandas as gpd
 
 from scipy import ndimage
 from scipy.spatial import ConvexHull
+from sklearn import linear_model
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -65,7 +66,7 @@ dbp = DataBaseProxy()
 # plt.show()
 
 def color(df):
-    if df['provider'][1] == 'enjoy':
+    if df['provider'][2] == 'enjoy':
         return 'red'
     else:
         return 'blue'
@@ -426,6 +427,16 @@ class Graphics():
         ax.axis([0,100,0,45])                                       
         ax.scatter(df_.tot_duration_google_transit, df_.duration, color=color(df),s=0.5)
         ax.plot(df_.duration, df_.duration, color="green")
+        # Create linear regression object
+        x = df_.tot_duration_google_transit.values
+        y = df_.duration.values
+        x = x.reshape(len(x), 1)
+        y = y.reshape(len(y), 1)
+        regr = linear_model.LinearRegression()
+        regr.fit(x, y)
+        # Train the model using the training sets
+        ax.plot(x, regr.predict(x), color='black', linewidth=1, linestyle='-')
+
         plt.show()
                    
     def car_vs_transit_resampled(self, df_):
