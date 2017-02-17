@@ -88,22 +88,25 @@ col = "distance"
 #col = "tot_duration_in_traffic"
 #col = "riding_time"
 #col = "duration"
+
+plt.figure()
+g.plot_samples(car2go_df, col, filter_name, "car2go")
+plt.figure()
+g.plot_samples(car2go_df, col, filter_name, "car2go", quantile=0.01)
+plt.figure()
+g.plot_samples(car2go_df, col, filter_name, "car2go", quantile=0.05)
+
+plt.figure()
+g.plot_samples(enjoy_df, col, filter_name, "enjoy")
+plt.figure()
+g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.01)
+plt.figure()
+g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.05)
+
+
 g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name)
 g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
 g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.05)
-
-g.plot_samples(car2go_df, col, filter_name, "car2go")
-g.plot_samples(car2go_df, col, filter_name, "car2go", quantile=0.01)
-g.plot_samples(car2go_df, col, filter_name, "car2go", quantile=0.05)
-
-g.plot_samples(enjoy_df, col, filter_name, "enjoy")
-g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.01)
-g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.05)
-
-
-g.plot_samples(enjoy_df, col, filter_name, "enjoy")
-g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.01)
-g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.05)
 
 # HISTOGRAMS 
 col = "duration"
@@ -129,32 +132,20 @@ g.plot_aggregated_count_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
 g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all")
 g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all", quantile=0.01)
 
+# DAILY
+
+g.plot_daily_count_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
+g.plot_daily_mean_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
 
 
-#
-#plt.figure()
-#g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "min_bill", "all", quantile=0.01)
-#g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "max_bill", "all", quantile=0.01)
-#
-#### CDF WEEKS ###
-#g.cdf_weeks_duration(enjoy_df, car2go_df)
-#g.cdf_weeks_distance(enjoy_df, car2go_df)
-#
-#### CDF BUSINESS VS WEEKEND ###
-#g.cdf_business_weekend(enjoy_df)
-#g.cdf_business_weekend(car2go_df)
-#
-#### REAL DURATION VS GOOGLE ###
-#g.car_vs_google(enjoy_df)
-#g.car_vs_google(car2go_df)
-#g.car_vs_google_comparison(enjoy_df, car2go_df)
 
 """
- ****** GOOGLE RESULTS ******
+ * GOOGLE RESULTS *
 """
 
-g.plot_samples_vs(enjoy_df, car2go_df, "riding_time", "ride")
-#
+g.car_vs_google(enjoy_df)
+g.car_vs_google(car2go_df)
+g.car_vs_google_comparison(enjoy_df, car2go_df)
 
 g.car_vs_transit(enjoy_df)
 g.car_vs_transit(car2go_df)
@@ -165,26 +156,39 @@ g.car_vs_transit_bar(car2go_df)
 #
 g.car_vs_transit_resampled(enjoy_df)
 g.car_vs_transit_resampled(car2go_df)
-#
+
 #g.faster_PT_hours(enjoy_df)
 ##  night problem
 #g.faster_PT_hours(car2go_df)
-#g.faster_car_hours(enjoy_df)
-#g.faster_car_hours(car2go_df)
+
+g.faster_car_hours(enjoy_df)
+g.faster_car_hours(car2go_df)
 #
 g.faster_car_PTtime_hours(enjoy_df)
 g.faster_car_PTtime_hours(car2go_df)
 
-#g.car_vs_pt(enjoy_df)
-#g.car_vs_pt(car2go_df)
+
+g.car_pt(enjoy_df)
+g.car_pt(car2go_df)
+
+g.car_pt_vs(enjoy_df,car2go_df)
+##
 #
-#g.cars_vs_pt(enjoy_df,car2go_df)
+##
 #
-#g.car_vs_pt(enjoy_df)
-#g.car_vs_pt(car2go_df)
 #
-#g.cars_vs_pt(enjoy_df,car2go_df)
+"""
+Bills
+"""
+g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "min_bill", "all", quantile=0.01)
+g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "max_bill", "all", quantile=0.01)
+
+g.plot_aggregated_sum_vs(enjoy_df.iloc[:30000], car2go_df[:30000], "min_bill", "all", quantile=0.01)
+g.plot_aggregated_sum_vs(enjoy_df.iloc[:30000], car2go_df[:30000], "max_bill", "all", quantile=0.01)
+
 #
+
+
 
 """
 Heatmap origins/destinations

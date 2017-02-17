@@ -101,8 +101,9 @@ class Graphics():
                      provider,
                      quantile=0.0,
                      figsize=(13,6)):
-        plt.figure()
-        plt.title(col)
+        plt.ylabel(col)
+        plt.xlabel("Samples")
+        plt.title(provider + " - " + col + " samples")
         s = df.loc[df[filter_col] == True, col].dropna()
         s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
         s.plot(marker='o', figsize=figsize, label=provider, color=color(df))
@@ -114,9 +115,10 @@ class Graphics():
                         filter_col, 
                         quantile=0.0,
                         figsize=(13,6)):
-
+        plt.figure()
         self.plot_samples(enjoy_df, col, filter_col, "Enjoy", quantile, figsize=figsize)
         self.plot_samples(car2go_df, col, filter_col, "Car2Go", quantile, figsize=figsize)
+        plt.title("Enjoy vs car2go " + "- " + col + " - samples")
         plt.legend()        
 
     def hist(self, 
@@ -129,11 +131,17 @@ class Graphics():
              bins=100,
              cumulative=False,
              figsize=(13,6)):
+        
         plt.figure()
-        plt.title(col)
+        plt.xlabel(col)
+        plt.ylabel("Probability")
+        if cumulative:
+            plt.title("CDF")
+        else:
+            plt.title("PDF")
         s = df.loc[df[filter_col] == True, col].dropna()
         s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
-        s.hist(figsize=figsize, label=provider, color=color, cumulative=cumulative, bins=bins)        
+        s.hist(figsize=figsize, label=provider, color=color, cumulative=cumulative, normed = True, bins=bins)        
 
     def plot_system_utilization(self, 
                                 df, 
@@ -178,7 +186,7 @@ class Graphics():
                                 quantile=0.0,
                                 figsize=(13,6)):
         
-        plt.title("Number of bookings")
+        plt.title("Number of bookings aggregated " + freq)
         df_ = df.loc[df[filter_col] == True].set_index("start")
         s = df_[col].dropna()
         s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
@@ -209,7 +217,8 @@ class Graphics():
                         quantile=0.0,
                         figsize=(13,6)):
         
-        plt.title(col)
+        plt.ylabel(col)
+        plt.title("Aggregated " + col + " - " + provider)
         df_ = df.loc[df[filter_col] == True].set_index("start")
         s = df_[col].dropna()
         s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
@@ -228,6 +237,7 @@ class Graphics():
         plt.figure()
         self.plot_aggregated_mean(enjoy_df, col, filter_col, "Enjoy", "red", freq=freq, quantile=quantile)
         self.plot_aggregated_mean(car2go_df, col, filter_col, "Car2Go", "blue", freq=freq, quantile=quantile)
+        plt.title("Aggregated " + col + " - Enjoy vs car2go" )
         plt.legend()        
 
     def plot_aggregated_sum(self, 
@@ -270,12 +280,16 @@ class Graphics():
                         quantile=0.0,
                         figsize=(13,6)):
         
-        plt.title("Number of bookings")
+        plt.title("Number of daily bookings - " + provider)
+        plt.xlabel("Daily hours")
         df_ = df.loc[df[filter_col] == True].set_index("start")
         s = df_[col].dropna()
         s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
+        div = float(len(s.groupby(s.index.map(lambda t: t.date))))
+        print "GIORNI + " + str(div)
         s = s.groupby(s.index.map(lambda t: t.hour)).count()
-        s.plot(marker='o', figsize=figsize, label=provider, color=color)
+        s_ = s/div
+        s_.plot(marker='o', figsize=figsize, label=provider, color=color)
         
     def plot_daily_count_vs(self, 
                             enjoy_df, 
@@ -288,6 +302,7 @@ class Graphics():
         plt.figure()
         self.plot_daily_count(enjoy_df, col, filter_col, "Enjoy", "red", quantile=quantile)
         self.plot_daily_count(car2go_df, col, filter_col, "Car2Go", "blue", quantile=quantile)
+        
         plt.legend()        
         
     def plot_daily_mean(self, 
@@ -300,7 +315,8 @@ class Graphics():
                         quantile=0.0,
                         figsize=(13,6)):
         
-        plt.title(col)
+        plt.xlabel("Daily hours")
+        plt.title(provider + " - " +  col + " - daily mean" )
         df_ = df.loc[df[filter_col] == True].set_index("start")
         s = df_[col].dropna()
         s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
@@ -331,7 +347,7 @@ class Graphics():
                         quantile=0.0,
                         figsize=(13,6)):
         
-        plt.title(col)
+        plt.title(provider + " - " + col + " - daily sum")
         df_ = df.loc[df[filter_col] == True].set_index("start")
         s = df_[col].dropna()
         s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
@@ -354,7 +370,7 @@ class Graphics():
         
     def cdf_weeks_duration(self, df1, df2):
         
-        plt.figure()
+        plt.figure(figsize = (13,6))
         plt.title('CDF by weeks duration')
         weeks_number = df1['week'].unique()
 
@@ -369,12 +385,12 @@ class Graphics():
                              & (df2['week']==week)].duration.hist(bins=10000, normed=1, cumulative=True, histtype='step')
         plt.ylabel('p')
         plt.xlabel('duration [m]')
-        plt.axis([0, 120, 0, 1.1])
+        plt.axis([0, 50, 0, 1.1])
         plt.legend(loc=4)
 
     def cdf_weeks_distance(self, df1, df2):
 
-        plt.figure()
+        plt.figure(figsize = (13,6))
         plt.title('CDF : weeks distance')
         weeks_number = df1['week'].unique()
 
@@ -458,7 +474,7 @@ class Graphics():
         ax.plot(bis_x,bis_y,linewidth=1.0, linestyle='--', 
                 label= "Equal time bisector", color= "black")
         ax.set_xlabel("Google Forecast [m]")
-        ax.set_ylabel("Measuerd Duration [m]")
+        ax.set_ylabel("Measured Duration [m]")
         plt.axis([0, 50, 0, 50])
         plt.legend(loc=4)
         plt.show()
@@ -474,7 +490,8 @@ class Graphics():
         ax.set_ylabel('Tcar [m]')
         ax.axis([0,100,0,45])                                       
         ax.scatter(df_.tot_duration_google_transit, df_.duration, color=color(df),s=0.5)
-        ax.plot(df_.duration, df_.duration, color="green")
+        bis_y = bis_x = range(1,int(df_.duration.max()))
+        ax.plot(bis_x, bis_y, color="green", linestyle = '--', label = 'time bisector')
         # Create linear regression object
         x = df_.tot_duration_google_transit.values
         y = df_.duration.values
@@ -483,7 +500,7 @@ class Graphics():
         regr = linear_model.LinearRegression()
         regr.fit(x, y)
         # Train the model using the training sets
-        ax.plot(x, regr.predict(x), color='black', linewidth=1, linestyle='-')
+        ax.plot(x, regr.predict(x), color='black', linewidth=1, linestyle='-', label = 'linear regression')
 
         plt.show()
                    
@@ -493,9 +510,10 @@ class Graphics():
         fig, ax = plt.subplots(figsize=(13, 6))       
         plt.axis([0, 80,0,40])
         df_ = df.set_index("start").resample("5Min").mean()
-        ax.scatter(df_.tot_duration_google_transit, df_.duration, color=color(df),s=0.5)
+        ax.scatter(df_.tot_duration_google_transit, df_.duration, color=color(df),s=0.5, label = 'resampled')
         bis_y = bis_x = range(1,int(df_.duration.max()))
-        ax.plot(bis_x, bis_y, color="green", linestyle='--' ) 
+        ax.plot(bis_x, bis_y, color="white", linestyle='--' ) 
+
         plt.xlabel('Tbus [m]')
         plt.ylabel('Tcar [m]') 
         plt.show()        
@@ -507,7 +525,7 @@ class Graphics():
         ax = df.groupby('slot')._id.count().apply(lambda x : x/float(len(df)))
         ax.plot.bar(color=color(df_))
         plt.xlabel('Google transit durations slots [m]')
-        plt.ylabel('Booking Frequencies') 
+        plt.ylabel('Booking Probability') 
         plt.show()
         
     def slotted_df(self, df_):
@@ -577,7 +595,7 @@ class Graphics():
         plt.xlabel('Hours of a day')
         plt.legend()        
         
-    def car_vs_pt(self, df1):
+    def car_pt(self, df1):
         plt.figure()
         df = df1[(df1['ride'] == True) & \
                  (df1['short_trips'] == True) & \
@@ -589,7 +607,7 @@ class Graphics():
         plt.xlabel('Hours of a day')
         plt.legend()
 
-    def cars_vs_pt(self, df1, df2):
+    def car_pt_vs(self, df1, df2):
         plt.figure()
         df = df1[(df1['ride'] == True) & \
                  (df1['short_trips'] == True) & \
