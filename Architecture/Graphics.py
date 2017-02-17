@@ -119,6 +119,39 @@ class Graphics():
         s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
         s.hist(figsize=figsize, label=provider, color=color, cumulative=cumulative, bins=bins)        
 
+    def plot_system_utilization(self, 
+                                df, 
+                                col, 
+                                filter_col, 
+                                provider, 
+                                color,
+                                fleet,
+                                freq="30Min",
+                                quantile=0.0,
+                                figsize=(13,6)):
+        
+        plt.title("System utilization")
+        df_ = df.loc[df[filter_col] == True].set_index("start")
+        s = df_[col].dropna()
+        s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
+        s = s.resample(freq).count()/float(len(fleet))
+        s.plot(marker='o', figsize=figsize, label=provider, color=color)
+
+    def plot_system_utilization_vs(self,
+                                enjoy_df, 
+                                car2go_df, 
+                                col, 
+                                filter_col,
+                                fleet,
+                                freq="30Min",
+                                quantile=0.0,
+                                figsize=(13,6)):
+
+        plt.figure()
+        self.plot_system_utilization(enjoy_df, col, filter_col, "Enjoy", "red", fleet=fleet, freq=freq, quantile=quantile)
+        self.plot_system_utilization(car2go_df, col, filter_col, "Car2Go", "blue", fleet=fleet, freq=freq, quantile=quantile)
+        plt.legend()
+
     def plot_aggregated_count(self, 
                                 df, 
                                 col, 
