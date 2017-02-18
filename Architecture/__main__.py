@@ -39,163 +39,163 @@ from area_car2go import create_zones_car2go
 Load data structure
 """
 
-start = datetime.datetime(2016, 12, 10, 0, 0, 0)
-end = datetime.datetime(2017, 2, 1, 23, 59, 59)
+start = datetime.datetime(2016, 12, 12, 0, 0, 0)
+end = datetime.datetime(2016, 12, 13, 23, 59, 59)
 
 enjoy_df = dbp.query_books_df_filtered_v3("enjoy", "torino", start, end)
 car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
-
-zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})\
-                     .sort_values("Denom_GTT").reset_index().drop("index", axis=1)
-
-centroids = gpd.read_file("../../SHAPE/Centroidi.dbf").to_crs({"init": "epsg:4326"})\
-                     .sort_values("Denom_GTT").reset_index().drop("index", axis=1)
-
-demography = gpd.read_file("../../dati_torino/zonestat_popolazione_residente_2015_geo.dbf").to_crs({"init": "epsg:4326"})
-
-enjoy_operational_zones = create_zones_enjoy()
-car2go_operational_zones = create_zones_car2go('zones')
-car2go_airport = create_zones_car2go('airport')
-car2go_ikea = create_zones_car2go('ikea')
-
-frames = [enjoy_operational_zones, 
-          car2go_operational_zones, 
-          car2go_airport, 
-          car2go_ikea]
-
-operational_zones = gpd.GeoDataFrame(pd.concat(frames))
-
-"""
-Fleet
-"""
-
-enjoy_fleetsize_series = enjoy.get_fleetsize_info().dropna()
-car2go_fleetsize_series = car2go.get_fleetsize_info().dropna()
-
-fig, axs = plt.subplots(1,1)
-enjoy_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Enjoy")
-car2go_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Car2Go")
-plt.legend()
-plt.title("Fleet size evolution")
-
-plt.show()
-
-"""
-Sketch
-"""
-# * SAMPLES *
-
-filter_name = "ride"
-col = "distance"
-#col = "tot_duration_in_traffic"
-#col = "riding_time"
-#col = "duration"
-
-plt.figure()
-g.plot_samples(car2go_df, col, filter_name, "car2go")
-plt.figure()
-g.plot_samples(car2go_df, col, filter_name, "car2go", quantile=0.01)
-plt.figure()
-g.plot_samples(car2go_df, col, filter_name, "car2go", quantile=0.05)
-
-plt.figure()
-g.plot_samples(enjoy_df, col, filter_name, "enjoy")
-plt.figure()
-g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.01)
-plt.figure()
-g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.05)
-
-
-g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name)
-g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
-g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.05)
-
-# HISTOGRAMS 
-col = "duration"
-g.hist(enjoy_df, col, filter_name, "Enjoy", "red")
-g.hist(enjoy_df, col, filter_name, "Enjoy", "red", quantile=0.05)
-g.hist(enjoy_df, col, filter_name, "Enjoy", "red", quantile=0.05, cumulative= True)
-
-g.hist(car2go_df, col, filter_name, "Car2Go", "blue")
-g.hist(car2go_df, col, filter_name, "Car2Go", "blue", quantile=0.05)
-g.hist(car2go_df, col, filter_name, "Car2Go", "blue", quantile=0.05, cumulative= True)
-
-#### CDF WEEKS ###
-g.cdf_weeks_duration(enjoy_df, car2go_df)
-g.cdf_weeks_distance(enjoy_df, car2go_df)
 #
-#### CDF BUSINESS VS WEEKEND ###
-g.cdf_business_weekend(enjoy_df)
-g.cdf_business_weekend(car2go_df)
+#zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})\
+#                     .sort_values("Denom_GTT").reset_index().drop("index", axis=1)
+#
+#centroids = gpd.read_file("../../SHAPE/Centroidi.dbf").to_crs({"init": "epsg:4326"})\
+#                     .sort_values("Denom_GTT").reset_index().drop("index", axis=1)
+#
+#demography = gpd.read_file("../../dati_torino/zonestat_popolazione_residente_2015_geo.dbf").to_crs({"init": "epsg:4326"})
+#
+#enjoy_operational_zones = create_zones_enjoy()
+#car2go_operational_zones = create_zones_car2go('zones')
+#car2go_airport = create_zones_car2go('airport')
+#car2go_ikea = create_zones_car2go('ikea')
+#
+#frames = [enjoy_operational_zones, 
+#          car2go_operational_zones, 
+#          car2go_airport, 
+#          car2go_ikea]
+#
+#operational_zones = gpd.GeoDataFrame(pd.concat(frames))
 
-# AGGREGATED PLOTS
-col = "distance"
-g.plot_aggregated_count_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
-g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all")
-g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all", quantile=0.01)
+#"""
+#Fleet
+#"""
+#
+#enjoy_fleetsize_series = enjoy.get_fleetsize_info().dropna()
+#car2go_fleetsize_series = car2go.get_fleetsize_info().dropna()
+#
+#fig, axs = plt.subplots(1,1)
+#enjoy_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Enjoy")
+#car2go_fleetsize_series.plot(figsize=(13,6), marker='o', ax=axs, label="Car2Go")
+#plt.legend()
+#plt.title("Fleet size evolution")
+#
+#plt.show()
+#
+#"""
+#Sketch
+#"""
+## * SAMPLES *
+#
+#filter_name = "ride"
+#col = "distance"
+##col = "tot_duration_in_traffic"
+##col = "riding_time"
+##col = "duration"
+#
+#plt.figure()
+#g.plot_samples(car2go_df, col, filter_name, "car2go")
+#plt.figure()
+#g.plot_samples(car2go_df, col, filter_name, "car2go", quantile=0.01)
+#plt.figure()
+#g.plot_samples(car2go_df, col, filter_name, "car2go", quantile=0.05)
+#
+#plt.figure()
+#g.plot_samples(enjoy_df, col, filter_name, "enjoy")
+#plt.figure()
+#g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.01)
+#plt.figure()
+#g.plot_samples(enjoy_df, col, filter_name, "enjoy", quantile=0.05)
+#
+#
+#g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name)
+#g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
+#g.plot_samples_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.05)
+#
+## HISTOGRAMS 
+#col = "duration"
+#g.hist(enjoy_df, col, filter_name, "Enjoy", "red")
+#g.hist(enjoy_df, col, filter_name, "Enjoy", "red", quantile=0.05)
+#g.hist(enjoy_df, col, filter_name, "Enjoy", "red", quantile=0.05, cumulative= True)
+#
+#g.hist(car2go_df, col, filter_name, "Car2Go", "blue")
+#g.hist(car2go_df, col, filter_name, "Car2Go", "blue", quantile=0.05)
+#g.hist(car2go_df, col, filter_name, "Car2Go", "blue", quantile=0.05, cumulative= True)
+#
+##### CDF WEEKS ###
+#g.cdf_weeks_duration(enjoy_df, car2go_df)
+#g.cdf_weeks_distance(enjoy_df, car2go_df)
+##
+##### CDF BUSINESS VS WEEKEND ###
+#g.cdf_business_weekend(enjoy_df)
+#g.cdf_business_weekend(car2go_df)
 
-# DAILY
-
-g.plot_daily_count_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
-g.plot_daily_mean_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
-
+## AGGREGATED PLOTS
+#col = "distance"
+#g.plot_aggregated_count_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
+#g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all")
+#g.plot_aggregated_mean_vs(enjoy_df, car2go_df, col, "all", quantile=0.01)
+#
+## DAILY
+#
+#g.plot_daily_count_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
+#g.plot_daily_mean_vs(enjoy_df, car2go_df, col, filter_name, quantile=0.01)
 
 
 """
  * GOOGLE RESULTS *
 """
 
-g.car_vs_google(enjoy_df)
-g.car_vs_google(car2go_df)
-g.car_vs_google_comparison(enjoy_df, car2go_df)
+#g.car_vs_google(enjoy_df)
+#g.car_vs_google(car2go_df)
+#g.car_vs_google_comparison(enjoy_df, car2go_df)
 
-g.car_vs_transit(enjoy_df)
-g.car_vs_transit(car2go_df)
-#
-g.car_vs_transit_bar(enjoy_df)
-g.car_vs_transit_bar(car2go_df)
-#
-#
-g.car_vs_transit_resampled(enjoy_df)
-g.car_vs_transit_resampled(car2go_df)
+#g.car_vs_transit(enjoy_df)
+#g.car_vs_transit(car2go_df)
 
+#g.car_vs_transit_bar(enjoy_df)
+#g.car_vs_transit_bar(car2go_df)
+##
+##
+#g.car_vs_transit_resampled(enjoy_df)
+#g.car_vs_transit_resampled(car2go_df)
+#
 #g.faster_PT_hours(enjoy_df)
 ##  night problem
 #g.faster_PT_hours(car2go_df)
-
-g.faster_car_hours(enjoy_df)
-g.faster_car_hours(car2go_df)
 #
-g.faster_car_PTtime_hours(enjoy_df)
-g.faster_car_PTtime_hours(car2go_df)
-
-
-g.car_pt(enjoy_df)
-g.car_pt(car2go_df)
-
-g.car_pt_vs(enjoy_df,car2go_df)
+#g.faster_car_hours(enjoy_df)
+#g.faster_car_hours(car2go_df)
+##
+#g.faster_car_PTtime_hours(enjoy_df)
+#g.faster_car_PTtime_hours(car2go_df)
+#
+#
+#g.car_pt(enjoy_df)
+#g.car_pt(car2go_df)
+#
+#g.car_pt_vs(enjoy_df,car2go_df)
 ##
 #
 ##
 #
-#
+#pos_piazzaVittorio = [45.0650653, 7.6936148]
+#pos_PortaNuova = [45.0620829, 7.6762908]
+#g.isocrono(enjoy_df, pos_piazzaVittorio)
+#g.isocost(enjoy_df, pos_piazzaVittorio)
+
 """
 Bills
 """
-g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "min_bill", "all", quantile=0.01)
-g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "max_bill", "all", quantile=0.01)
 
-g.plot_aggregated_sum_vs(enjoy_df.iloc[:30000], car2go_df[:30000], "min_bill", "all", quantile=0.01)
-g.plot_aggregated_sum_vs(enjoy_df.iloc[:30000], car2go_df[:30000], "max_bill", "all", quantile=0.01)
+#g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "min_bill", "ride", quantile=0.01)
+#g.plot_aggregated_sum_vs(enjoy_df, car2go_df, "max_bill", "ride", quantile=0.01)
+#
+#g.plot_daily_sum_vs(enjoy_df, car2go_df, "min_bill", "ride", quantile=0.01)
+#g.plot_daily_sum_vs(enjoy_df, car2go_df, "max_bill", "ride", quantile=0.01)
 
 """
 Isocronous / Isocost
 """
 
-pos_piazzaVittorio = [45.0650653, 7.6936148]
-pos_PortaNuova = [45.0620829, 7.6762908]
-g.isocrono(enjoy_df, pos_piazzaVittorio)
-g.isocost(enjoy_df, pos_piazzaVittorio)
 
 """
 Heatmap
@@ -244,10 +244,10 @@ def filter_quantile(df, col, filter_col, quantile):
     s = s[(s >= s.quantile(q=quantile)) & (s <= s.quantile(q=1.0-quantile))]
     return df.loc[s.index]
 
-#origins, destinations, car2go_od = getODmatrix\
-#    (filter_quantile(car2go_df, "start_lat", "ride", 0.001), zones)
-#origins, destinations, enjoy_od = getODmatrix\
-#    (filter_quantile(enjoy_df, "start_lat", "ride", 0.001), zones)
+origins, destinations, car2go_od = getODmatrix\
+    (filter_quantile(car2go_df, "start_lat", "ride", 0.001), zones)
+origins, destinations, enjoy_od = getODmatrix\
+    (filter_quantile(enjoy_df, "start_lat", "ride", 0.001), zones)
 
 def drop_od (od):
     dropped_od = od

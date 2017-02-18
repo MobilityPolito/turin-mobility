@@ -26,6 +26,7 @@ def color(df):
         return 'blue'
         
 def heatmap(lats, lons, hour, path, bins=(100,100), smoothing=1.3, cmap='jet'):
+    
     heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
     
     logheatmap = np.log(heatmap)
@@ -198,7 +199,7 @@ class Graphics():
                         filter_col, 
                         provider, 
                         color,
-                        freq="30Min",
+                        freq="1440Min",
                         quantile=0.0,
                         figsize=(13,6)):
         
@@ -214,7 +215,7 @@ class Graphics():
                             car2go_df, 
                             col, 
                             filter_col,
-                            freq="30Min",
+                            freq="1440Min",
                             quantile=0.0,
                             figsize=(13,6)):
 
@@ -489,16 +490,19 @@ class Graphics():
                  (df_['tot_duration_google_transit'].isnull() == False) &\
                  (df_['tot_duration_google_transit']< 100)] 
         df["slot"] = pd.Series()
-        df.loc[df.tot_duration_google_transit < 10, "slot"] = 10
-        df.loc[(df.tot_duration_google_transit < 20) & (df.tot_duration_google_transit > 10), "slot"] = 20
-        df.loc[(df.tot_duration_google_transit < 30) & (df.tot_duration_google_transit > 20), "slot"] = 30
-        df.loc[(df.tot_duration_google_transit < 40) & (df.tot_duration_google_transit > 30), "slot"] = 40
-        df.loc[(df.tot_duration_google_transit < 50) & (df.tot_duration_google_transit > 40), "slot"] = 50
-        df.loc[(df.tot_duration_google_transit < 60) & (df.tot_duration_google_transit > 50), "slot"] = 60
-        df.loc[(df.tot_duration_google_transit < 70) & (df.tot_duration_google_transit > 60), "slot"] = 70
-        df.loc[(df.tot_duration_google_transit < 80) & (df.tot_duration_google_transit > 70), "slot"] = 80
-        df.loc[(df.tot_duration_google_transit < 90) & (df.tot_duration_google_transit > 80), "slot"] = 90
-        df.loc[df.tot_duration_google_transit > 90, "slot"] = 100
+        delta = 5.0
+        df.loc[np.floor(df.tot_duration_google_transit/delta)*delta]
+        df.loc[df.tot_duration_google_transit < 5, "slot"] = 5
+        df.loc[(df.tot_duration_google_transit < 10) & (df.tot_duration_google_transit > 5), "slot"] = 10
+        df.loc[(df.tot_duration_google_transit < 15) & (df.tot_duration_google_transit > 10), "slot"] = 15
+        df.loc[(df.tot_duration_google_transit < 20) & (df.tot_duration_google_transit > 15), "slot"] = 20
+        df.loc[(df.tot_duration_google_transit < 25) & (df.tot_duration_google_transit > 20), "slot"] = 25
+        df.loc[(df.tot_duration_google_transit < 30) & (df.tot_duration_google_transit > 25), "slot"] = 30
+        df.loc[(df.tot_duration_google_transit < 35) & (df.tot_duration_google_transit > 30), "slot"] = 35
+        df.loc[(df.tot_duration_google_transit < 40) & (df.tot_duration_google_transit > 35), "slot"] = 40
+        df.loc[(df.tot_duration_google_transit < 45) & (df.tot_duration_google_transit > 40), "slot"] = 45
+        df.loc[(df.tot_duration_google_transit < 50) & (df.tot_duration_google_transit > 45), "slot"] = 50
+        df.loc[df.tot_duration_google_transit > 50, "slot"] = 50.1
         return df
 
     def faster_PT_hours(self, df1):
@@ -566,11 +570,13 @@ class Graphics():
         plt.figure()
         df = df1[(df1['ride'] == True) & \
                  (df1['short_trips'] == True) & \
+                 (df1['duration_driving'].isnull() == False) & \
                  (df1['tot_duration_google_transit'].isnull() == False)]   
         df_ = df.set_index("start")
         df_.groupby(df_.index.map(lambda t: t.hour)).duration.mean().plot(figsize=(13, 6), marker='o', color=color(df1), label = 'avg CS duration')
         _df = df2[(df2['ride'] == True) & \
                  (df2['short_trips'] == True) & \
+                 (df1['duration_driving'].isnull() == False) & \
                  (df2['tot_duration_google_transit'].isnull() == False)]   
         __df = _df.set_index("start")
         __df.groupby(__df.index.map(lambda t: t.hour)).duration.mean().plot(figsize=(13, 6), marker='o', color=color(df2), label = 'avg CS duration')
@@ -578,6 +584,10 @@ class Graphics():
         dur_pt = (df_.groupby(df_.index.map(lambda t: t.hour)).tot_duration_google_transit.mean()\
          + __df.groupby(__df.index.map(lambda t: t.hour)).tot_duration_google_transit.mean())/2.0
         dur_pt.plot(figsize=(13, 6), marker='o', color='orange', label = 'avg PT duration')
+
+        dur_pt = (df_.groupby(df_.index.map(lambda t: t.hour)).duration_driving.mean()\
+         + __df.groupby(__df.index.map(lambda t: t.hour)).duration_driving.mean())/2.0
+        dur_pt.plot(figsize=(13, 6), marker='o', color='purple', label = 'avg car duration')
         
         plt.xticks(np.arange(0,23+1, 1.0))
         plt.xlabel('Hours of a day')
@@ -618,7 +628,7 @@ class Graphics():
           plt.plot(df_isoc['start_lon'].iloc[simplex], df_isoc['start_lat'].iloc[simplex], color='red', linewidth=3, label='_nolegend_' )
        #
        for t in range(10,100,10):
-          df_isoc_time = df_isoc[(df_isoc['duration'] <= t)& (df_isoc['duration']>(t-10))]
+          df_isoc_time = df_isoc[(df_isoc['riding_time'] <= t)& (df_isoc['riding_time']>(t-10))]
           if(len(df_isoc_time) > 0):
               print 'in {} minuti : {}'.format(t, len(df_isoc_time))
               if len(df_isoc_time) >=3:
