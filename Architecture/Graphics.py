@@ -658,71 +658,6 @@ class Graphics():
                    for simplex in hull.simplices:
                        plt.plot(df_isoc_time['end_lon'].iloc[simplex], df_isoc_time['end_lat'].iloc[simplex],color=colors[t/2], linewidth=3, label='_nolegend_' )
                df_isoc_time.plot.scatter(x="end_lon", y='end_lat', label=str(t)+' euro', s=100, ax=ax, color=colors[t/2])
-               
-    def heatmap_per_hour(self, df):
-        def heatmap(lats, lons, hour, path, ax, bins=(100,100), smoothing=1.3, cmap='jet'):
-    
-            heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
-            
-            logheatmap = np.log(heatmap)
-            logheatmap[np.isneginf(logheatmap)] = 0
-            logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
-            
-            ex = [yedges[0], yedges[-1], xedges[-1], xedges[0]]
-            im = ax.imshow(heatmap, cmap=cmap, extent=ex, aspect='auto')
-            cb = plt.colorbar(im, ax=ax)
-#            plt.savefig(path+"/"+str(hour), dpi=250)
-#            plt.show()
-            return heatmap, xedges, yedges
-        
-        df_ = df[(df['start_lon'] >= 7.60) &\
-                 (df['end_lon'] <= 7.80) &\
-                 (df['start_lat'] >= 45) &\
-                 (df['end_lat'] <= 45.25)]
-        df_["hour"] = df_["start"].apply(lambda d: d.hour)
-        
-        path = "../Images/"
-        if os.path.isdir(path) == False:
-            os.makedirs(path)
-            
-        provider = df_["provider"].iloc[0]
-        path += "../Images/"+provider
-        if os.path.isdir(path) == False:
-            os.makedirs(path)
-                    
-        grouped = df_.groupby("hour")
-        for hour in range(2):
-            fig = plt.figure(figsize=(13,6))
-            ax1 = plt.subplot2grid((1,2), (0,0))
-            ax2 = plt.subplot2grid((1,2), (0,1))
-            x_lim = [7.62, 7.728]
-            y_lim = [45, 45.2]
-            title1 = provider + " - Initial books positions - "+str(hour)+":00"
-            title2 = provider + " - Final books positions - "+str(hour)+":00"
-            
-            zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
-            zones_geo = zones["geometry"]
-            zones_geo.plot(color="white",ax=ax1)
-            ax1.set_xlim(x_lim)
-            ax1.set_ylim(y_lim)
-            ax1.set_title(title1)
-            
-            heatmap(grouped.get_group(hour).start_lat.values, 
-                    grouped.get_group(hour).start_lon.values,            
-                    hour, path, ax1, bins=(50,20))
-
-            zones_geo.plot(color="white",ax=ax2)
-            ax2.set_xlim(x_lim)
-            ax2.set_ylim(y_lim)
-            ax2.set_title(title2)
-            heatmap(grouped.get_group(hour).end_lat.values, 
-                    grouped.get_group(hour).end_lon.values,            
-                    hour, path, ax2, bins=(50,20))
-            
-            plt.show()
-            
-            
-        return
     
     def total_recessed(self,df_list):
         def filter_quantile(df, col, filter_col, quantile):
@@ -752,19 +687,88 @@ class Graphics():
         ax.set_ylabel("Reccesed")
         ax.set_title("Total Recessed")
         plt.legend(loc=4)
-        plt.savefig("reccessed", dpi=250)
+#        plt.savefig("reccessed", dpi=250)
         plt.show()
+        return
+        
+    def heatmap_per_hour(self, df):
+        def heatmap(lats, lons, hour, path, ax, bins=(100,100), smoothing=1.3, cmap='jet'):
+    
+            heatmap, xedges, yedges = np.histogram2d(lats, lons, bins=bins)
+            
+            logheatmap = np.log(heatmap)
+            logheatmap[np.isneginf(logheatmap)] = 0
+            logheatmap = ndimage.filters.gaussian_filter(logheatmap, smoothing, mode='nearest')
+            
+            ex = [yedges[0], yedges[-1], xedges[-1], xedges[0]]
+            im = ax.imshow(heatmap, cmap=cmap, extent=ex, aspect='auto')
+            cb = plt.colorbar(im, ax=ax)
+            im.set_clim([0,100])
+            return heatmap, xedges, yedges
+        
+        df_ = df[(df['start_lon'] >= 7.60) &\
+                 (df['end_lon'] <= 7.80) &\
+                 (df['start_lat'] >= 45) &\
+                 (df['end_lat'] <= 45.25)]
+        df_["hour"] = df_["start"].apply(lambda d: d.hour)
+        
+        path = "../Images/"
+        if os.path.isdir(path) == False:
+            os.makedirs(path)
+            
+        provider = df_["provider"].iloc[0]
+        path += "../Images/"+provider
+        if os.path.isdir(path) == False:
+            os.makedirs(path)
+                    
+        grouped = df_.groupby("hour")
+        c, provider = color(df)
+        if provider == "enjoy":
+            x_lim = [7.62, 7.728]
+            y_lim = [45.005, 45.11]
+        if provider == "car2go":
+            x_lim = [7.62, 7.728]
+            y_lim = [45.01, 45.19]
+
+        for hour in range(24):
+            fig = plt.figure(figsize=(13,6))
+            ax1 = plt.subplot2grid((1,2), (0,0))
+            ax2 = plt.subplot2grid((1,2), (0,1))
+            title1 = provider + " - Initial books positions - "+str(hour)+":00"
+            title2 = provider + " - Final books positions - "+str(hour)+":00"
+            
+            zones = gpd.read_file("../../SHAPE/Zonizzazione.dbf").to_crs({"init": "epsg:4326"})
+            zones_geo = zones["geometry"]
+            zones_geo.plot(color="white",ax=ax1)
+            ax1.set_xlim(x_lim)
+            ax1.set_ylim(y_lim)
+            ax1.set_title(title1)
+            
+            heatmap(grouped.get_group(hour).start_lat.values, 
+                    grouped.get_group(hour).start_lon.values,            
+                    hour, path, ax1, bins=(50,20))
+
+            zones_geo.plot(color="white",ax=ax2)
+            ax2.set_xlim(x_lim)
+            ax2.set_ylim(y_lim)
+            ax2.set_title(title2)
+            heatmap(grouped.get_group(hour).end_lat.values, 
+                    grouped.get_group(hour).end_lon.values,            
+                    hour, path, ax2, bins=(50,20))
+            
+            plt.show()
         return
             
         
 start = datetime.datetime(2016, 12, 10, 0, 0, 0)
-end = datetime.datetime(2017, 01, 30, 23, 59, 59)
+end = datetime.datetime(2017, 01, 5, 23, 59, 59)
 
 #enjoy_df = dbp.query_books_df_filtered_v3("enjoy", "torino", start, end)
 #car2go_df = dbp.query_books_df_filtered_v3("car2go", "torino", start, end)
 #
 g=Graphics()
-#g.heatmap_per_hour(car2go_df)
-a = g.total_recessed([car2go_df, enjoy_df])
+g.heatmap_per_hour(car2go_df)
+g.heatmap_per_hour(enjoy_df)
+#a = g.total_recessed([car2go_df, enjoy_df])
 
 
